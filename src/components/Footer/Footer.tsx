@@ -1,9 +1,7 @@
-import './Footer.css';
-
 export function Footer() {
   return (
    
-<footer> this is the footer</footer>
+<footer className='bg-red-800'> this is the footer</footer>
 
    
   );

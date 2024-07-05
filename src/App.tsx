@@ -6,12 +6,13 @@ import { Post } from './components/Post/Post';
 
 function App() {
 
-
   return (
-    <main>
+    <main className='bg-gray-800 font-sans text-white'>
      <NavBar></NavBar>
       
      <Post></Post>
+    
+
      <Footer></Footer>
     </main>
   )
