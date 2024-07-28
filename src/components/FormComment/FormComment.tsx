@@ -1,19 +1,44 @@
+import { useComments } from "../../hooks/useComments";
+import { useRef } from "react";
+import Comments from "../Comments/Comments";
 
-export function FormComment() {
-  return (
-    <form  mt-2>
-      <input className=" rounded-sm mb-2" type="text" />
-      <div className="flex space-x-2">
-      <button className=" bg-red-600 px-1">Cancel</button>
-      <button className="bg-green-500 px-1">Add Comment</button>
-      </div>
-      
-    </form>
+export default function FormComment() {
+  const { postComments, comments, deleteComment } = useComments();
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  const handleAddComment = async () => {
+    const comment = inputRef.current?.value || "";
+    if(comment!= ''){
+      await postComments(comment);
+    }
     
+    if (inputRef.current) {
+      inputRef.current.value = "";
+    }
+  };
+
+  return (
+    <>
+      <form
+        onSubmit={(ev) => {
+          ev.preventDefault();
+        }}
+      >
+        <input
+          ref={inputRef}
+          className=" rounded-sm mb-2  text-black"
+          type="text"
+          name="search"
+        />
+        <div className="">
+          <button className=" bg-red-600 px-1">Cancel</button>
+          <button className="bg-green-500 px-1" onClick={handleAddComment}>
+            Add Comment
+          </button>
+        </div>
+      </form>
+
+      <Comments comments={comments} deleteComment= {deleteComment}></Comments>
+    </>
   );
 }
-
-
-
-
-

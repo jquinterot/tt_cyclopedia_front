@@ -1,7 +1,7 @@
-export function SideBar() {
+export default function SideBar() {
   return (
    
-<div id="navbar"> this is a nav bar</div>
+<div className="sidebar"> this is a nav bar</div>
 
    
   );
