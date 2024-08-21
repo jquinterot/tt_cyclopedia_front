@@ -24,9 +24,10 @@ export default function FormComment() {
           ev.preventDefault();
         }}
       >
+        <p className="text-2xl">Add Comment</p>
         <input
           ref={inputRef}
-          className=" rounded-sm mb-2  text-black"
+          className="w-11/12 sm:w-9/12 h-8  rounded-sm mb-2  text-black"
           type="text"
           name="search"
         />
@@ -37,8 +38,9 @@ export default function FormComment() {
           </button>
         </div>
       </form>
-
-      <Comments comments={comments} deleteComment= {deleteComment}></Comments>
+      
+    
+      <Comments comments={comments} deleteComment={deleteComment}></Comments>
     </>
   );
 }

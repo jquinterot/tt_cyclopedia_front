@@ -1,31 +1,36 @@
+import { usePosts } from "../../hooks/usePosts";
+import { Post } from "../../types/Post";
 import FormComment from "../FormComment/FormComment";
-import FormInfo from "../FormInfo/FormInfo";
+import PostInfo from "../PostInfo/Postinfo";
 
 export default function Post() {
+  const { posts } = usePosts();
   return (
-    <>
-      <div>
-        <h1 className="">Ovtcharov alc</h1>
-      </div>
-      <br />
+    <div className="ml-5 w-10/12 md:mx-auto md:w-1/2 lg:mx-auto lg:w-1/2">
+      {posts.map((post: Post) => (
+        <div key={post.id} className="mb-7">
+          <div>
+            <h1 className=" text-3xl">{post.title}</h1>
+          </div>
 
-      <div className="">
-        <img
-          className=""
-          src="https://ttgearlab.com/wp-content/uploads/2023/08/15.jpg?w=1024"
-        />
-        <p className="">
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Sint numquam
-          hic voluptates mollitia illum vero, pariatur reprehenderit, commodi
-          recusandae voluptatum placeat odit corrupti consequuntur culpa alias?
-          Enim commodi delectus nesciunt?
-        </p>
-      </div>
-      <FormInfo></FormInfo>
+          <div className="">
+            <img
+              className=""
+              src={post.img}
+            />
+            <p className="">
+             {post.content}
+            </p>
+          </div>
+          <PostInfo likes= {post.likes}></PostInfo>
+        </div>
+
+       
+      ))}
 
       <div className="">
         <FormComment></FormComment>
       </div>
-    </>
+    </div>
   );
 }
