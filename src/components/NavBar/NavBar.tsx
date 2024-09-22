@@ -1,6 +1,5 @@
 export default function NavBar() {
-  return (
-   
+  return (   
 <header className="h-14 sm:h-14 mb-3  bg-red-700 flex shrink-0  justify-between items-center"> 
   <div className="ml-20">
     <a href=""> TT Cyclopedia</a>
@@ -11,7 +10,5 @@ export default function NavBar() {
     </ul>
   </nav>
 </header>
-
-   
   );
 }

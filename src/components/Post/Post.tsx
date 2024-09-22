@@ -24,8 +24,6 @@ export default function Post() {
           </div>
           <PostInfo likes= {post.likes}></PostInfo>
         </div>
-
-       
       ))}
 
       <div className="">
