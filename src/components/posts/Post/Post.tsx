@@ -1,5 +1,5 @@
-import { usePosts } from "../../hooks/usePosts";
-import { Post } from "../../types/Post";
+import { usePosts } from "../../../hooks/usePosts";
+import { Post } from "../../../types/Post";
 import FormComment from "../FormComment/FormComment";
 import PostInfo from "../PostInfo/Postinfo";
 

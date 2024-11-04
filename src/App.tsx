@@ -1,16 +1,18 @@
-import  NavBar  from './components/NavBar/NavBar';
-import  Footer  from './components/Footer/Footer';
-import  Post  from './components/Post/Post';
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import MainPage from "./pages/MainPage/MainPage";
+import PostPage from "./pages/PostPage/PostPage";
+import CreatePostPage from "./pages/AddPostPage/CreatePostPage";
 
 function App() {
-
   return (
-    <main className='bg-gray-800 font-sans text-white m-0'>
-     <NavBar></NavBar>
-     <Post></Post>
-     <Footer></Footer>
-    </main>
-  )
+    <Router>
+      <Routes>
+        <Route path="/" element={<MainPage />} />
+        <Route path="/posts/" element={<PostPage />} />
+        <Route path="/createPost"  element={<CreatePostPage />}/>
+      </Routes>
+    </Router>
+  );
 }
 
-export default App
+export default App;

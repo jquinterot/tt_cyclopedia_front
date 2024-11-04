@@ -1,5 +1,5 @@
-import { useBearStore } from "../../states/useCommentsState";
-import { Post } from "../../types/Post";
+import { useBearStore } from "../../../states/useCommentsState";
+import { Post } from "../../../types/Post";
 
 export default function PostInfo({likes}:{likes:number;}) {
   const bears =  useBearStore(state => state.bears);

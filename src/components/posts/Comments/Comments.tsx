@@ -1,4 +1,4 @@
-import { Comment } from '../../types/Comment';
+import { Comment } from '../../../types/Comment';
 import UserInfo from '../UserInfo/UserInfo';
 
 export default function Comments({ comments, deleteComment }: { comments: Comment[];  deleteComment:(commentId:string) => Promise<void>; }) {

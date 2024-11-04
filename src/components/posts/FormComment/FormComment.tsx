@@ -1,4 +1,4 @@
-import { useComments } from "../../hooks/useComments";
+import { useComments } from "../../../hooks/useComments";
 import { useRef } from "react";
 import Comments from "../Comments/Comments";
 

@@ -1,5 +1,5 @@
-import { useUsers} from "../../hooks/useUsers"
-import { User } from "../../types/User";
+import { useUsers} from "../../../hooks/useUsers"
+import { User } from "../../../types/User";
 
 export default function UserInfo() {
   const { users } = useUsers();
