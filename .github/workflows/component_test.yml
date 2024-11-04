@@ -14,5 +14,5 @@ jobs:
         with:
           runTests: false
 
-      - name: Run regression
+      - name: Run Component tests
         run: npm run component:test
