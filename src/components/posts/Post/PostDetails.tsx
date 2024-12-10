@@ -1,9 +1,10 @@
+
 import { usePosts } from "../../../hooks/usePosts";
 import { Post } from "../../../types/Post";
 import FormComment from "../FormComment/FormComment";
-import PostInfo from "../PostInfo/Postinfo";
+import PostInfo from "../PostInfo/PostLikes";
 
-export default function Post() {
+export default function PostDetails() {
   const { posts } = usePosts();
   return (
     <div className="ml-5 w-10/12 md:mx-auto md:w-1/2 lg:mx-auto lg:w-1/2">
