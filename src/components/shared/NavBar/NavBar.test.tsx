@@ -8,6 +8,6 @@ describe("NavBar", () => {
             <NavBar/>
         )
         expect(screen.getByText("TT Cyclopedia")).toBeDefined();
-        expect(screen.getByText("Menu")).toBeDefined();
+        expect(screen.getByText("Create Post")).toBeDefined();
     })
 })

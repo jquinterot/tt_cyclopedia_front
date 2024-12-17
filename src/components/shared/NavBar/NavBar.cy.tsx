@@ -5,6 +5,6 @@ describe('<NavBar />', () => {
     cy.mount(<NavBar />);
     
     cy.get('nav').should("be.visible");
-    cy.get('li').should("have.text", "Menu");
+    cy.get('ul a').should("have.text", "Create Post");
   })
 })
