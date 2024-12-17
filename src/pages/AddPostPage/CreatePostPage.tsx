@@ -5,11 +5,13 @@ import CreatePostForm from '../../components/createPost/CreatePostForm/CreatePos
 function CreatePostPage() {
 
   return (
-    <main className='bg-gray-800 font-sans text-white m-0 '>
-     <NavBar></NavBar>
-     <CreatePostForm></CreatePostForm>
-     <Footer></Footer>
-    </main>
+     <div className="min-h-screen flex flex-col bg-gray-800 font-sans text-white m-0">
+      <NavBar />
+      <main className="flex-grow ">
+        <CreatePostForm/>
+      </main>
+      <Footer />
+    </div>
   )
 }
 

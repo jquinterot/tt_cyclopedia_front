@@ -4,8 +4,7 @@ import axios from 'axios';
 
 export const useUsers = () => {
     const [users, setUsers] = useState<User[]>([]);
-   
-  
+
     useEffect(() => {
       const fetchData = async () => {
         try {
@@ -19,10 +18,5 @@ export const useUsers = () => {
       fetchData();
     }, []);
   
-
-   
-
- 
-
   return { users };
 };

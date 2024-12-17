@@ -5,11 +5,13 @@ import  PostDetails  from '../../components/posts/Post/PostDetails';
 function PostPage() {
 
   return (
-    <main className='bg-gray-800 font-sans text-white m-0'>
-     <NavBar></NavBar>
-     <PostDetails></PostDetails>
-     <Footer></Footer>
-    </main>
+    <div className="min-h-screen flex flex-col bg-gray-800 font-sans text-white m-0">
+          <NavBar />
+          <main className="flex-grow ">
+          <PostDetails></PostDetails>
+          </main>
+          <Footer />
+        </div>
   )
 }
 

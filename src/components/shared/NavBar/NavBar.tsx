@@ -6,7 +6,7 @@ export default function NavBar() {
   </div>
   <nav className="ml-2 mr-20">
     <ul>
-      <li>Menu</li>
+      <a href="/createPost"> Create Post</a>
     </ul>
   </nav>
 </header>

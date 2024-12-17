@@ -1,34 +1,32 @@
-
-import { usePosts } from "../../../hooks/usePosts";
-import { Post } from "../../../types/Post";
-import FormComment from "../FormComment/FormComment";
+import { useEffect } from "react";
+import { useParams } from "react-router-dom";
+import { usePostState } from "../../../states/usePostState"; // Zustand store
 import PostInfo from "../PostInfo/PostLikes";
+import FormComment from "../FormComment/FormComment";
 
 export default function PostDetails() {
-  const { posts } = usePosts();
+  const { id } = useParams(); // Get postId from the route
+  const { post, error, getPostById } = usePostState(); // Zustand store
+
+  useEffect(() => {
+    if (id) {
+      getPostById(id); // Fetch the post when component mounts
+    }
+  }, [id, getPostById]);
+
+  if (error) return <div>Error: {error}</div>; // Display error message
+  if (!post) return <div>Loading...</div>; // Show loading state until post is fetched
+
   return (
     <div className="ml-5 w-10/12 md:mx-auto md:w-1/2 lg:mx-auto lg:w-1/2">
-      {posts.map((post: Post) => (
-        <div key={post.id} className="mb-7">
-          <div>
-            <h1 className=" text-3xl">{post.title}</h1>
-          </div>
-
-          <div className="">
-            <img
-              className=""
-              src={post.img}
-            />
-            <p className="">
-             {post.content}
-            </p>
-          </div>
-          <PostInfo likes= {post.likes}></PostInfo>
-        </div>
-      ))}
-
+      <div key={post.id} className="mb-7">
+        <h1 className="text-3xl">{post.title}</h1>
+        <img className="w-full h-auto" src={post.img} alt={post.title} />
+        <p>{post.content}</p>
+        <PostInfo likes={post.likes} />
+      </div>
       <div className="">
-        <FormComment></FormComment>
+        <FormComment />
       </div>
     </div>
   );
