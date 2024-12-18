@@ -1,16 +1,11 @@
 import { create } from 'zustand';
 import { Post } from '../types/Post';
+import { PostState } from '../types/PostState';
 import axios from 'axios';
 
-interface PostState {
-  post: Post | null;
-  error: string | null;
-  getPostById: (postId: string) => Promise<void>;
-}
-
 export const usePostState = create<PostState>((set) => ({
-  post: null, // Explicit initial value
-  error: null, // Explicit initial value
+  post: null,
+  error: null, 
   getPostById: async (postId: string) => {
     try {
       const response = await axios.get<Post>(`http://localhost:8000/posts/${postId}`);

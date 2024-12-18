@@ -10,7 +10,7 @@ export default function PostDetails() {
 
   useEffect(() => {
     if (id) {
-      getPostById(id); // Fetch the post when component mounts
+      getPostById(id);
     }
   }, [id, getPostById]);
 
