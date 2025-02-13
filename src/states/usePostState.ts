@@ -8,7 +8,7 @@ export const usePostState = create<PostState>((set) => ({
   error: null, 
   getPostById: async (postId: string) => {
     try {
-      const response = await axios.get<Post>(`http://localhost:8000/posts/${postId}`);
+      const response = await axios.get<Post>(`https://ttcyclopediaback-production.up.railway.app/posts/${postId}`);
       set({
         post: response.data,
         error: null,
