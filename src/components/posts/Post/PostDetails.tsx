@@ -23,7 +23,7 @@ export default function PostDetails() {
         <h1 className="text-3xl">{post.title}</h1>
         <img className="w-full h-auto" src={post.img} alt={post.title} />
         <p>{post.content}</p>
-        <PostInfo likes={post.likes} />
+        <PostInfo />
       </div>
       <div className="">
         <FormComment />

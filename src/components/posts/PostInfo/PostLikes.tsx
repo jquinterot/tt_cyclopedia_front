@@ -1,16 +1,26 @@
-import { useBearStore } from "../../../states/useCommentsState";
+import { useLikes } from "../../../states/useCommentsState";
+import likeIcon from "../../../assets/like.png";
 
-export default function PostLikes({likes}:{likes:number}) {
-  const bears =  useBearStore(state => state.bears);
-  const increase = useBearStore(state => state.increase);
-
+export default function PostLikes() {
+  const likes = useLikes(state => state.likes);
+  const increase = useLikes(state => state.increase);
 
   return (
-    <section className="">
-      <img src="../../assets/like.png" alt="" />
-      <p>bears {bears}</p>
-      <p>likes {likes}</p>
-      <button className="bg-blue-500" onClick={() => increase(1)}>Likes</button>
+    <section className="flex items-center gap-3">
+      <div className="flex items-center gap-2">
+        <img 
+          src={likeIcon} 
+          alt="Like icon" 
+          className="w-7 h-7"
+        />
+        <p className="text-base font-medium">{likes}</p>
+      </div>
+      <button 
+        className="px-3 py-1 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors"
+        onClick={() => increase(1)}
+      >
+        Like
+      </button>
     </section>
   );
 }

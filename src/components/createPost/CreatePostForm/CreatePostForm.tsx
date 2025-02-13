@@ -1,75 +1,112 @@
 import toast, { Toaster } from "react-hot-toast";
 import { usePosts } from "../../../hooks/usePosts";
-import { useRef } from "react";
+import { useRef, LegacyRef } from "react";
+import defaultImage from "../../../assets/default.jpeg";
 
 export default function CreatePostForm() {
   const { postPosts } = usePosts();
+  const formRef = useRef<HTMLFormElement>(null);
   const inputTitleRef = useRef<HTMLInputElement>(null);
-  const inputContentRef = useRef<HTMLInputElement>(null);
+  const inputContentRef = useRef<HTMLTextAreaElement>(null);
   const inputImageRef = useRef<HTMLInputElement>(null);
-  const notify = () => toast.success("Post Successfully Created!");
 
-  const handleAddPost = async () => {
-    const title = inputTitleRef.current?.value || "";
-    const content = inputContentRef.current?.value || "";
-    //const image = inputContentRef.current?.files;
+  const handleAddPost = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    const title = inputTitleRef.current?.value.trim() || "";
+    const content = inputContentRef.current?.value.trim() || "";
+    const imageFile = inputImageRef.current?.files?.[0];
 
-    if (title != "") {
-      await postPosts(title, content, "img");
-      notify();
+    if (!title) {
+      toast.error("Please enter a title");
+      return;
     }
 
-    if (inputTitleRef.current) {
-      inputTitleRef.current.value = "";
+    if (!content) {
+      toast.error("Please enter content");
+      return;
     }
 
-    if (inputContentRef.current) {
-      inputContentRef.current.value = "";
+    try {
+      const image = imageFile ? URL.createObjectURL(imageFile) : defaultImage;
+      await postPosts(title, content, image);
+      toast.success("Post successfully created!");
+      formRef.current?.reset();
+    } catch (error) {
+      toast.error("Failed to create post");
     }
   };
 
-  return (
-    <>
-      <div className="flex justify-center">
-        <div>
-          <Toaster position="bottom-right" reverseOrder={true} />
-        </div>
-        <form
-          className="w-full max-w-md"
-          onSubmit={(ev) => {
-            ev.preventDefault();
-          }}
-        >
-          <p className="text-2xl">Create Post</p>
+  const handleCancel = () => {
+    formRef.current?.reset();
+    toast.dismiss();
+  };
 
-          <h2 className="text-xl">Post Title</h2>
+  return (
+    <div className="flex justify-center p-4">
+      <Toaster position="bottom-right" reverseOrder={true} />
+      
+      <form
+        ref={formRef}
+        className="w-full max-w-md space-y-4"
+        onSubmit={handleAddPost}
+      >
+        <h1 className="text-2xl font-bold">Create New Post</h1>
+
+        <div className="space-y-2">
+          <label className="block text-lg font-medium" htmlFor="title">
+            Post Title
+          </label>
           <input
             ref={inputTitleRef}
-            className="w-11/12 sm:w-9/12 h-8  rounded-sm mb-2  text-black"
+            id="title"
+            className="w-full p-2 rounded border text-black"
             type="text"
-            name="title"
+            required
           />
+        </div>
 
-          <h2 className="text-xl">Post Content</h2>
+        <div className="space-y-2">
+          <label className="block text-lg font-medium" htmlFor="content">
+            Post Content
+          </label>
+          <textarea
+            ref={inputContentRef as LegacyRef<HTMLTextAreaElement>}
+            id="content"
+            className="w-full p-2 h-32 rounded border text-black"
+            required
+          />
+        </div>
+
+        <div className="space-y-2">
+          <label className="block text-lg font-medium" htmlFor="image">
+            Post Image (optional)
+          </label>
           <input
-            ref={inputContentRef}
-            className="w-11/12 sm:w-9/12 h-16  rounded-sm mb-2  text-black"
-            type="text"
-            name="content"
+            ref={inputImageRef}
+            id="image"
+            type="file"
+            accept="image/*"
+            className="w-full text-white"
           />
+        </div>
 
-          <input ref={inputImageRef} type="file" name="" id="" />
-
-          <h2 className="text-xl">Add Post Image</h2>
-
-          <div className="">
-            <button className=" bg-red-600 px-2">Cancel</button>
-            <button className="bg-green-500 px-1" onClick={handleAddPost}>
-              Add Post
-            </button>
-          </div>
-        </form>
-      </div>
-    </>
+        <div className="flex gap-4 justify-end">
+          <button
+            type="button"
+            onClick={handleCancel}
+            className="px-2 py-2 bg-red-600 text-white rounded hover:bg-gray-600"
+          >
+            Cancel
+          </button>
+          <button
+            type="submit"
+            className="px-3 py-2 bg-green-500 text-white rounded hover:bg-green-600"
+          >
+            Create Post
+          </button>
+        </div>
+      </form>
+    </div>
   );
 }
