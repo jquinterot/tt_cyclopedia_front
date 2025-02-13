@@ -7,25 +7,30 @@ export default function PostList() {
   const navigate = useNavigate();
   
   return (
-    <div className="ml-5 w-3/5">
+    <div className="mx-auto max-w-2xl">
       {posts.map((post: Post) => (
-        <div key={post.id} className="mb-7 ">
-          <div
-            className="flex flex-row flex-nowrap justify-center hover:bg-gray-500"
-            onClick={() => navigate(`/posts/${post.id}`)}
-          >
+        <div 
+          key={post.id}
+          className="group mb-8 cursor-pointer overflow-hidden bg-gray-700 shadow-sm shadow-gray-900/30 transition-all hover:shadow-md hover:shadow-gray-900/50"
+          onClick={() => navigate(`/posts/${post.id}`)}
+        >
+        
+          <div className="aspect-video w-full md:aspect-square md:h-[400px]">
             <img
-              className="w-80 h-60 rounded-md object-cover mr-4 hover:bg-gray-500"
+              className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
               src={post.img}
+              alt={post.title}
             />
-            <div className="w-2/4 ">
-              <h1 className="text-3xl cursor-pointer ">{post.title}</h1>
-              <p className="overflow-wrap break-words">
-                {post.content.length > 200 // Adjust character limit as needed
-                  ? `${post.content.substring(0, 200)}...`
-                  : post.content}
-              </p>
-            </div>
+          </div>
+
+          {/* Text Content */}
+          <div className="space-y-4 p-7">
+            <h1 className="text-2xl font-semibold text-white hover:text-blue-400">
+              {post.title}
+            </h1>
+            <p className="text-gray-300 line-clamp-3">
+              {post.content}
+            </p>
           </div>
         </div>
       ))}
