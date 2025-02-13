@@ -28,7 +28,7 @@ export const usePosts = () => {
       setError(null);
   
       try {
-        const response = await axios.post<Post>('http://localhost:8000/posts', { title: title, content: content, img: img });
+        const response = await axios.post<Post>('https://ttcyclopediaback-production.up.railway.app/posts', { title: title, content: content, img: img });
         const newPost = response.data;
         setPosts(prevPosts => [...prevPosts, newPost]);
       } catch (error) {
@@ -41,7 +41,7 @@ export const usePosts = () => {
 
     const getPostById = async (postId: string) => {
       try {
-        const response = await axios.get<Post>(`http://localhost:8000/posts/${postId}`);
+        const response = await axios.get<Post>(`https://ttcyclopediaback-production.up.railway.app/${postId}`);
         setPost(response.data);
       } catch (error) {
         if (axios.isAxiosError(error)) {
