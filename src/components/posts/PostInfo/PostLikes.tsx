@@ -1,13 +1,9 @@
 import { useBearStore } from "../../../states/useCommentsState";
-import { Post } from "../../../types/Post";
 
 export default function PostLikes({likes}:{likes:number}) {
   const bears =  useBearStore(state => state.bears);
   const increase = useBearStore(state => state.increase);
 
-  const handleLikes = () =>{
-
-  }
 
   return (
     <section className="">

@@ -10,7 +10,7 @@ export const useComments = () => {
     useEffect(() => {
       const fetchData = async () => {
         try {
-          const response = await axios.get<Comment[]>('http://localhost:8000/comments');
+          const response = await axios.get<Comment[]>('https://ttcyclopediaback-production.up.railway.app/comments');
           setComments(response.data);
         } catch (error) {
           console.error('Error fetching comments:', error);
@@ -26,7 +26,7 @@ export const useComments = () => {
       setError(null);
   
       try {
-        const response = await axios.post<Comment>('http://localhost:8000/comments', { comment: comment });
+        const response = await axios.post<Comment>('https://ttcyclopediaback-production.up.railway.app/comments', { comment: comment });
         const newComment = response.data;
         setComments(prevComments => [...prevComments, newComment]);
       } catch (error) {
@@ -39,7 +39,7 @@ export const useComments = () => {
 
     const deleteComment = async (commentId:string) => {
       try {
-        await axios.delete(`http://localhost:8000/comments/${commentId}`);
+        await axios.delete(`https://ttcyclopediaback-production.up.railway.app/comments/${commentId}`);
         const updatedComments = comments.filter((commentToRemove) => commentToRemove.id !== commentId);
         setComments(updatedComments);
    

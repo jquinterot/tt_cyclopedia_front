@@ -4,7 +4,7 @@ import axios from 'axios';
 
 export const usePosts = () => {
     const [posts, setPosts] = useState<Post[]>([]);
-    const[post,setPost] = useState<Post  | null>(null);
+    const [post,setPost] = useState<Post  | null>(null);
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
    
@@ -12,7 +12,7 @@ export const usePosts = () => {
     useEffect(() => {
       const fetchData = async () => {
         try {
-          const response = await axios.get<Post[]>('http://localhost:8000/posts');
+          const response = await axios.get<Post[]>('https://ttcyclopediaback-production.up.railway.app/posts');
           setPosts(response.data);
         } catch (error) {
           console.error('Error fetching posts:', error);
