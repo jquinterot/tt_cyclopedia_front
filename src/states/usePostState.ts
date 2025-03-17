@@ -2,13 +2,14 @@ import { create } from 'zustand';
 import { Post } from '../types/Post';
 import { PostState } from '../types/PostState';
 import axios from 'axios';
+import { apiClient } from "../config/apiClient";
 
 export const usePostState = create<PostState>((set) => ({
   post: null,
   error: null, 
   getPostById: async (postId: string) => {
     try {
-      const response = await axios.get<Post>(`https://ttcyclopediaback-production.up.railway.app/posts/${postId}`);
+      const response = await apiClient.get<Post>(`/posts/${postId}`);
       set({
         post: response.data,
         error: null,
