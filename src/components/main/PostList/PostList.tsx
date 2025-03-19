@@ -18,7 +18,7 @@ export default function PostList() {
           <div className="aspect-video w-full md:aspect-square md:h-[400px]">
             <img
               className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
-              src={post.img}
+              src={`http://localhost:8000${post.image_url}`}
               alt={post.title}
             />
           </div>

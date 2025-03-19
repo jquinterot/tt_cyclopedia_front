@@ -2,6 +2,6 @@ export type Post = {
     id: string;
     title: string;
     content: string;
-    img: string;
+    image_url: string;
     likes:number;
 }

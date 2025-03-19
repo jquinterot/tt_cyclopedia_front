@@ -1,15 +1,11 @@
+// config/apiClient.ts
 import axios from 'axios';
 
-// Determine environment (Vite uses import.meta.env)
-const isDevelopment = import.meta.env.MODE === 'development';
-
-// Get base URL from environment variables (Vite requires VITE_ prefix)
-const baseURL = isDevelopment
-  ? import.meta.env.VITE_API_BASE_URL_LOCAL
-  : import.meta.env.VITE_API_BASE_URL_PROD;
+// Single environment variable for both environments
+const baseURL = import.meta.env.VITE_API_BASE_URL;
 
 if (!baseURL) {
-  throw new Error('Missing API base URL in environment variables');
+  throw new Error('Missing VITE_API_BASE_URL in environment variables');
 }
 
 export const apiClient = axios.create({
@@ -18,3 +14,6 @@ export const apiClient = axios.create({
     'Content-Type': 'application/json'
   }
 });
+
+// Optional: Export baseURL for direct access where needed
+export const API_BASE_URL = baseURL;

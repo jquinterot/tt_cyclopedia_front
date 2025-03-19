@@ -1,7 +1,6 @@
 import toast, { Toaster } from "react-hot-toast";
 import { usePosts } from "../../../hooks/usePosts";
 import { useRef, LegacyRef } from "react";
-import defaultImage from "../../../assets/default.jpeg";
 
 export default function CreatePostForm() {
   const { postPosts } = usePosts();
@@ -28,8 +27,14 @@ export default function CreatePostForm() {
     }
 
     try {
-      const image = imageFile ? URL.createObjectURL(imageFile) : defaultImage;
-      await postPosts(title, content, image);
+      const formData = new FormData();
+      formData.append('title', title);
+      formData.append('content', content);
+      if (imageFile) {
+        formData.append('image', imageFile);
+      }
+
+      await postPosts(formData);
       toast.success("Post successfully created!");
       formRef.current?.reset();
     } catch (error) {

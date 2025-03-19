@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Post } from "../types/Post";
 import { apiClient } from "../config/apiClient";
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
 
 export const usePosts = () => {
     const [posts, setPosts] = useState<Post[]>([]);
@@ -10,44 +10,71 @@ export const usePosts = () => {
     const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
+        const abortController = new AbortController();
+
         const fetchData = async () => {
+            setIsLoading(true);
             try {
-                const response = await apiClient.get<Post[]>('/posts');
+                const response = await apiClient.get<Post[]>('/posts', {
+                    signal: abortController.signal
+                });
                 setPosts(response.data);
+                setError(null);
             } catch (error) {
-                console.error('Error fetching posts:', error);
+                if (!abortController.signal.aborted) {
+                    const message = axios.isAxiosError(error)
+                        ? error.response?.data?.message || error.message
+                        : 'Failed to fetch posts';
+                    setError(message);
+                }
+            } finally {
+                if (!abortController.signal.aborted) {
+                    setIsLoading(false);
+                }
             }
         };
 
         fetchData();
+        return () => abortController.abort();
     }, []);
 
-    const postPosts = async (title: string, content: string, img: string) => {
+    const postPosts = async (formData: FormData) => {
         setIsLoading(true);
         setError(null);
 
         try {
-            const response = await apiClient.post<Post>('/posts', { title, content, img });
-            const newPost = response.data;
-            setPosts(prevPosts => [...prevPosts, newPost]);
+            const response = await apiClient.post<Post>('/posts', formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                }
+            });
+            setPosts(prev => [response.data, ...prev]);
+            return response.data;
         } catch (error) {
-            setError('Error creating post');
-            console.error('Error creating post:', error);
+            const message = axios.isAxiosError(error)
+                ? error.response?.data?.message || error.message
+                : 'Failed to create post';
+            setError(message);
+            throw error;
         } finally {
             setIsLoading(false);
         }
     };
 
     const getPostById = async (postId: string) => {
+        setIsLoading(true);
+        setError(null);
+
         try {
             const response = await apiClient.get<Post>(`/posts/${postId}`);
             setPost(response.data);
         } catch (error) {
-            if (axios.isAxiosError(error)) {
-                console.error('Error fetching post:', error.response?.data || error.message);
-            } else {
-                console.error('Unknown error:', error);
-            }
+            const message = axios.isAxiosError(error)
+                ? error.response?.data?.message || error.message
+                : 'Failed to fetch post';
+            setError(message);
+        } finally {
+            setIsLoading(false);
         }
     };
 

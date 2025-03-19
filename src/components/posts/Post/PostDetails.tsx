@@ -21,7 +21,11 @@ export default function PostDetails() {
     <div className="ml-5 w-10/12 md:mx-auto md:w-1/2 lg:mx-auto lg:w-1/2">
       <div key={post.id} className="mb-7">
         <h1 className="text-3xl">{post.title}</h1>
-        <img className="w-full h-auto" src={post.img} alt={post.title} />
+        <img 
+  className="w-full h-auto" 
+  src={`${import.meta.env.VITE_API_BASE_URL}${post.image_url}`} 
+  alt={post.title} 
+/>
         <p>{post.content}</p>
         <PostInfo />
       </div>
