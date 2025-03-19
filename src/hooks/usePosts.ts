@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Post } from "../types/Post";
 import { apiClient } from "../config/apiClient";
-import axios, { AxiosError } from 'axios';
+import axios from 'axios';
 
 export const usePosts = () => {
     const [posts, setPosts] = useState<Post[]>([]);
