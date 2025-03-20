@@ -1,12 +1,12 @@
 import { useEffect } from "react";
 import { useParams } from "react-router-dom";
-import { usePostState } from "../../../states/usePostState"; // Zustand store
-import PostInfo from "../PostInfo/PostLikes";
+import { usePostState } from "../../../states/usePostState"; 
+import PostInfo from "../PostInfo/PostInfo";
 import FormComment from "../FormComment/FormComment";
 
 export default function PostDetails() {
-  const { id } = useParams(); // Get postId from the route
-  const { post, error, getPostById } = usePostState(); // Zustand store
+  const { id } = useParams(); 
+  const { post, error, getPostById } = usePostState(); 
 
   useEffect(() => {
     if (id) {
@@ -14,11 +14,11 @@ export default function PostDetails() {
     }
   }, [id, getPostById]);
 
-  if (error) return <div>Error: {error}</div>; // Display error message
-  if (!post) return <div>Loading...</div>; // Show loading state until post is fetched
+  if (error) return <div>Error: {error}</div>; 
+  if (!post) return <div>Loading...</div>;
 
   return (
-    <div className="ml-5 w-10/12 md:mx-auto md:w-1/2 lg:mx-auto lg:w-1/2">
+    <div className="ml-5 w-10/12 md:mx-auto md:w-1/2 lg:mx-auto lg:w-1/2 mt-4">
       <div key={post.id} className="mb-7">
         <h1 className="text-3xl">{post.title}</h1>
         <img 

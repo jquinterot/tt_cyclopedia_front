@@ -7,7 +7,7 @@ export default function PostList() {
   const navigate = useNavigate();
   
   return (
-    <div className="mx-auto max-w-2xl">
+    <div className="mx-auto max-w-2xl mt-5">
       {posts.map((post: Post) => (
         <div 
           key={post.id}
@@ -23,7 +23,6 @@ export default function PostList() {
             />
           </div>
 
-          {/* Text Content */}
           <div className="space-y-4 p-7">
             <h1 className="text-2xl font-semibold text-white hover:text-blue-400">
               {post.title}

@@ -1,7 +1,7 @@
 import { useLikes } from "../../../states/useCommentsState";
 import likeIcon from "../../../assets/like.png";
 
-export default function PostLikes() {
+export default function PostInfo() {
   const likes = useLikes(state => state.likes);
   const increase = useLikes(state => state.increase);
 
