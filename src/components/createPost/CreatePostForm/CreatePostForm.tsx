@@ -1,6 +1,7 @@
 import toast, { Toaster } from "react-hot-toast";
 import { usePosts } from "../../../hooks/usePosts";
 import { useRef, LegacyRef } from "react";
+import { useNavigate } from "react-router-dom";
 
 export default function CreatePostForm() {
   const { postPosts } = usePosts();
@@ -8,6 +9,7 @@ export default function CreatePostForm() {
   const inputTitleRef = useRef<HTMLInputElement>(null);
   const inputContentRef = useRef<HTMLTextAreaElement>(null);
   const inputImageRef = useRef<HTMLInputElement>(null);
+  const navigate = useNavigate();
 
   const handleAddPost = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -37,6 +39,7 @@ export default function CreatePostForm() {
       await postPosts(formData);
       toast.success("Post successfully created!");
       formRef.current?.reset();
+      navigate("/");
     } catch (error) {
       toast.error("Failed to create post");
     }
