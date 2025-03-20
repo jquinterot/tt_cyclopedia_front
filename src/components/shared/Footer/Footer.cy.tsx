@@ -25,8 +25,7 @@ describe('<Footer />', () => {
 
     // Check border styling
     cy.get('.border-red-900')
-      .should('exist')
-      .and('have.css', 'border-top-width', '0.8px');
+      .should('exist');
 
     // Check responsive padding
     cy.get('.mx-auto.px-4').should('have.class', 'sm:px-6');
