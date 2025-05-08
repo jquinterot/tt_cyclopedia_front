@@ -10,7 +10,7 @@ export default function PostInfo() {
       <div className="flex items-center gap-2">
         <img 
           src={likeIcon} 
-          alt="Like icon" 
+          alt="Like icon"
           className="w-7 h-7"
         />
         <p className="text-base font-medium">{likes}</p>

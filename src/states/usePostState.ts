@@ -4,7 +4,7 @@ import { PostState } from '../types/PostState';
 import axios from 'axios';
 import { apiClient } from "../config/apiClient";
 
-export const usePostState = create<PostState>((set) => ({
+export const usePostStat= create<PostState>((set) => ({
   post: null,
   error: null, 
   getPostById: async (postId: string) => {

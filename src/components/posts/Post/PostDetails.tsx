@@ -1,20 +1,23 @@
 import { useEffect } from "react";
 import { useParams } from "react-router-dom";
-import { usePostState } from "../../../states/usePostState"; 
+import { usePostById } from "../../../hooks/posts/usePostById";
+import { usePostId } from "../../../hooks/usePostId";
 import PostInfo from "../PostInfo/PostInfo";
 import FormComment from "../FormComment/FormComment";
 
 export default function PostDetails() {
   const { id } = useParams(); 
-  const { post, error, getPostById } = usePostState(); 
+  const {postId, updatePostId} = usePostId();
 
   useEffect(() => {
     if (id) {
-      getPostById(id);
+      updatePostId(id);
     }
-  }, [id, getPostById]);
+  }, [id]);
 
-  if (error) return <div>Error: {error}</div>; 
+  const {post, error} =  usePostById(postId);
+  
+  if (error) return <div>Error getting the post by Id</div>; 
   if (!post) return <div>Loading...</div>;
 
   return (
@@ -29,8 +32,8 @@ export default function PostDetails() {
         <p>{post.content}</p>
         <PostInfo />
       </div>
-      <div className="">
-        <FormComment />
+      <div>
+        {id && <FormComment postId={id} />}
       </div>
     </div>
   );

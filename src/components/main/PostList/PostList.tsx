@@ -1,14 +1,16 @@
-import { usePosts } from "../../../hooks/usePosts";
+import { usePosts } from "../../../hooks/posts/usePosts";
 import { Post } from "../../../types/Post";
 import { useNavigate } from "react-router-dom";
 
 export default function PostList() {
-  const { posts } = usePosts();
+  const { posts, isLoading } = usePosts();
   const navigate = useNavigate();
   
+  if (isLoading) return <div>Loading...</div>;
+
   return (
     <div className="mx-auto max-w-2xl mt-5">
-      {posts.map((post: Post) => (
+      {posts?.map((post: Post) => (
         <div 
           key={post.id}
           className="group mb-8 cursor-pointer overflow-hidden bg-gray-700 shadow-sm shadow-gray-900/30 transition-all hover:shadow-md hover:shadow-gray-900/50"

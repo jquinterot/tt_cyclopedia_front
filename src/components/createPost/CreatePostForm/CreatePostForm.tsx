@@ -1,10 +1,10 @@
 import toast, { Toaster } from "react-hot-toast";
-import { usePosts } from "../../../hooks/usePosts";
+import { usePostPost } from "../../../hooks/posts/usePostPosts";
 import { useRef, LegacyRef } from "react";
 import { useNavigate } from "react-router-dom";
 
 export default function CreatePostForm() {
-  const { postPosts } = usePosts();
+  const { mutateAsync: createPost, isError, isPending } = usePostPost();
   const formRef = useRef<HTMLFormElement>(null);
   const inputTitleRef = useRef<HTMLInputElement>(null);
   const inputContentRef = useRef<HTMLTextAreaElement>(null);
@@ -13,7 +13,7 @@ export default function CreatePostForm() {
 
   const handleAddPost = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     const title = inputTitleRef.current?.value.trim() || "";
     const content = inputContentRef.current?.value.trim() || "";
     const imageFile = inputImageRef.current?.files?.[0];
@@ -36,7 +36,7 @@ export default function CreatePostForm() {
         formData.append('image', imageFile);
       }
 
-      await postPosts(formData);
+      await createPost({ formData }); // Pass formData as an object to match mutationFn
       toast.success("Post successfully created!");
       formRef.current?.reset();
       navigate("/");
@@ -53,7 +53,7 @@ export default function CreatePostForm() {
   return (
     <div className="flex justify-center p-4">
       <Toaster position="bottom-right" reverseOrder={true} />
-      
+
       <form
         ref={formRef}
         className="w-full max-w-md space-y-4"
@@ -110,10 +110,12 @@ export default function CreatePostForm() {
           <button
             type="submit"
             className="px-3 py-2 bg-green-500 text-white rounded hover:bg-green-600"
+            disabled={isPending}
           >
-            Create Post
+            {isPending ? 'Creating...' : 'Create Post'}
           </button>
         </div>
+        {isError && <p className="text-red-500 mt-2">Error: Failed to create post</p>}
       </form>
     </div>
   );

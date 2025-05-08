@@ -1,0 +1,10 @@
+# Development
+FROM node:18-alpine
+
+WORKDIR /app
+COPY package.json package-lock.json ./
+RUN npm ci
+COPY . .
+
+# Use Vite's dev server with HMR
+CMD ["npm", "run", "dev"]
