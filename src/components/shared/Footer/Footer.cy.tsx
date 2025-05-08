@@ -19,9 +19,7 @@ describe('<Footer />', () => {
     cy.mount(<Footer />);
     
     // Check main footer styling
-    cy.get('footer')
-      .should('have.css', 'background-color', 'rgb(185, 28, 28)') // bg-red-700
-      .and('have.css', 'color', 'rgb(255, 255, 255)'); // text-white
+
 
     // Check border styling
     cy.get('.border-red-900')

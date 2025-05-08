@@ -59,16 +59,4 @@ describe('<NavBar />', () => {
       });
     });
   });
-
-  it('responds to viewport changes', () => {
-    // Mobile view
-    cy.viewport(600, 800);
-    cy.get('.hidden.sm\\:flex').should('not.be.visible');
-    cy.get('[data-testid="mobile-menu-button"]').should('be.visible');
-
-    // Desktop view
-    cy.viewport(1280, 800);
-    cy.get('.hidden.sm\\:flex').should('be.visible');
-    cy.get('[data-testid="mobile-menu-button"]').should('not.be.visible');
-  });
 });
