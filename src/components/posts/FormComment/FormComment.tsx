@@ -1,60 +1,55 @@
-import FormComment from './FormComment';
-import { describe, test, expect, vi } from "vitest";
-import { render, screen } from "@testing-library/react";
-import { MemoryRouter, Route, Routes } from "react-router-dom";
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { useComments  } from "../../../hooks/comments/useComments";
+import { usePostComment } from "../../../hooks/comments/usePostComments";
+import { useRef } from "react";
+import Comments from "../Comments/Comments";
 
-// Mock API hooks
-vi.mock('../../../hooks/comments/useComments', () => ({
-  useComments: (postId: string) => ({
-    comments: [
-      { id: '1', comment: 'Test comment', userId: 'test-user' }
-    ],
-    error: null,
-    isLoading: false
-  })
-}));
+export default function FormComment({ postId }: { postId: string }) {
+  const { mutateAsync: postComment } = usePostComment(postId);
+  const {
+    comments,
+    error: getCommentError,
+    isLoading: isLoadingComment,
+  } = useComments(postId);
 
-vi.mock('../../../hooks/comments/usePostComments', () => ({
-  usePostComment: (postId: string) => ({
-    mutateAsync: vi.fn()
-  })
-}));
+  const inputRef = useRef<HTMLInputElement>(null);
 
-// Mock useParams if needed
-vi.mock('react-router-dom', async () => ({
-  ...(await vi.importActual('react-router-dom')),
-  useParams: () => ({ id: 'test-id' })
-}));
-
-const queryClient = new QueryClient();
-
-const Wrapper = ({ children }: { children: React.ReactNode }) => (
-  <QueryClientProvider client={queryClient}>
-    <MemoryRouter initialEntries={['/posts/test-id']}>
-      <Routes>
-        <Route path="/posts/:id" element={children} />
-      </Routes>
-    </MemoryRouter>
-  </QueryClientProvider>
-);
-
-describe("FormComment", () => {
-  test("should render FormComment", () => {
-    render(
-      <Wrapper>
-        <FormComment />
-      </Wrapper>
-    );
-
-    // Verify buttons
-    expect(screen.getByRole('button', { name: 'Add Comment' })).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: 'Cancel' })).toBeInTheDocument();
-
-    // Verify input field
-    expect(screen.getByRole('textbox')).toBeInTheDocument();
+  const handleAddComment = async () => {
+    const comment = inputRef.current?.value || "";
+    if (comment !== "") {
+      await postComment({
+        comment,
+        userId: "QZWHYrz9NpYbSuR84sF5W8",
+        postId,
+      });
+    }
     
-    // Verify header text
-    expect(screen.getByText(/Add Comment/i)).toBeInTheDocument();
-  });
-});
+    if (inputRef.current) {
+      inputRef.current.value = "";
+    }
+  };
+
+  if (getCommentError) return <div>Error fetching comments</div>;
+  if (isLoadingComment) return <div>Loading...</div>;
+
+  return (
+    <>
+      <form onSubmit={(ev) => ev.preventDefault()}>
+        <p className="text-2xl">Add Comment</p>
+        <input
+          ref={inputRef}
+          className="w-11/12 sm:w-9/12 h-8 rounded-sm mb-2 text-black"
+          type="text"
+          name="search"
+        />
+        <div>
+          <button className="bg-red-600 px-1">Cancel</button>
+          <button className="bg-green-500 px-1" onClick={handleAddComment}>
+            Add Comment
+          </button>
+        </div>
+      </form>
+
+      <Comments comments={comments ?? []} postId={postId} />
+    </>
+  );
+}
