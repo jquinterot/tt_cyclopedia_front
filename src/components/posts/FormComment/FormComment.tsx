@@ -18,7 +18,7 @@ export default function FormComment({ postId }: { postId: string }) {
     if (comment !== "") {
       await postComment({
         comment,
-        userId: "QZWHYrz9NpYbSuR84sF5W8",
+        userId: "default_admin_id",
         postId,
       });
     }
