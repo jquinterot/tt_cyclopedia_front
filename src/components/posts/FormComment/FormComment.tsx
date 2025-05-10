@@ -13,7 +13,7 @@ export default function FormComment({ postId }: { postId: string }) {
     const comment = inputRef.current?.value.trim() || "";
     
     if (!comment) {
-      toast.error("Please enter a comment");
+      toast("Please enter a comment");
       return;
     }
 
