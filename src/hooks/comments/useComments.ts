@@ -16,7 +16,7 @@ export const useComments = (postId: string) => {
     queryKey: ["comments", postId],
     queryFn: () => fetchComments(postId),
     enabled: !!postId,
-    refetchOnMount: false, // Prevent refetching on component mount
+    refetchOnMount: false,
   });
 
   return { comments, isLoading, error };
