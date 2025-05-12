@@ -58,12 +58,13 @@ export default function FormComment({ postId }: { postId: string }) {
           className="w-11/12 sm:w-9/12 h-8 rounded-sm mb-2 text-black"
           type="text"
           name="search"
+          
+
         />
         <div>
-          <button className="bg-red-600 px-1">Cancel</button>
           <button 
             className="bg-green-500 px-1" 
-            type="submit"  // Changed to type="submit"
+            type="submit"
           >
             Add Comment
           </button>
