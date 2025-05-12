@@ -47,7 +47,7 @@ export default function CreatePostForm() {
 
   const handleCancel = () => {
     formRef.current?.reset();
-    toast.dismiss();
+    navigate("/");
   };
 
   return (
