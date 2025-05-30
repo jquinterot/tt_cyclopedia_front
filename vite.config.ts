@@ -9,5 +9,9 @@ export default defineConfig({
   test: {
     environment: "jsdom",
     globals: true
-  }
+  },
+  server: {
+  port: 5173,
+  host: true  // Allow connections from outside the container
+}
 })
