@@ -1,42 +1,138 @@
+import { Link, useNavigate } from "react-router-dom";
+import { useState } from "react";
+import toast, { Toaster } from "react-hot-toast";
+
 function LoginPage() {
-    return (
-        <div className="bg-gray-800 min-h-screen flex flex-col items-center text-white">
-            <form
-                className="w-full max-w-md space-y-4 mt-20"
-            >
-                <h1 className="text-2xl font-bold">Sign in</h1>
+    const navigate = useNavigate();
+    const [formData, setFormData] = useState({
+        username: "",
+        password: ""
+    });
+    const [error, setError] = useState("");
 
-                <div className="space-y-2">
-                    <label className="block text-lg font-medium" htmlFor="username">
-                        Username
-                    </label>
-                    <input
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const { name, value } = e.target;
+        setFormData(prev => ({
+            ...prev,
+            [name]: value
+        }));
+        setError(""); // Clear error when user types
+    };
 
-                        id="username"
-                        className="w-full p-2 rounded border text-black"
-                        type="text"
-                    />
-
-                    <label className="block text-lg font-medium" htmlFor="password">
-                        Password
-                    </label>
-                    <input
-
-                        id="password"
-                        className="w-full p-2 rounded border text-black"
-                        type="text"
-                    />
-
-                        <button
-                            type="submit"
-                            className="w-1/3 mt-4  mr-2 bg-green-800 hover:bg-green-500 text-white font-bold py-2 px-4 rounded">
-                            Sign in
-                        </button>
+    const handleSubmit = (e: React.FormEvent) => {
+        e.preventDefault();
         
-                        <a href="/main" className="button w-1/3 bg-blue-800 hover:bg-blue-500 text-white font-bold py-2 px-4 rounded"> Sign up</a>
+        // Mock authentication
+        if (formData.username === "test" && formData.password === "test") {
+            toast.success("Successfully logged in!");
+            localStorage.setItem("isAuthenticated", "true");
+            navigate("/");
+        } else {
+            setError("Invalid username or password");
+            toast.error("Login failed. Please check your credentials.");
+        }
+    };
+
+    return (
+        <div className="min-h-screen flex flex-col items-center justify-center font-sans text-white py-12 px-4 sm:px-6 lg:px-8" data-testid="login-page">
+            <div className="max-w-md w-full">
+                <Toaster
+                    position="top-center"
+                    toastOptions={{
+                        duration: 3000,
+                        style: {
+                            background: '#363636',
+                            color: '#fff',
+                        },
+                    }}
+                />
+
+                <div className="text-center mb-8" data-testid="login-header">
+                    <h1 className="text-3xl font-bold">Welcome Back</h1>
+                    <p className="mt-3 text-sm text-gray-300">
+                        Sign in to TT Cyclopedia to continue your journey
+                    </p>
                 </div>
-            </form>
+
+                <div className="bg-white/10 backdrop-blur-sm rounded-xl p-8 border border-white/10">
+                    <form onSubmit={handleSubmit} data-testid="login-form">
+                        <div className="space-y-6">
+                            <div>
+                                <label className="block text-sm font-medium text-gray-300 mb-1" htmlFor="username">
+                                    Username
+                                </label>
+                                <div className="mt-1">
+                                    <input
+                                        id="username"
+                                        name="username"
+                                        value={formData.username}
+                                        onChange={handleChange}
+                                        data-testid="username-input"
+                                        className="w-full px-4 py-2 bg-white/5 border border-white/10 rounded-md text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
+                                        type="text"
+                                        placeholder="Enter your username"
+                                        autoComplete="username"
+                                    />
+                                </div>
+                            </div>
+
+                            <div>
+                                <label className="block text-sm font-medium text-gray-300 mb-1" htmlFor="password">
+                                    Password
+                                </label>
+                                <div className="mt-1">
+                                    <input
+                                        id="password"
+                                        name="password"
+                                        value={formData.password}
+                                        onChange={handleChange}
+                                        data-testid="password-input"
+                                        className="w-full px-4 py-2 bg-white/5 border border-white/10 rounded-md text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
+                                        type="password"
+                                        placeholder="Enter your password"
+                                        autoComplete="current-password"
+                                    />
+                                </div>
+                            </div>
+                        </div>
+
+                        {error && (
+                            <div className="text-red-400 text-sm bg-red-400/10 p-3 rounded-md mt-4" data-testid="login-error">
+                                {error}
+                            </div>
+                        )}
+
+                        <div className="flex flex-col gap-4 pt-6">
+                            <button
+                                type="submit"
+                                data-testid="login-submit"
+                                className="w-full px-4 py-2 bg-blue-600 border border-transparent rounded-md text-sm font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors"
+                            >
+                                Sign in
+                            </button>
+        
+                            <div className="relative">
+                                <div className="absolute inset-0 flex items-center">
+                                    <div className="w-full border-t border-white/10"></div>
+                                </div>
+                                <div className="relative flex justify-center text-sm">
+                                    <span className="px-2 bg-[#0f172a] text-gray-400">or</span>
+                                </div>
+                            </div>
+
+                            <Link 
+                                to="/signup" 
+                                data-testid="signup-link"
+                                className="w-full px-4 py-2 border border-white/10 rounded-md text-sm font-medium text-white hover:bg-white/5 transition-colors text-center"
+                            >
+                                Create new account
+                            </Link>
+                        </div>
+                    </form>
+                </div>
+            </div>
         </div>
-    )
+    );
 }
+
 export default LoginPage;

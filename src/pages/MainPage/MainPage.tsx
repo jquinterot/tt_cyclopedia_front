@@ -4,10 +4,10 @@ import PostList from "../../components/main/PostList/PostList";
 
 function MainPage() {
   return (
-    <div className="min-h-screen flex flex-col bg-gray-800 font-sans text-white m-0">
+    <div className="min-h-screen flex flex-col font-sans text-white" data-testid="main-page">
       <NavBar />
-      <main className="flex-grow flex justify-center">
-        <PostList></PostList>
+      <main className="flex-grow flex justify-center px-4 py-8" data-testid="main-content">
+        <PostList />
       </main>
       <Footer />
     </div>

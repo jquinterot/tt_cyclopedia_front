@@ -1,31 +1,45 @@
+/// <reference types="cypress" />
 import Footer from './Footer';
 
 describe('<Footer />', () => {
-  it('renders footer content correctly', () => {
+  beforeEach(() => {
     cy.mount(<Footer />);
+  });
+
+  it('renders footer content correctly', () => {
+    // Check main content
+    cy.get('[data-testid="footer"]').should('exist');
+    cy.get('[data-testid="footer-heading"]').should('contain', 'TT Cyclopedia');
+    cy.get('[data-testid="footer-description"]').should('contain', 'Your premier destination for comprehensive blade equipment reviews');
     
-    // Verify main content
-    cy.get('footer').should('exist');
-    
-    // Check heading and description
-    cy.contains('h2', 'TT Cyclopedia').should('be.visible');
-    cy.contains('p', 'Your premier destination for comprehensive blade equipment reviews').should('be.visible');
-    
-    // Verify copyright text with dynamic year
-    cy.contains('p.text-\\[0\\.7rem\\]', /© \d{4} TT Cyclopedia\. All rights reserved\./).should('be.visible');
+    // Check copyright text with dynamic year
+    const currentYear = new Date().getFullYear();
+    cy.get('[data-testid="footer-copyright"]')
+      .should('contain', `© ${currentYear} TT Cyclopedia. All rights reserved.`);
   });
 
   it('has proper styling', () => {
-    cy.mount(<Footer />);
-    
-    // Check main footer styling
+    // Check footer styling
+    cy.get('[data-testid="footer"]')
+      .should('have.class', 'bg-slate-900/60')
+      .and('have.class', 'backdrop-blur-md')
+      .and('have.class', 'text-white')
+      .and('have.class', 'mt-auto');
 
+    // Check content section styling
+    cy.get('[data-testid="footer-content"]')
+      .should('have.class', 'border-t')
+      .and('have.class', 'border-white/5')
+      .and('have.class', 'bg-slate-900/80');
+  });
 
-    // Check border styling
-    cy.get('.border-red-900')
-      .should('exist');
+  it('renders social links', () => {
+    // Check Twitter link
+    cy.get('a').contains('Twitter').should('exist');
+    cy.get('a svg').first().should('exist');
 
-    // Check responsive padding
-    cy.get('.mx-auto.px-4').should('have.class', 'sm:px-6');
+    // Check GitHub link
+    cy.get('a').contains('GitHub').should('exist');
+    cy.get('a svg').last().should('exist');
   });
 });

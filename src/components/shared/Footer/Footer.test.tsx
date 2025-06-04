@@ -1,44 +1,31 @@
 import { describe, test, expect } from "vitest";
-import { render, screen } from "@testing-library/react";
+import { render } from "@testing-library/react";
 import Footer from './Footer';
 import '@testing-library/jest-dom/vitest';
 
 describe("Footer Component", () => {
-  test("renders copyright text with current year", () => {
-    render(<Footer />);
+  test("renders footer content correctly", () => {
+    const { getByTestId } = render(<Footer />);
     
-    const copyrightRegex = new RegExp(
-      `© ${new Date().getFullYear()} TT Cyclopedia. All rights reserved.`
+    expect(getByTestId("footer")).toBeInTheDocument();
+    expect(getByTestId("footer-heading")).toHaveTextContent("TT Cyclopedia");
+    expect(getByTestId("footer-description")).toHaveTextContent(
+      "Your premier destination for comprehensive blade equipment reviews"
     );
     
-    expect(screen.getByText(copyrightRegex)).toBeInTheDocument();
+    const currentYear = new Date().getFullYear();
+    expect(getByTestId("footer-copyright")).toHaveTextContent(
+      `© ${currentYear} TT Cyclopedia. All rights reserved.`
+    );
   });
 
-  test("displays main heading and description", () => {
-    render(<Footer />);
-
-    // Check main heading
-    expect(screen.getByRole('heading', { 
-      name: /TT Cyclopedia/i,
-      level: 2
-    })).toBeInTheDocument();
-
-    // Check description text
-    const descriptionText = "Your premier destination for comprehensive blade equipment reviews. Share experiences, read detailed analyses, and connect with cutting enthusiasts worldwide.";
-    expect(screen.getByText(descriptionText)).toBeInTheDocument();
-  });
-
-  test("has proper styling classes", () => {
-    const { container } = render(<Footer />);
+  test("has proper styling", () => {
+    const { getByTestId } = render(<Footer />);
     
-    // Check main footer classes
-    const footerElement = container.querySelector('footer');
-    expect(footerElement).toHaveClass('bg-red-700');
-    expect(footerElement).toHaveClass('text-white');
-    expect(footerElement).toHaveClass('mt-auto');
+    const footer = getByTestId("footer");
+    expect(footer).toHaveClass("bg-slate-900/60", "backdrop-blur-md", "text-white", "mt-auto");
 
-    // Check border styling
-    const borderDiv = container.querySelector('.border-red-900');
-    expect(borderDiv).toBeInTheDocument();
+    const content = getByTestId("footer-content");
+    expect(content).toHaveClass("border-t", "border-white/5", "bg-slate-900/80");
   });
 });

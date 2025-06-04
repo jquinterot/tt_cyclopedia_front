@@ -1,6 +1,6 @@
 import toast, { Toaster } from "react-hot-toast";
 import { usePostPost } from "../../../hooks/posts/usePostPosts";
-import { useRef, LegacyRef } from "react";
+import { useRef } from "react";
 import { useNavigate } from "react-router-dom";
 
 export default function CreatePostForm() {
@@ -36,7 +36,7 @@ export default function CreatePostForm() {
         formData.append('image', imageFile);
       }
 
-      await createPost({ formData }); // Pass formData as an object to match mutationFn
+      await createPost({ formData });
       toast.success("Post successfully created!");
       formRef.current?.reset();
       navigate("/");
@@ -51,72 +51,128 @@ export default function CreatePostForm() {
   };
 
   return (
-    <div className="flex justify-center p-4">
-      <Toaster position="bottom-right" reverseOrder={true} />
+    <div className="max-w-2xl mx-auto px-4 py-8" data-testid="create-post-container">
+      <Toaster 
+        position="top-center"
+        toastOptions={{
+          duration: 3000,
+          style: {
+            background: '#363636',
+            color: '#fff',
+          },
+        }}
+      />
 
-      <form
-        ref={formRef}
-        className="w-full max-w-md space-y-4"
-        onSubmit={handleAddPost}
-      >
-        <h1 className="text-2xl font-bold">Create New Post</h1>
+      <div className="bg-white/10 backdrop-blur-sm rounded-xl p-8 border border-white/10">
+        <form
+          ref={formRef}
+          onSubmit={handleAddPost}
+          className="space-y-6"
+          data-testid="create-post-form"
+        >
+          <div>
+            <h1 className="text-2xl font-bold mb-6">Create New Post</h1>
+            <p className="text-sm text-gray-300 mb-8">Share your thoughts with the community</p>
+          </div>
 
-        <div className="space-y-2">
-          <label className="block text-lg font-medium" htmlFor="title">
-            Post Title
-          </label>
-          <input
-            ref={inputTitleRef}
-            id="title"
-            className="w-full p-2 rounded border text-black"
-            type="text"
-            required
-          />
-        </div>
+          <div className="space-y-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-300 mb-1" htmlFor="title">
+                Title
+              </label>
+              <input
+                ref={inputTitleRef}
+                id="title"
+                type="text"
+                className="w-full px-4 py-2 bg-white/5 border border-white/10 rounded-md text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                placeholder="Enter post title"
+                data-testid="post-title-input"
+              />
+            </div>
 
-        <div className="space-y-2">
-          <label className="block text-lg font-medium" htmlFor="content">
-            Post Content
-          </label>
-          <textarea
-            ref={inputContentRef as LegacyRef<HTMLTextAreaElement>}
-            id="content"
-            className="w-full p-2 h-32 rounded border text-black"
-            required
-          />
-        </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-300 mb-1" htmlFor="content">
+                Content
+              </label>
+              <textarea
+                ref={inputContentRef}
+                id="content"
+                rows={6}
+                className="w-full px-4 py-2 bg-white/5 border border-white/10 rounded-md text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
+                placeholder="Write your post content..."
+                data-testid="post-content-input"
+              />
+            </div>
 
-        <div className="space-y-2">
-          <label className="block text-lg font-medium" htmlFor="image">
-            Post Image (optional)
-          </label>
-          <input
-            ref={inputImageRef}
-            id="image"
-            type="file"
-            accept="image/*"
-            className="w-full text-white"
-          />
-        </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-300 mb-1" htmlFor="image">
+                Cover Image
+              </label>
+              <div className="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-white/10 border-dashed rounded-md hover:border-blue-500/50 transition-colors" data-testid="image-upload-area">
+                <div className="space-y-1 text-center">
+                  <svg
+                    className="mx-auto h-12 w-12 text-gray-400"
+                    stroke="currentColor"
+                    fill="none"
+                    viewBox="0 0 48 48"
+                    aria-hidden="true"
+                  >
+                    <path
+                      d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02"
+                      strokeWidth={2}
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                  </svg>
+                  <div className="flex text-sm text-gray-400">
+                    <label
+                      htmlFor="image"
+                      className="relative cursor-pointer rounded-md font-medium text-blue-400 hover:text-blue-300 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-blue-500"
+                    >
+                      <span>Upload a file</span>
+                      <input
+                        ref={inputImageRef}
+                        id="image"
+                        type="file"
+                        accept="image/*"
+                        className="sr-only"
+                        data-testid="image-input"
+                      />
+                    </label>
+                    <p className="pl-1">or drag and drop</p>
+                  </div>
+                  <p className="text-xs text-gray-400">PNG, JPG, GIF up to 10MB</p>
+                </div>
+              </div>
+            </div>
+          </div>
 
-        <div className="flex gap-4 justify-end">
-          <button
-            type="button"
-            onClick={handleCancel}
-            className="px-2 py-2 bg-red-600 text-white rounded hover:bg-gray-600"
-          >
-            Cancel
-          </button>
-          <button
-            type="submit"
-            className="px-3 py-2 bg-green-500 text-white rounded hover:bg-green-600"
-            disabled={isPending}
-          >
-            {isPending ? 'Creating...' : 'Create Post'}
-          </button>
-        </div>
-        {isError && <p className="text-red-500 mt-2">Error: Failed to create post</p>}
-      </form>
+          {isError && (
+            <div className="text-red-400 text-sm bg-red-400/10 p-3 rounded-md">
+              Error: Failed to create post. Please try again.
+            </div>
+          )}
+
+          <div className="flex justify-end space-x-4">
+            <button
+              type="button"
+              onClick={handleCancel}
+              className="px-4 py-2 text-sm font-medium text-gray-300 hover:text-white hover:bg-white/5 rounded-md transition-colors"
+              data-testid="cancel-button"
+            >
+              Cancel
+            </button>
+            <button
+              type="submit"
+              className="px-4 py-2 bg-blue-600 text-sm font-medium text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors"
+              data-testid="submit-button"
+              disabled={isPending}
+            >
+              {isPending ? 'Creating...' : 'Create Post'}
+            </button>
+          </div>
+        </form>
+      </div>
     </div>
   );
 }

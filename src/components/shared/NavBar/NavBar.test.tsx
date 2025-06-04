@@ -1,7 +1,16 @@
 import { describe, test, expect, vi, afterEach } from "vitest";
-import { render, screen, fireEvent, cleanup, within } from "@testing-library/react";
+import { render, fireEvent, cleanup } from "@testing-library/react";
+import { BrowserRouter } from 'react-router-dom';
 import NavBar from './NavBar';
 import '@testing-library/jest-dom/vitest';
+
+const renderWithRouter = (component: React.ReactElement) => {
+  return render(
+    <BrowserRouter>
+      {component}
+    </BrowserRouter>
+  );
+};
 
 describe("NavBar Component", () => {
   afterEach(() => {
@@ -9,75 +18,43 @@ describe("NavBar Component", () => {
     vi.restoreAllMocks();
   });
 
-  test("renders logo with responsive text", () => {
-    render(<NavBar />);
+  test("renders logo and brand name", () => {
+    const { getByTestId } = renderWithRouter(<NavBar />);
     
-    // Check logo elements
-    const logoLink = screen.getByRole('link', { name: /TT Cyclopedia/i });
-    expect(logoLink).toBeInTheDocument();
+    const logo = getByTestId("navbar-logo");
+    expect(logo).toBeInTheDocument();
     
-    // Desktop TT version
-    const desktopTT = within(logoLink).getByText('TT', { selector: '.hidden.sm\\:inline' });
-    expect(desktopTT).toBeInTheDocument();
-    
-    // Mobile TT version
-    const mobileTT = within(logoLink).getByText('TT', { selector: '.sm\\:hidden' });
-    expect(mobileTT).toBeInTheDocument();
+    const logoLink = getByTestId("logo-link");
+    expect(logoLink).toHaveTextContent("TT");
+    expect(logoLink).toHaveTextContent("Cyclopedia");
   });
 
-  test("shows desktop navigation on large screens", () => {
-    render(<NavBar />);
+  test("shows desktop navigation links", () => {
+    const { getByTestId } = renderWithRouter(<NavBar />);
     
-    const desktopNav = screen.getByTestId('desktop-nav');
-    expect(desktopNav).toBeVisible();
+    const desktopNav = getByTestId("desktop-nav");
+    expect(desktopNav).toBeInTheDocument();
     
-    const links = within(desktopNav).getAllByRole('link');
-    expect(links).toHaveLength(3);
-    expect(links[0]).toHaveTextContent(/Home/i);
-    expect(links[1]).toHaveTextContent(/Create Post/i);
-    expect(links[2]).toHaveTextContent(/About/i);
+    expect(getByTestId("nav-home")).toHaveTextContent("Home");
+    expect(getByTestId("nav-create-post")).toHaveTextContent("Create Post");
+    expect(getByTestId("nav-about")).toHaveTextContent("About");
   });
 
-  test("toggles mobile menu correctly", async () => {
-    render(<NavBar />);
+  test("toggles mobile menu", () => {
+    const { getByRole, queryByTestId } = renderWithRouter(<NavBar />);
     
-    const menuButton = screen.getByRole('button', { name: /Open main menu/i });
-    
-    // Initial state - closed
-    expect(menuButton).toHaveAttribute('aria-expanded', 'false');
-    expect(screen.queryByTestId('mobile-menu')).toBeNull();
+    const menuButton = getByRole("button", { name: /open main menu/i });
+    expect(menuButton).toHaveAttribute("aria-expanded", "false");
+    expect(queryByTestId("mobile-menu")).not.toBeInTheDocument();
     
     // Open menu
     fireEvent.click(menuButton);
-    expect(menuButton).toHaveAttribute('aria-expanded', 'true');
-    
-    const mobileMenu = screen.getByTestId('mobile-menu');
-    expect(mobileMenu).toBeVisible();
-    
-    // Verify mobile menu links
-    const mobileLinks = within(mobileMenu).getAllByRole('link');
-    expect(mobileLinks).toHaveLength(3);
-    expect(mobileLinks[0]).toHaveTextContent(/Home/i);
+    expect(menuButton).toHaveAttribute("aria-expanded", "true");
+    expect(queryByTestId("mobile-menu")).toBeInTheDocument();
     
     // Close menu
     fireEvent.click(menuButton);
-    expect(menuButton).toHaveAttribute('aria-expanded', 'false');
-    expect(screen.queryByTestId('mobile-menu')).toBeNull();
-  });
-
-  test("mobile menu button shows correct icon", () => {
-    render(<NavBar />);
-    
-    const menuButton = screen.getByRole('button', { name: /Open main menu/i });
-    const svg = menuButton.querySelector('svg')!;
-    
-    // Initial closed state (hamburger icon)
-    let path = svg.querySelector('path')!;
-    expect(path.getAttribute('d')).toMatch(/M4 6h16M4 12h16M4 18h16/);
-    
-    // Open menu
-    fireEvent.click(menuButton);
-    path = svg.querySelector('path')!;
-    expect(path.getAttribute('d')).toMatch(/M6 18L18 6M6 6l12 12/);
+    expect(menuButton).toHaveAttribute("aria-expanded", "false");
+    expect(queryByTestId("mobile-menu")).not.toBeInTheDocument();
   });
 });

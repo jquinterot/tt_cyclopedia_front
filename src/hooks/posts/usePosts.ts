@@ -15,7 +15,9 @@ export const usePosts = () => {
   } = useQuery({
     queryKey: ["posts"],
     queryFn: () => fetchPosts(),
-    refetchOnMount: false,
+    staleTime: 1000 * 60, // Consider data fresh for 1 minute
+    refetchOnMount: true, // Enable refetch on mount
+    refetchOnWindowFocus: true, // Enable refetch on window focus
   });
 
   return { posts, isLoading, error };

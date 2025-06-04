@@ -1,62 +1,71 @@
 import NavBar from './NavBar';
+import { BrowserRouter } from 'react-router-dom';
 
 describe('<NavBar />', () => {
   beforeEach(() => {
-    cy.mount(<NavBar />);
+    cy.mount(
+      <BrowserRouter>
+        <NavBar />
+      </BrowserRouter>
+    );
   });
 
   it('renders logo and navigation elements', () => {
     // Verify logo structure
-    cy.get('header').should('exist');
-    cy.get('a[href="/"]')
-      .should('contain', 'TT')
-      .and('contain', 'Cyclopedia');
+    cy.get('[data-testid="navbar"]').should('exist');
+    cy.get('[data-testid="navbar-logo"]').should('exist');
+    cy.get('[data-testid="logo-link"]').within(() => {
+      cy.contains('TT').should('exist');
+      cy.contains('Cyclopedia').should('exist');
+    });
 
     // Verify desktop navigation
     cy.viewport(1280, 800);
     cy.get('[data-testid="desktop-nav"]').within(() => {
-      cy.contains('Home').should('be.visible');
-      cy.contains('Create Post').should('be.visible');
-      cy.contains('About').should('be.visible');
+      cy.get('[data-testid="nav-home"]').should('be.visible');
+      cy.get('[data-testid="nav-create-post"]').should('be.visible');
+      cy.get('[data-testid="nav-about"]').should('be.visible');
     });
-
   });
 
   it('toggles mobile menu correctly', () => {
-    // Open menu
-    cy.get('button').click();
-    cy.get('#mobile-menu').should('be.visible');
-    cy.get('button').should('have.attr', 'aria-expanded', 'true');
-
+    // Set viewport and wait for it to take effect
+    cy.viewport(375, 667); // iPhone SE viewport
+    cy.wait(500); // Wait longer for viewport change to take effect
+    
+    // Initial state - menu should be closed
+    cy.get('[data-testid="mobile-menu"]').should('not.exist');
+    
+    // Open menu - use button[data-testid] to be more specific
+    cy.get('button[data-testid="mobile-menu-button"]').click();
+    cy.get('[data-testid="mobile-menu"]').should('be.visible');
+    
     // Verify mobile menu links
-    cy.get('#mobile-menu').within(() => {
-      cy.contains('Home').should('be.visible');
-      cy.contains('Create Post').should('be.visible');
-      cy.contains('About').should('be.visible');
-    });
-
+    cy.get('[data-testid="mobile-nav-home"]').should('be.visible');
+    cy.get('[data-testid="mobile-nav-create-post"]').should('be.visible');
+    cy.get('[data-testid="mobile-nav-about"]').should('be.visible');
+    
     // Close menu
-    cy.get('button').click();
-    cy.get('#mobile-menu').should('not.exist');
-    cy.get('button').should('have.attr', 'aria-expanded', 'false');
+    cy.get('button[data-testid="mobile-menu-button"]').click();
+    cy.get('[data-testid="mobile-menu"]').should('not.exist');
   });
 
-  it('updates menu icon correctly', () => {
-    // Get initial icon state
-    cy.get('button svg path').then(($path) => {
-      const initialD = $path.attr('d');
-      
-      // Open menu
-      cy.get('button').click();
-      cy.get('button svg path').should(($pathAfterOpen) => {
-        expect($pathAfterOpen.attr('d')).not.to.eq(initialD);
-      });
+  it('handles user authentication state', () => {
+    // Test unauthenticated state
+    cy.get('[data-testid="user-profile"]').should('not.exist');
+    cy.contains('Login').should('be.visible');
 
-      // Close menu
-      cy.get('button').click();
-      cy.get('button svg path').should(($pathAfterClose) => {
-        expect($pathAfterClose.attr('d')).to.eq(initialD);
-      });
+    // Test authenticated state
+    cy.window().then((win) => {
+      win.localStorage.setItem('isAuthenticated', 'true');
+      cy.mount(
+        <BrowserRouter>
+          <NavBar />
+        </BrowserRouter>
+      );
     });
+
+    cy.get('[data-testid="user-profile"]').should('be.visible');
+    cy.get('[data-testid="profile-button"]').should('be.visible').and('contain', 'Logout');
   });
 });

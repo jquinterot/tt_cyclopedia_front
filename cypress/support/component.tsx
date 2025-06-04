@@ -30,14 +30,7 @@ declare global {
 }
 
 // Custom mount command
-Cypress.Commands.add('mount', (component, options = {}) => {
-  return mount(
-    <WithProviders>
-      {component}
-    </WithProviders>,
-    options
-  )
-})
+Cypress.Commands.add('mount', mount)
 
 // Optional: Handle uncaught exceptions
 Cypress.on('uncaught:exception', (err) => {

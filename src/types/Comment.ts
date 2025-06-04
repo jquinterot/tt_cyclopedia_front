@@ -1,7 +1,10 @@
-
 export type Comment = {
     id: string;
-    comment:  string;
+    comment: string;
     user_id: string;
     post_id: string;
+    parent_id?: string | null;
+    replies?: Comment[];
+    created_at?: string;
+    likes?: number;
 }

@@ -1,18 +1,17 @@
-import  NavBar  from '../../components/shared/NavBar/NavBar';
-import  Footer  from '../../components/shared/Footer/Footer';
-import  PostDetails  from '../../components/posts/Post/PostDetails';
+import NavBar from '../../components/shared/NavBar/NavBar';
+import Footer from '../../components/shared/Footer/Footer';
+import PostDetails from '../../components/posts/Post/PostDetails';
 
 function PostPage() {
-
   return (
-    <div className="min-h-screen flex flex-col bg-gray-800 font-sans text-white m-0">
+    <div className="min-h-screen flex flex-col font-sans text-white">
           <NavBar />
-          <main className="flex-grow ">
-          <PostDetails></PostDetails>
+      <main className="flex-grow flex justify-center px-4 py-8">
+        <PostDetails />
           </main>
           <Footer />
         </div>
-  )
+  );
 }
 
-export default PostPage
+export default PostPage;
