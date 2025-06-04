@@ -1,10 +1,11 @@
 import { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
+import { useLanguage } from '../../../contexts/LanguageContext';
 
 export default function NavBar() {
   const [isOpen, setIsOpen] = useState(false);
   const [username, setUsername] = useState<string | null>(null);
-  const navigate = useNavigate();
+  const { language, setLanguage, t } = useLanguage();
 
   useEffect(() => {
     // Check if user is authenticated
@@ -17,7 +18,11 @@ export default function NavBar() {
   const handleLogout = () => {
     localStorage.removeItem('isAuthenticated');
     setUsername(null);
-    navigate('/login');
+    // Don't navigate away, just stay on current page
+  };
+
+  const toggleLanguage = () => {
+    setLanguage(language === 'en' ? 'es' : 'en');
   };
 
   return (
@@ -44,22 +49,33 @@ export default function NavBar() {
               className="text-gray-300 hover:text-blue-400 transition-colors px-3 py-2 rounded-md text-sm font-medium"
               data-testid="nav-home"
             >
-              Home
+              {t('nav.home')}
             </Link>
-            <Link 
-              to="/createPost" 
-              className="text-gray-300 hover:text-blue-400 transition-colors px-3 py-2 rounded-md text-sm font-medium"
-              data-testid="nav-create-post"
-            >
-              Create Post
-            </Link>
+            {username && (
+              <Link 
+                to="/createPost" 
+                className="text-gray-300 hover:text-blue-400 transition-colors px-3 py-2 rounded-md text-sm font-medium"
+                data-testid="nav-create-post"
+              >
+                {t('nav.createPost')}
+              </Link>
+            )}
             <Link 
               to="/about" 
               className="text-gray-300 hover:text-blue-400 transition-colors px-3 py-2 rounded-md text-sm font-medium"
               data-testid="nav-about"
             >
-              About
+              {t('nav.about')}
             </Link>
+
+            {/* Language Toggle */}
+            <button
+              onClick={toggleLanguage}
+              className="text-gray-300 hover:text-blue-400 transition-colors px-3 py-2 rounded-md text-sm font-medium"
+              data-testid="language-toggle"
+            >
+              {language.toUpperCase()}
+            </button>
 
             {/* User Profile Section */}
             {username ? (
@@ -77,15 +93,16 @@ export default function NavBar() {
                   className="text-gray-300 hover:text-blue-400 transition-colors px-3 py-2 rounded-md text-sm font-medium"
                   data-testid="profile-button"
                 >
-                  Logout
+                  {t('nav.logout')}
                 </button>
               </div>
             ) : (
               <Link
                 to="/login"
                 className="text-gray-300 hover:text-blue-400 transition-colors px-3 py-2 rounded-md text-sm font-medium"
+                data-testid="nav-login"
               >
-                Login
+                {t('nav.signIn')}
               </Link>
             )}
           </div>
@@ -141,24 +158,39 @@ export default function NavBar() {
                 onClick={() => setIsOpen(false)}
                 data-testid="mobile-nav-home"
               >
-                Home
+                {t('nav.home')}
               </Link>
-              <Link 
-                to="/createPost" 
-                className="block px-3 py-2 rounded-md text-base font-medium text-gray-300 hover:text-blue-400 hover:bg-white/5 transition-colors"
-                onClick={() => setIsOpen(false)}
-                data-testid="mobile-nav-create-post"
-              >
-                Create Post
-              </Link>
+              {username && (
+                <Link 
+                  to="/createPost" 
+                  className="block px-3 py-2 rounded-md text-base font-medium text-gray-300 hover:text-blue-400 hover:bg-white/5 transition-colors"
+                  onClick={() => setIsOpen(false)}
+                  data-testid="mobile-nav-create-post"
+                >
+                  {t('nav.createPost')}
+                </Link>
+              )}
               <Link 
                 to="/about" 
                 className="block px-3 py-2 rounded-md text-base font-medium text-gray-300 hover:text-blue-400 hover:bg-white/5 transition-colors"
                 onClick={() => setIsOpen(false)}
                 data-testid="mobile-nav-about"
               >
-                About
+                {t('nav.about')}
               </Link>
+
+              {/* Language Toggle */}
+              <button
+                onClick={() => {
+                  toggleLanguage();
+                  setIsOpen(false);
+                }}
+                className="block w-full text-left px-3 py-2 rounded-md text-base font-medium text-gray-300 hover:text-blue-400 hover:bg-white/5 transition-colors"
+                data-testid="mobile-language-toggle"
+              >
+                {language.toUpperCase()}
+              </button>
+
               {username ? (
                 <>
                   <div className="flex items-center space-x-2 px-3 py-2">
@@ -176,7 +208,7 @@ export default function NavBar() {
                     }}
                     className="block w-full text-left px-3 py-2 rounded-md text-base font-medium text-gray-300 hover:text-blue-400 hover:bg-white/5 transition-colors"
                   >
-                    Logout
+                    {t('nav.logout')}
                   </button>
                 </>
               ) : (
@@ -184,8 +216,9 @@ export default function NavBar() {
                   to="/login"
                   className="block px-3 py-2 rounded-md text-base font-medium text-gray-300 hover:text-blue-400 hover:bg-white/5 transition-colors"
                   onClick={() => setIsOpen(false)}
+                  data-testid="mobile-nav-login"
                 >
-                  Login
+                  {t('nav.signIn')}
                 </Link>
               )}
             </div>

@@ -2,12 +2,15 @@ import { describe, test, expect, vi, afterEach } from "vitest";
 import { render, fireEvent, cleanup } from "@testing-library/react";
 import { BrowserRouter } from 'react-router-dom';
 import NavBar from './NavBar';
+import { LanguageProvider } from '../../../contexts/LanguageContext';
 import '@testing-library/jest-dom/vitest';
 
 const renderWithRouter = (component: React.ReactElement) => {
   return render(
     <BrowserRouter>
+      <LanguageProvider> 
       {component}
+        </LanguageProvider> 
     </BrowserRouter>
   );
 };
@@ -36,7 +39,6 @@ describe("NavBar Component", () => {
     expect(desktopNav).toBeInTheDocument();
     
     expect(getByTestId("nav-home")).toHaveTextContent("Home");
-    expect(getByTestId("nav-create-post")).toHaveTextContent("Create Post");
     expect(getByTestId("nav-about")).toHaveTextContent("About");
   });
 

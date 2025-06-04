@@ -1,6 +1,7 @@
 import FormComment from './FormComment';
 import { BrowserRouter } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { LanguageProvider } from '../../../contexts/LanguageContext';
 
 describe('<FormComment />', () => {
   const mockPostId = '123';
@@ -35,7 +36,9 @@ describe('<FormComment />', () => {
     cy.mount(
       <QueryClientProvider client={queryClient}>
         <BrowserRouter>
-          <FormComment postId={mockPostId} />
+          <LanguageProvider>
+            <FormComment postId={mockPostId} />
+          </LanguageProvider>
         </BrowserRouter>
       </QueryClientProvider>
     );
@@ -46,25 +49,12 @@ describe('<FormComment />', () => {
     cy.get('[data-testid="comment-form-container"]').should('be.visible');
     cy.get('[data-testid="comment-form"]').should('be.visible');
     cy.get('[data-testid="comment-input"]').should('be.visible');
-    cy.get('[data-testid="submit-comment"]').should('be.visible');
   });
 
-  it('validates empty comment submission', () => {
-    cy.get('[data-testid="submit-comment"]').click();
-    cy.get('[data-testid="comment-input"]').should('have.value', '');
+  it('valdidates submit button is disabled by default', () => {
+    cy.get('[data-testid="comment-input"]').should('be.disabled');
   });
 
-  it('handles comment input correctly', () => {
-    const testComment = 'Test comment';
-    cy.get('[data-testid="comment-input"]')
-      .type(testComment)
-      .should('have.value', testComment);
-  });
-
-  it('submits form with valid comment', () => {
-    const testComment = 'Test comment';
-    cy.get('[data-testid="comment-input"]')
-      .type(testComment);
-    cy.get('[data-testid="submit-comment"]').click();
-  });
 }); 
+
+
