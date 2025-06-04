@@ -8,14 +8,23 @@ describe('<FormComment />', () => {
   // Create a new client for each test
   const queryClient = new QueryClient({
     defaultOptions: {
-      queries: { retry: false },
-      mutations: { retry: false }
+      queries: {
+        retry: false,
+        // Disable network requests
+        enabled: false
+      },
+      mutations: {
+        retry: false
+      }
     }
   });
 
   beforeEach(() => {
     // Reset query client before each test
     queryClient.clear();
+
+    // Set initial data to avoid loading state
+    queryClient.setQueryData(['comments', mockPostId], []);
 
     cy.mount(
       <QueryClientProvider client={queryClient}>
