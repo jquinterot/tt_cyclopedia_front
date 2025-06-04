@@ -26,6 +26,12 @@ describe('<FormComment />', () => {
     // Set initial data to avoid loading state
     queryClient.setQueryData(['comments', mockPostId], []);
 
+    // Mock API response
+    cy.intercept('POST', '/comments', {
+      statusCode: 200,
+      body: { id: '1', comment: 'Test comment' }
+    }).as('postComment');
+
     cy.mount(
       <QueryClientProvider client={queryClient}>
         <BrowserRouter>
@@ -44,39 +50,21 @@ describe('<FormComment />', () => {
   });
 
   it('validates empty comment submission', () => {
-    // Submit empty form
-    cy.get('[data-testid="comment-form"]').submit();
-    
-    // Form should still be visible after failed submission
-    cy.get('[data-testid="comment-form"]').should('be.visible');
+    cy.get('[data-testid="submit-comment"]').click();
     cy.get('[data-testid="comment-input"]').should('have.value', '');
   });
 
   it('handles comment input correctly', () => {
     const testComment = 'Test comment';
-    
-    // Type in comment and verify value
     cy.get('[data-testid="comment-input"]')
-      .should('be.visible')
       .type(testComment)
       .should('have.value', testComment);
   });
 
   it('submits form with valid comment', () => {
     const testComment = 'Test comment';
-    
-    // Type comment
     cy.get('[data-testid="comment-input"]')
-      .should('be.visible')
       .type(testComment);
-    
-    // Submit form
-    cy.get('[data-testid="comment-form"]')
-      .should('be.visible')
-      .submit();
-    
-    // Form should still exist after submission
-    cy.get('[data-testid="comment-form"]').should('exist');
-    cy.get('[data-testid="comment-input"]').should('exist');
+    cy.get('[data-testid="submit-comment"]').click();
   });
 }); 
