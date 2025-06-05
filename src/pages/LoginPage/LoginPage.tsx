@@ -16,7 +16,7 @@ function LoginPage() {
             ...prev,
             [name]: value
         }));
-        setError(""); // Clear error when user types
+        setError("");
     };
 
     const handleSubmit = (e: React.FormEvent) => {
