@@ -27,12 +27,6 @@ describe('<FormComment />', () => {
     // Set initial data to avoid loading state
     queryClient.setQueryData(['comments', mockPostId], []);
 
-    // Mock API response
-    cy.intercept('POST', '/comments', {
-      statusCode: 200,
-      body: { id: '1', comment: 'Test comment' }
-    }).as('postComment');
-
     cy.mount(
       <QueryClientProvider client={queryClient}>
         <BrowserRouter>
@@ -45,7 +39,6 @@ describe('<FormComment />', () => {
   });
 
   it('renders form elements correctly', () => {
-    // Check form structure
     cy.get('[data-testid="comment-form-container"]').should('be.visible');
     cy.get('[data-testid="comment-form"]').should('be.visible');
     cy.get('[data-testid="comment-input"]').should('be.visible');
