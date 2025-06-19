@@ -5,6 +5,7 @@ import Comments from "../Comments/Comments";
 import toast, { Toaster } from "react-hot-toast";
 import { Link } from "react-router-dom";
 import { useLanguage } from "../../../contexts/LanguageContext";
+import { useQueryClient } from "@tanstack/react-query";
 
 export default function FormComment({ postId }: { postId: string }) {
   const { mutateAsync: postComment } = usePostComment(postId);
@@ -12,6 +13,7 @@ export default function FormComment({ postId }: { postId: string }) {
   const inputRef = useRef<HTMLInputElement>(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const { t } = useLanguage();
+    const queryClient = useQueryClient();
 
   useEffect(() => {
     const authStatus = localStorage.getItem('isAuthenticated');
@@ -36,8 +38,10 @@ export default function FormComment({ postId }: { postId: string }) {
         comment,
         userId: "default_admin_id",
         postId,
+        username: "admin",
+        parentId: undefined, // Assuming no parent comment for top-level comments
       });
-      
+      queryClient.invalidateQueries({ queryKey: ["mainComments", postId] });
       toast.success("Comment added successfully");
       if (inputRef.current) inputRef.current.value = "";
     } catch (error) {
@@ -109,7 +113,7 @@ export default function FormComment({ postId }: { postId: string }) {
       {hasComments && (
         <div className="space-y-4" data-testid="comments-list-container">
           <h2 className="text-xl font-semibold" data-testid="comments-count">{t('comments.title')} ({comments.length})</h2>
-          <Comments comments={comments} postId={postId} />
+          <Comments postId={postId} />
         </div>
       )}
     </div>

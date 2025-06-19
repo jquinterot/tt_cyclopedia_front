@@ -4,4 +4,6 @@ export type Post = {
     content: string;
     image_url: string;
     likes:number;
+    timestamp?: string;
+    author?: string
 }

@@ -14,8 +14,8 @@ const CARD_STATS = {
 
 function StatBar({ label, value, color }: { label: string; value: number; color: string }) {
   return (
-    <div className="flex items-center gap-3 group">
-      <span className="text-xs font-medium text-gray-400 w-14 group-hover:text-white transition-colors">
+    <div className="flex items-center gap-3 group py-1">
+      <span className="text-xs font-medium text-gray-400 w-16 group-hover:text-white transition-colors">
         {label}
       </span>
       <div className="flex-1 h-3 bg-white/10 rounded-lg overflow-hidden backdrop-blur-sm border border-white/5">
@@ -27,7 +27,7 @@ function StatBar({ label, value, color }: { label: string; value: number; color:
           }}
         />
       </div>
-      <span className="text-xs font-medium text-gray-300 w-8 group-hover:text-white transition-colors">
+      <span className="text-xs font-medium text-gray-300 w-10 text-right group-hover:text-white transition-colors">
         {value.toFixed(1)}
       </span>
     </div>
@@ -59,9 +59,10 @@ export default function PostDetails() {
   );
 
   return (
-    <div className="max-w-4xl mx-auto px-4" data-testid="post-details-container">
+    <div className="w-full max-w-4xl mx-auto px-4 py-6" data-testid="post-details-container">
       <div className="space-y-8">
-        <div className="grid grid-cols-2 gap-8 mb-6">
+        <h1 className=" text-center text-5xl">{post.title}</h1>
+        <div className="rounded-xl bg-white/10 backdrop-blur-sm border border-white/10 grid grid-cols-1 sm:grid-cols-2 gap-8 mb-6">
           {/* Left: Image */}
           <div className="aspect-square w-full group relative overflow-hidden rounded-lg" data-testid="post-image-container">
             <img
@@ -74,8 +75,15 @@ export default function PostDetails() {
           </div>
 
           {/* Right: Stats */}
-          <div className="flex flex-col justify-center space-y-6" data-testid="post-stats-container">
-            <div className="space-y-4">
+          <div className="flex flex-col justify-center space-y-6 px-4 sm:px-0" data-testid="post-stats-container">
+            
+            <div className="p-4 space-y-4">
+              <h3
+                    className="text-base font-semibold text-white text-center "
+                    data-testid="stats-heading"
+                  >
+                    Stats
+                  </h3>
               <StatBar label="Speed" value={CARD_STATS.speed} color="bg-red-500" data-testid="stat-speed" />
               <StatBar label="Spin" value={CARD_STATS.spin} color="bg-green-500" data-testid="stat-spin" />
               <StatBar label="Control" value={CARD_STATS.control} color="bg-blue-500" data-testid="stat-control" />
@@ -85,13 +93,13 @@ export default function PostDetails() {
         </div>
 
         {/* Content */}
-        <div className="prose prose-invert max-w-none" data-testid="post-content">
-          <p className="text-gray-300 leading-relaxed whitespace-pre-wrap">{post.content}</p>
+        <div className="prose prose-invert max-w-none text-sm sm:text-base" data-testid="post-content">
+          <p className="text-gray-300 text-xl leading-relaxed whitespace-pre-wrap">{post.content}</p>
         </div>
       </div>
 
       {/* Comments Section */}
-      <div className="rounded-xl bg-white/10 backdrop-blur-sm border border-white/10 p-8" data-testid="comments-section">
+      <div className="mt-8 rounded-xl bg-white/10 backdrop-blur-sm border border-white/10 p-5" data-testid="comments-section">
         {id && <FormComment postId={id} />}
       </div>
     </div>

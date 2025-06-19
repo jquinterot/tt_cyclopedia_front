@@ -23,7 +23,7 @@ function LoginPage() {
         e.preventDefault();
         
         // Mock authentication
-        if (formData.username === "test" && formData.password === "test") {
+        if (formData.username === "admin" && formData.password === "admin") {
             toast.success("Successfully logged in!");
             localStorage.setItem("isAuthenticated", "true");
             navigate("/");

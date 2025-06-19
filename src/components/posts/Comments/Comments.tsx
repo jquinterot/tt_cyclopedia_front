@@ -2,59 +2,71 @@ import { Comment } from "../../../types/Comment";
 import UserInfo from "../UserInfo/UserInfo";
 import { useDeleteComment } from "../../../hooks/comments/useDeleteComment";
 import { usePostComment } from "../../../hooks/comments/usePostComments";
-import { useState, useRef } from "react";
+import { useMainComments } from "../../../hooks/comments/useMainComments";
+import { useReplyComments } from "../../../hooks/comments/useRepliedComments";
+import { useState, useRef, useCallback, memo } from "react";
+import { useQueryClient } from "@tanstack/react-query";
 import toast from "react-hot-toast";
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000';
-
-export default function Comments({
-  comments,
+const ReplyList = memo(function ReplyList({
+  parentId,
   postId,
+  onDeleteReply,
 }: {
-  comments: Comment[];
+  parentId: string;
   postId: string;
+  onDeleteReply: (replyId: string, parentId: string) => void;
 }) {
-  const { mutateAsync: deleteCommentMutation } = useDeleteComment(postId);
-  const { mutateAsync: postComment } = usePostComment(postId);
-  const [replyingTo, setReplyingTo] = useState<string | null>(null);
-  const replyInputRef = useRef<HTMLTextAreaElement>(null);
+  const { comments: replies = [] } = useReplyComments(postId, parentId);
+  if (!replies.length) return null;
+  return (
+    <div className="ml-6 mt-2 space-y-2">
+      {replies.map((reply) => (
+        <div key={reply.id} className="p-3 rounded bg-white/10 border border-white/10">
+          <div className="flex items-center justify-between">
+            <UserInfo userId={reply.user_id} />
+            <button
+              className="p-1 text-xs text-red-400 hover:text-red-300 hover:bg-white/5 rounded transition-colors"
+              onClick={() => onDeleteReply(reply.id, parentId)}
+              data-testid={`delete-reply-button-${reply.id}`}
+            >
+              Delete
+            </button>
+          </div>
+          <div className="mt-1 text-gray-300">{reply.comment}</div>
+        </div>
+      ))}
+    </div>
+  );
+});
 
-  const handleDeleteComment = async (commentId: string) => {
-    try {
-      await deleteCommentMutation(commentId);
-      toast.success("Comment deleted successfully");
-    } catch (error) {
-      toast.error("Failed to delete comment");
-    }
-  };
-
-  const handleReply = async (parentId: string) => {
-    const replyText = replyInputRef.current?.value.trim() || "";
-    
-    if (!replyText) {
-      toast.error("Please enter a reply");
-      return;
-    }
-
-    try {
-      await postComment({
-        comment: replyText,
-        userId: "default_admin_id",
-        postId,
-        parentId
-      });
-      toast.success("Reply added successfully");
-      if (replyInputRef.current) replyInputRef.current.value = "";
-      setReplyingTo(null);
-    } catch (error) {
-      toast.error("Failed to add reply");
-    }
-  };
-
-  const CommentItem = ({ comment }: { comment: Comment }) => (
+const CommentItem = memo(function CommentItem({
+  comment,
+  replyingTo,
+  replyText,
+  setReplyText,
+  setReplyingTo,
+  setReplyInputRef,
+  handleReply,
+  handleDeleteComment,
+  postId,
+  handleDeleteReply,
+}: {
+  comment: Comment;
+  replyingTo: string | null;
+  replyText: { [key: string]: string };
+  setReplyText: React.Dispatch<React.SetStateAction<{ [key: string]: string }>>;
+  setReplyingTo: React.Dispatch<React.SetStateAction<string | null>>;
+  setReplyInputRef: (commentId: string) => (el: HTMLTextAreaElement | null) => void;
+  handleReply: (parentId: string) => void;
+  handleDeleteComment: (commentId: string) => void;
+  postId: string;
+  handleDeleteReply: (replyId: string, parentId: string) => void;
+}) {
+  return (
     <div className="mb-4 p-4 rounded-lg bg-white/5 border border-white/10" data-testid={`comment-${comment.id}`}>
       <div className="flex items-center justify-between">
-        <UserInfo />
+        <UserInfo userId={comment.user_id} />
         <div className="flex items-center space-x-2">
           <button
             className="p-1.5 text-sm text-blue-400 hover:text-blue-300 hover:bg-white/5 rounded-md transition-colors"
@@ -72,24 +84,17 @@ export default function Comments({
           </button>
         </div>
       </div>
-      
       <div className="mt-2">
         <p className="text-gray-300" data-testid={`comment-text-${comment.id}`}>{comment.comment}</p>
       </div>
-
-      <div className="mt-2 flex items-center space-x-0">
-        <span className="text-sm text-gray-300" data-testid={`likes-count-${comment.id}`}>{comment.likes || 0}</span>
-        <button className="p-2 rounded-full hover:bg-white/5 transition-colors" data-testid={`like-button-${comment.id}`}>
-          <svg className="h-5 w-5 text-blue-500" fill="currentColor" viewBox="0 0 24 24">
-            <path d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
-          </svg>
-        </button>
-      </div>
-      
       {replyingTo === comment.id && (
         <div className="mt-4 space-y-3" data-testid={`reply-form-${comment.id}`}>
           <textarea
-            ref={replyInputRef}
+            ref={setReplyInputRef(comment.id)}
+            value={replyText[comment.id] || ""}
+            onChange={(e) =>
+              setReplyText((prev) => ({ ...prev, [comment.id]: e.target.value }))
+            }
             onKeyDown={(e) => {
               if (e.key === 'Enter' && !e.shiftKey) {
                 e.preventDefault();
@@ -99,7 +104,6 @@ export default function Comments({
             className="w-full px-3 py-2 bg-white/5 border border-white/10 rounded-md text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors resize-none"
             placeholder="Write your reply..."
             rows={2}
-            autoFocus
             data-testid={`reply-input-${comment.id}`}
           />
           <div className="flex justify-end space-x-2">
@@ -107,7 +111,7 @@ export default function Comments({
               className="px-3 py-1.5 text-sm text-gray-300 hover:text-white hover:bg-white/5 rounded-md transition-colors"
               onClick={() => {
                 setReplyingTo(null);
-                if (replyInputRef.current) replyInputRef.current.value = "";
+                setReplyText((prev) => ({ ...prev, [comment.id]: "" }));
               }}
               data-testid={`cancel-reply-${comment.id}`}
             >
@@ -123,13 +127,113 @@ export default function Comments({
           </div>
         </div>
       )}
+      {/* Render replies */}
+      <ReplyList
+        parentId={comment.id}
+        postId={postId}
+        onDeleteReply={handleDeleteReply}
+      />
     </div>
   );
+});
+
+export default function Comments({ postId }: { postId: string }) {
+  const queryClient = useQueryClient();
+  const { mainComments, isLoading, error } = useMainComments(postId);
+  const { mutateAsync: deleteCommentMutation } = useDeleteComment(postId);
+  const { mutateAsync: postComment } = usePostComment(postId);
+  const [replyingTo, setReplyingTo] = useState<string | null>(null);
+  const [replyText, setReplyText] = useState<{ [key: string]: string }>({});
+  const replyInputRefs = useRef<{ [key: string]: HTMLTextAreaElement | null }>({});
+
+  const setReplyInputRef = useCallback(
+    (commentId: string) => (el: HTMLTextAreaElement | null) => {
+      replyInputRefs.current[commentId] = el;
+      if (replyingTo === commentId && el) {
+        el.focus();
+        const val = el.value;
+        el.value = "";
+        el.value = val;
+      }
+    },
+    [replyingTo]
+  );
+
+  const handleDeleteComment = useCallback(async (commentId: string) => {
+    queryClient.setQueryData(['mainComments', postId], (old: Comment[] | undefined) =>
+      old ? old.filter(comment => comment.id !== commentId) : []
+    );
+    try {
+      await deleteCommentMutation(commentId);
+      toast.success("Comment deleted successfully");
+      queryClient.invalidateQueries({ queryKey: ["mainComments", postId] });
+    } catch (error) {
+      toast.error("Failed to delete comment");
+      queryClient.invalidateQueries({ queryKey: ["mainComments", postId] });
+    }
+  }, [deleteCommentMutation, postId, queryClient]);
+
+  const handleDeleteReply = useCallback(async (replyId: string, parentId: string) => {
+    queryClient.setQueryData(['repliedComments', postId, parentId], (old: Comment[] | undefined) =>
+      old ? old.filter(reply => reply.id !== replyId) : []
+    );
+    try {
+      await deleteCommentMutation(replyId);
+      toast.success("Reply deleted successfully");
+      queryClient.invalidateQueries({ queryKey: ["repliedComments", postId, parentId] });
+    } catch (error) {
+      toast.error("Failed to delete reply");
+      queryClient.invalidateQueries({ queryKey: ["repliedComments", postId, parentId] });
+    }
+  }, [deleteCommentMutation, postId, queryClient]);
+
+  const handleReply = useCallback(async (parentId: string) => {
+    const text = replyText[parentId]?.trim() || "";
+    if (!text) {
+      toast.error("Please enter a reply");
+      return;
+    }
+    try {
+      // Use the current user info for the reply (replace with your auth logic if needed)
+      const userId = "default_admin_id";
+      const username = "admin";
+      await postComment({
+        comment: text,
+        userId,
+        username,
+        postId,
+        parentId,
+      });
+
+      queryClient.invalidateQueries({ queryKey: ["mainComments", postId] });
+      toast.success("Reply added successfully");
+      setReplyText((prev) => ({ ...prev, [parentId]: "" }));
+      setReplyingTo(null);
+      queryClient.invalidateQueries({ queryKey: ["repliedComments", postId, parentId] });
+    } catch (error) {
+      toast.error("Failed to add reply");
+    }
+  }, [postComment, postId, replyText, queryClient]);
+
+  if (isLoading) return <div>Loading comments...</div>;
+  if (error) return <div className="text-red-400">Error loading comments</div>;
 
   return (
     <div className="space-y-4" data-testid="comments-list">
-      {comments.map((comment) => (
-        <CommentItem key={comment.id} comment={comment} />
+      {(mainComments || []).map((mainComment) => (
+        <CommentItem
+          key={mainComment.id}
+          comment={mainComment}
+          replyingTo={replyingTo}
+          replyText={replyText}
+          setReplyText={setReplyText}
+          setReplyingTo={setReplyingTo}
+          setReplyInputRef={setReplyInputRef}
+          handleReply={handleReply}
+          handleDeleteComment={handleDeleteComment}
+          postId={postId}
+          handleDeleteReply={handleDeleteReply}
+        />
       ))}
     </div>
   );

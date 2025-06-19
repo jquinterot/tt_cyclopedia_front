@@ -2,6 +2,7 @@ import toast, { Toaster } from "react-hot-toast";
 import { usePostPost } from "../../../hooks/posts/usePostPosts";
 import { useRef } from "react";
 import { useNavigate } from "react-router-dom";
+import { useQueryClient } from "@tanstack/react-query";
 
 export default function CreatePostForm() {
   const { mutateAsync: createPost, isError, isPending } = usePostPost();
@@ -10,6 +11,7 @@ export default function CreatePostForm() {
   const inputContentRef = useRef<HTMLTextAreaElement>(null);
   const inputImageRef = useRef<HTMLInputElement>(null);
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
 
   const handleAddPost = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -32,11 +34,15 @@ export default function CreatePostForm() {
       const formData = new FormData();
       formData.append('title', title);
       formData.append('content', content);
-      if (imageFile) {
+      formData.append('author', 'Admin'); // Replace with actual user ID if available
+      console.log("Creating post with image:", imageFile);
+      if (imageFile != undefined) {
         formData.append('image', imageFile);
       }
-
+      console.log("Form data prepared:", formData.get('title'), formData.get('content'), formData.get('image'));
       await createPost({ formData });
+      // Invalidate main comments so new post appears immediately
+      queryClient.invalidateQueries({ queryKey: ["mainComments"] });
       toast.success("Post successfully created!");
       formRef.current?.reset();
       navigate("/");

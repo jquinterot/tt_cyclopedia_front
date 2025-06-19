@@ -7,4 +7,6 @@ export type Comment = {
     replies?: Comment[];
     created_at?: string;
     likes?: number;
+    username:string
+    timestamp: string;
 }
