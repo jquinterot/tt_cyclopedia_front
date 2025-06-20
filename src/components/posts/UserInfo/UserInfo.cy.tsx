@@ -2,6 +2,6 @@ import UserInfo from './UserInfo'
 
 describe('<UserInfo />', () => {
   it('renders', () => {
-    cy.mount(<UserInfo />)
+    cy.mount(<UserInfo userId="test-user-id" />)
   })
 })

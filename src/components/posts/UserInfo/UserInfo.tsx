@@ -17,7 +17,6 @@ const UserInfo = ({ userId }: UserInfoProps) => {
     <section className="flex justify-start items-center" data-testid="user-info">
       <img
         className="h-8 w-8 mr-2"
-        src={user.avatarUrl || "https://static.vecteezy.com/system/resources/thumbnails/008/442/086/small_2x/illustration-of-human-icon-user-symbol-icon-modern-design-on-blank-background-free-vector.jpg"}
         alt="User avatar"
         data-testid="user-avatar"
       />
@@ -28,4 +27,5 @@ const UserInfo = ({ userId }: UserInfoProps) => {
   );
 };
 
-export default React.memo(UserInfo);
+const MemoizedUserInfo = React.memo(UserInfo);
+export default MemoizedUserInfo;

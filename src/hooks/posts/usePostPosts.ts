@@ -2,11 +2,13 @@ import { Post } from "../../types/Post";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { apiClient } from "../../config/apiClient";
 
+type OptimisticContext = { previousPosts?: Post[] };
+
 export const usePostPost = () => {
   const queryClient = useQueryClient();
 
-  return useMutation({
-    mutationFn: async ({ formData }: { formData: FormData }) => {
+  return useMutation<Post, unknown, { formData: FormData }, OptimisticContext>({
+    mutationFn: async ({ formData }) => {
       const response = await apiClient.post<Post>('/posts', formData, {
         headers: {
           'Content-Type': 'multipart/form-data'
@@ -15,13 +17,8 @@ export const usePostPost = () => {
       return response.data;
     },
     onMutate: async ({ formData }) => {
-      // Cancel any outgoing refetches
       await queryClient.cancelQueries({ queryKey: ['posts'] });
-
-      // Get the current posts
       const previousPosts = queryClient.getQueryData<Post[]>(['posts']) || [];
-
-      // Handle optional image for optimistic post
       const imageFile = formData.get('image');
       const optimisticPost: Post = {
         id: 'temp-' + Date.now(),
@@ -31,22 +28,17 @@ export const usePostPost = () => {
         likes: 0,
         author: formData.get('author') as string,
       };
-
-      // Add optimistic post to posts list
       queryClient.setQueryData<Post[]>(['posts'], old => {
         return old ? [optimisticPost, ...old] : [optimisticPost];
       });
-
       return { previousPosts };
     },
-    onError: (err, variables, context) => {
-      // If the mutation fails, use the context returned from onMutate to roll back
+    onError: (_error, _variables, context) => {
       if (context?.previousPosts) {
         queryClient.setQueryData(['posts'], context.previousPosts);
       }
     },
     onSettled: () => {
-      // Always refetch after error or success to sync with server
       queryClient.invalidateQueries({ queryKey: ['posts'] });
     },
   });
