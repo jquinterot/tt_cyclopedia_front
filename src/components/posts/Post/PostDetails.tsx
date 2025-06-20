@@ -42,7 +42,7 @@ export default function PostDetails() {
     if (id) {
       updatePostId(id);
     }
-  }, [id]);
+  }, [id, updatePostId]);
 
   const { post, error } = usePostById(postId);
 
