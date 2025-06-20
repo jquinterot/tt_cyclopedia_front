@@ -22,5 +22,12 @@
     "noFallthroughCasesInSwitch": true
   },
   "include": ["src", "cypress"],
-  "references": [{ "path": "./tsconfig.node.json" }]
+  "references": [{ "path": "./tsconfig.node.json" }],
+  "exclude": [
+    "cypress",
+    "**/*.cy.ts",
+    "**/*.cy.tsx",
+    "**/*.spec.ts",
+    "**/*.spec.tsx"
+  ]
 }
