@@ -1,7 +1,10 @@
+/* eslint-disable react-refresh/only-export-components */
+/* eslint-disable @typescript-eslint/no-namespace */
 import './commands';
 import { mount } from 'cypress/react18';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactNode } from 'react';
+import type { MountOptions } from 'cypress/react18';
 
 // Create a new query client instance for tests
 const testQueryClient = new QueryClient({
@@ -22,13 +25,15 @@ const WithProviders = ({ children }: { children: ReactNode }) => (
 declare global {
   namespace Cypress {
     interface Chainable {
-      mount: typeof customMount; // Updated to use customMount
+      mount: typeof mount; // Updated to use customMount
     }
   }
 }
 
 // Custom mount command with provider wrapping
-const customMount = (component: React.ReactNode, options?: any) => {
+
+
+const customMount = (component: React.ReactNode, options?: MountOptions) => {
   return mount(<WithProviders>{component}</WithProviders>, options);
 };
 
