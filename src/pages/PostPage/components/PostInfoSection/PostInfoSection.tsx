@@ -1,4 +1,4 @@
-import { useLikes } from "../../../states/useCommentsState";
+import { useLikes } from "../../../../states/useCommentsState";
 import likeIcon from "../../../assets/like.png";
 
 // LikeIcon.tsx

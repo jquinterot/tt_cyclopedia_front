@@ -1,12 +1,12 @@
 import { useRef, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { useComments } from "../../../hooks/comments/useComments";
-import { usePostComment } from "../../../hooks/comments/usePostComments";
-import { useLanguage } from "../../../contexts/LanguageContext";
+import { useComments } from "../../../../hooks/comments/useComments";
+import { usePostComment } from "../../../../hooks/comments/usePostComments";
+import { useLanguage } from "../../../../contexts/LanguageContext";
 import { useQueryClient } from "@tanstack/react-query";
 import toast, { Toaster } from "react-hot-toast";
-import Comments from "../Comments/Comments";
-import type { Comment } from "../../../types/Comment";
+import Comments from "../CommentsSection/CommentsSection";
+import type { Comment } from "../../../../types/Comment";
 
 type TFunction = (key: string) => string;
 

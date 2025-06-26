@@ -1,7 +1,7 @@
 import { describe, test, expect } from "vitest";
 import { render, screen } from "@testing-library/react";
 import '@testing-library/jest-dom/vitest';
-import PostDetails from "./PostDetails";
+import PostDetails from "./PostDetailsSection";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter } from "react-router-dom";
 

@@ -1,6 +1,6 @@
 import React from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import Comments from "./Comments";
+import Comments from "./CommentsSection";
 
 const queryClient = new QueryClient();
 

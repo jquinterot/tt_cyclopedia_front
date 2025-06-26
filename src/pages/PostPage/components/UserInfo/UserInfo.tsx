@@ -1,5 +1,5 @@
 import React from "react";
-import { useUser } from "../../../hooks/users/useUser";
+import { useUser } from "../../../../hooks/users/useUser";
 
 interface UserInfoProps {
   userId: string;

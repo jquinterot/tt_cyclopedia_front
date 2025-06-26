@@ -1,8 +1,8 @@
 import { useEffect } from "react";
 import { useParams } from "react-router-dom";
-import { usePostById } from "../../../hooks/posts/usePostById";
-import { usePostId } from "../../../hooks/usePostId";
-import FormComment from "../FormComment/FormComment";
+import { usePostById } from "../../../../../src/hooks/posts/usePostById";
+import { usePostId } from "../../../../../src/hooks/usePostId";
+import FormComment from "../FormCommentSection/FormCommentSection";
 
 // Static stats for all posts
 const CARD_STATS = {

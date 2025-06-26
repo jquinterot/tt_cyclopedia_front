@@ -1,6 +1,6 @@
 import NavBar from '../../components/shared/NavBar/NavBar';
 import Footer from '../../components/shared/Footer/Footer';
-import PostDetails from '../../components/posts/Post/PostDetails';
+import PostDetails from './components/PostDetailsSection/PostDetailsSection';
 
 function PostPage() {
   return (

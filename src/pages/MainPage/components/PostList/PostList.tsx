@@ -1,4 +1,4 @@
-import { usePosts } from "../../../hooks/posts/usePosts";
+import { usePosts } from "../../../../../src/hooks/posts/usePosts";
 import { useNavigate } from "react-router-dom";
 import { useState, useMemo } from "react";
 
