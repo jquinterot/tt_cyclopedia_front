@@ -1,13 +1,34 @@
 import React from "react";
 import { useUser } from "../../../hooks/users/useUser";
 
-
-
 interface UserInfoProps {
   userId: string;
 }
 
-const UserInfo = ({ userId }: UserInfoProps) => {
+function UserAvatar() {
+  return (
+    <img
+      className="h-8 w-8 mr-2"
+      alt="User avatar"
+      data-testid="user-avatar"
+    />
+  );
+}
+
+interface UserDetailsProps {
+  id: string;
+  username: string;
+}
+
+function UserDetails({ id, username }: UserDetailsProps) {
+  return (
+    <div className="mb-2" data-testid={`user-details-${id}`}>
+      <p className="" data-testid={`username-${id}`}>{username}</p>
+    </div>
+  );
+}
+
+function UserInfo({ userId }: UserInfoProps) {
   const { user, isLoading, error } = useUser(userId);
 
   if (isLoading) return <div>Loading...</div>;
@@ -15,17 +36,10 @@ const UserInfo = ({ userId }: UserInfoProps) => {
 
   return (
     <section className="flex justify-start items-center" data-testid="user-info">
-      <img
-        className="h-8 w-8 mr-2"
-        alt="User avatar"
-        data-testid="user-avatar"
-      />
-      <div className="mb-2" data-testid={`user-details-${user.id}`}>
-        <p className="" data-testid={`username-${user.id}`}>{user.username}</p>
-      </div>
+      <UserAvatar />
+      <UserDetails id={user.id} username={user.username} />
     </section>
   );
-};
+}
 
-const MemoizedUserInfo = React.memo(UserInfo);
-export default MemoizedUserInfo;
+export default React.memo(UserInfo);

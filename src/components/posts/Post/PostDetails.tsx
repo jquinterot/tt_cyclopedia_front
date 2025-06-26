@@ -4,7 +4,7 @@ import { usePostById } from "../../../hooks/posts/usePostById";
 import { usePostId } from "../../../hooks/usePostId";
 import FormComment from "../FormComment/FormComment";
 
-// Static stats that will be same for all posts
+// Static stats for all posts
 const CARD_STATS = {
   speed: 7.5,
   spin: 8.2,
@@ -34,6 +34,60 @@ function StatBar({ label, value, color }: { label: string; value: number; color:
   );
 }
 
+function PostImage({ src, alt }: { src: string; alt: string }) {
+  return (
+    <div className="aspect-square w-full group relative overflow-hidden rounded-lg" data-testid="post-image-container">
+      <img
+        className="w-full h-full object-cover transition-transform duration-500 ease-in-out group-hover:scale-110"
+        src={src}
+        alt={alt}
+        data-testid="post-image"
+      />
+      <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+    </div>
+  );
+}
+
+function PostStats() {
+  return (
+    <div className="flex flex-col justify-center space-y-6 px-4 sm:px-0" data-testid="post-stats-container">
+      <div className="p-4 space-y-4">
+        <h3 className="text-base font-semibold text-white text-center" data-testid="stats-heading">
+          Stats
+        </h3>
+        <StatBar label="Speed" value={CARD_STATS.speed} color="bg-red-500" />
+        <StatBar label="Spin" value={CARD_STATS.spin} color="bg-green-500" />
+        <StatBar label="Control" value={CARD_STATS.control} color="bg-blue-500" />
+        <StatBar label="Overall" value={CARD_STATS.overall} color="bg-purple-500" />
+      </div>
+    </div>
+  );
+}
+
+function PostContent({ content }: { content: string }) {
+  return (
+    <div className="prose prose-invert max-w-none text-sm sm:text-base" data-testid="post-content">
+      <p className="text-gray-300 text-xl leading-relaxed whitespace-pre-wrap">{content}</p>
+    </div>
+  );
+}
+
+function LoadingSpinner() {
+  return (
+    <div className="flex justify-center items-center h-64">
+      <div data-testid="loading-spinner" className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+    </div>
+  );
+}
+
+function ErrorMessage() {
+  return (
+    <div className="w-full max-w-4xl text-center p-8 rounded-xl bg-white/10 backdrop-blur-sm border border-white/10">
+      <p className="text-red-400">Error getting the post by Id</p>
+    </div>
+  );
+}
+
 export default function PostDetails() {
   const { id } = useParams();
   const { postId, updatePostId } = usePostId();
@@ -46,59 +100,19 @@ export default function PostDetails() {
 
   const { post, error } = usePostById(postId);
 
-  if (error) return (
-    <div className="w-full max-w-4xl text-center p-8 rounded-xl bg-white/10 backdrop-blur-sm border border-white/10">
-      <p className="text-red-400">Error getting the post by Id</p>
-    </div>
-  );
-  
-  if (!post) return (
-    <div className="flex justify-center items-center h-64">
-      <div data-testid="loading-spinner" className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
-    </div>
-  );
+  if (error) return <ErrorMessage />;
+  if (!post) return <LoadingSpinner />;
 
   return (
     <div className="w-full max-w-4xl mx-auto px-4 py-6" data-testid="post-details-container">
       <div className="space-y-8">
-        <h1 className=" text-center text-5xl">{post.title}</h1>
+        <h1 className="text-center text-5xl">{post.title}</h1>
         <div className="rounded-xl bg-white/10 backdrop-blur-sm border border-white/10 grid grid-cols-1 sm:grid-cols-2 gap-8 mb-6">
-          {/* Left: Image */}
-          <div className="aspect-square w-full group relative overflow-hidden rounded-lg" data-testid="post-image-container">
-            <img
-              className="w-full h-full object-cover transition-transform duration-500 ease-in-out group-hover:scale-110"
-              src={`${import.meta.env.VITE_API_BASE_URL}${post.image_url}`}
-              alt={post.title}
-              data-testid="post-image"
-            />
-            <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-          </div>
-
-          {/* Right: Stats */}
-          <div className="flex flex-col justify-center space-y-6 px-4 sm:px-0" data-testid="post-stats-container">
-            
-            <div className="p-4 space-y-4">
-              <h3
-                    className="text-base font-semibold text-white text-center "
-                    data-testid="stats-heading"
-                  >
-                    Stats
-                  </h3>
-              <StatBar label="Speed" value={CARD_STATS.speed} color="bg-red-500" data-testid="stat-speed" />
-              <StatBar label="Spin" value={CARD_STATS.spin} color="bg-green-500" data-testid="stat-spin" />
-              <StatBar label="Control" value={CARD_STATS.control} color="bg-blue-500" data-testid="stat-control" />
-              <StatBar label="Overall" value={CARD_STATS.overall} color="bg-purple-500" data-testid="stat-overall" />
-            </div>
-          </div>
+          <PostImage src={`${import.meta.env.VITE_API_BASE_URL}${post.image_url}`} alt={post.title} />
+          <PostStats />
         </div>
-
-        {/* Content */}
-        <div className="prose prose-invert max-w-none text-sm sm:text-base" data-testid="post-content">
-          <p className="text-gray-300 text-xl leading-relaxed whitespace-pre-wrap">{post.content}</p>
-        </div>
+        <PostContent content={post.content} />
       </div>
-
-      {/* Comments Section */}
       <div className="mt-8 rounded-xl bg-white/10 backdrop-blur-sm border border-white/10 p-5" data-testid="comments-section">
         {id && <FormComment postId={id} />}
       </div>

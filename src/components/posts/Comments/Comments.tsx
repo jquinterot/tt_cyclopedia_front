@@ -1,22 +1,40 @@
-import { Comment } from "../../../types/Comment";
+import { useState, useRef, useCallback, memo } from "react";
+import { useQueryClient } from "@tanstack/react-query";
+import toast from "react-hot-toast";
 import UserInfo from "../UserInfo/UserInfo";
 import { useDeleteComment } from "../../../hooks/comments/useDeleteComment";
 import { usePostComment } from "../../../hooks/comments/usePostComments";
 import { useMainComments } from "../../../hooks/comments/useMainComments";
 import { useReplyComments } from "../../../hooks/comments/useRepliedComments";
-import { useState, useRef, useCallback, memo } from "react";
-import { useQueryClient } from "@tanstack/react-query";
-import toast from "react-hot-toast";
+import type { Comment } from "../../../types/Comment";
 
-const ReplyList = memo(function ReplyList({
-  parentId,
-  postId,
-  onDeleteReply,
-}: {
+// --- Types ---
+type ReplyListProps = {
   parentId: string;
   postId: string;
   onDeleteReply: (replyId: string, parentId: string) => void;
-}) {
+};
+
+type CommentItemProps = {
+  comment: Comment;
+  replyingTo: string | null;
+  replyText: Record<string, string>;
+  setReplyText: React.Dispatch<React.SetStateAction<Record<string, string>>>;
+  setReplyingTo: React.Dispatch<React.SetStateAction<string | null>>;
+  setReplyInputRef: (commentId: string) => (el: HTMLTextAreaElement | null) => void;
+  handleReply: (parentId: string) => void;
+  handleDeleteComment: (commentId: string) => void;
+  postId: string;
+  handleDeleteReply: (replyId: string, parentId: string) => void;
+};
+
+// --- Components ---
+
+export const ReplyList = memo(function ReplyList({
+  parentId,
+  postId,
+  onDeleteReply,
+}: ReplyListProps) {
   const { comments: replies = [] } = useReplyComments(postId, parentId);
   if (!replies.length) return null;
   return (
@@ -40,7 +58,7 @@ const ReplyList = memo(function ReplyList({
   );
 });
 
-const CommentItem = memo(function CommentItem({
+export const CommentItem = memo(function CommentItem({
   comment,
   replyingTo,
   replyText,
@@ -51,18 +69,7 @@ const CommentItem = memo(function CommentItem({
   handleDeleteComment,
   postId,
   handleDeleteReply,
-}: {
-  comment: Comment;
-  replyingTo: string | null;
-  replyText: { [key: string]: string };
-  setReplyText: React.Dispatch<React.SetStateAction<{ [key: string]: string }>>;
-  setReplyingTo: React.Dispatch<React.SetStateAction<string | null>>;
-  setReplyInputRef: (commentId: string) => (el: HTMLTextAreaElement | null) => void;
-  handleReply: (parentId: string) => void;
-  handleDeleteComment: (commentId: string) => void;
-  postId: string;
-  handleDeleteReply: (replyId: string, parentId: string) => void;
-}) {
+}: CommentItemProps) {
   return (
     <div className="mb-4 p-4 rounded-lg bg-white/5 border border-white/10" data-testid={`comment-${comment.id}`}>
       <div className="flex items-center justify-between">
@@ -127,7 +134,6 @@ const CommentItem = memo(function CommentItem({
           </div>
         </div>
       )}
-      {/* Render replies */}
       <ReplyList
         parentId={comment.id}
         postId={postId}
@@ -143,8 +149,8 @@ export default function Comments({ postId }: { postId: string }) {
   const { mutateAsync: deleteCommentMutation } = useDeleteComment(postId);
   const { mutateAsync: postComment } = usePostComment(postId);
   const [replyingTo, setReplyingTo] = useState<string | null>(null);
-  const [replyText, setReplyText] = useState<{ [key: string]: string }>({});
-  const replyInputRefs = useRef<{ [key: string]: HTMLTextAreaElement | null }>({});
+  const [replyText, setReplyText] = useState<Record<string, string>>({});
+  const replyInputRefs = useRef<Record<string, HTMLTextAreaElement | null>>({});
 
   const setReplyInputRef = useCallback(
     (commentId: string) => (el: HTMLTextAreaElement | null) => {
@@ -194,7 +200,6 @@ export default function Comments({ postId }: { postId: string }) {
       return;
     }
     try {
-      // Use the current user info for the reply (replace with your auth logic if needed)
       const userId = "default_admin_id";
       const username = "admin";
       await postComment({
