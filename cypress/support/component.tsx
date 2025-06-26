@@ -5,6 +5,8 @@ import { mount } from 'cypress/react18';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactNode } from 'react';
 import type { MountOptions } from 'cypress/react18';
+import '../../../../../cypress/support/component';
+import React from 'react';
 
 // Create a new query client instance for tests
 const testQueryClient = new QueryClient({
