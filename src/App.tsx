@@ -3,7 +3,7 @@ import MainPage from "./pages/MainPage/MainPage";
 import PostPage from "./pages/PostPage/PostPage";
 import AboutPage from "./pages/AboutPage/About";
 import LoginPage from "./pages/LoginPage/LoginPage";
-import CreatePostPage from "./pages/AddPostPage/CreatePostPage";
+import CreatePostPage from "./pages/CreatePostPage/CreatePostPage";
 import SignupPage from "./pages/SignupPage/SignupPage";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { LanguageProvider } from "./contexts/LanguageContext";

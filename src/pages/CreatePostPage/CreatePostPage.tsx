@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import NavBar from '../../components/shared/NavBar/NavBar';
 import Footer from '../../components/shared/Footer/Footer';
-import CreatePostForm from '../../components/createPost/CreatePostForm/CreatePostForm';
+import CreatePostForm from './components/CreatePostForm/CreatePostForm';
 
 function CreatePostPage() {
   const navigate = useNavigate();

@@ -6,7 +6,7 @@ import "@testing-library/jest-dom/vitest";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 // Mock the useMainComments hook to avoid API calls
-vi.mock("../../../hooks/comments/useMainComments", () => ({
+vi.mock("../../../../hooks/comments/useMainComments", () => ({
   useMainComments: (postId: string) => ({
     mainComments: [
       {
@@ -24,19 +24,40 @@ vi.mock("../../../hooks/comments/useMainComments", () => ({
   }),
 }));
 
+// Mock the mutation hooks
+vi.mock("../../../../hooks/comments/useDeleteComment", () => ({
+  useDeleteComment: () => ({
+    mutateAsync: vi.fn(),
+  }),
+}));
+
+vi.mock("../../../../hooks/comments/usePostComments", () => ({
+  usePostComment: () => ({
+    mutateAsync: vi.fn(),
+  }),
+}));
+
 // Mock UserInfo to avoid user API calls
 vi.mock("../UserInfo/UserInfo", () => ({
   default: ({ userId }: { userId: string }) => <span data-testid={`user-info-${userId}`}>{userId}</span>,
 }));
 
 // Mock useReplyComments to avoid API calls for replies
-vi.mock("../../../hooks/comments/useRepliedComments", () => ({
+vi.mock("../../../../hooks/comments/useRepliedComments", () => ({
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   useReplyComments: () => ({
     comments: [],
     isLoading: false,
     error: null,
   }),
+}));
+
+// Mock toast to avoid toast notifications in tests
+vi.mock("react-hot-toast", () => ({
+  default: {
+    success: vi.fn(),
+    error: vi.fn(),
+  },
 }));
 
 const queryClient = new QueryClient({
