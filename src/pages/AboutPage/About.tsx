@@ -1,2 +1,2 @@
-import MainComponent from "./MainComponent/MainComponent";
+import MainComponent from "./MainComponent";
 export default MainComponent;

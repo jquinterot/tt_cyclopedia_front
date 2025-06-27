@@ -1,9 +1,9 @@
-import NavBar from "../../../components/shared/NavBar/NavBar";
-import Footer from "../../../components/shared/Footer/Footer";
-import AboutTitle from "../components/AboutTitle/AboutTitle";
-import AboutDescription from "../components/AboutDescription/AboutDescription";
-import MissionSection from "../components/MissionSection/MissionSection";
-import FeaturesSection from "../components/FeaturesSection/FeaturesSection";
+import NavBar from "../../components/shared/NavBar/NavBar";
+import Footer from "../../components/shared/Footer/Footer";
+import AboutTitle from "./components/AboutTitle/AboutTitle";
+import AboutDescription from "./components/AboutDescription/AboutDescription";
+import MissionSection from "./components/MissionSection/MissionSection";
+import FeaturesSection from "./components/FeaturesSection/FeaturesSection";
 
 export default function MainComponent() {
   return (

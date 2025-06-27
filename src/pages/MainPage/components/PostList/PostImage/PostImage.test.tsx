@@ -2,7 +2,6 @@ import { describe, test, expect } from "vitest";
 import { render, screen } from "@testing-library/react";
 import "@testing-library/jest-dom/vitest";
 import PostImage from "./PostImage";
-import React from "react";
 
 describe("PostImage Component", () => {
   test("renders image with correct attributes", () => {

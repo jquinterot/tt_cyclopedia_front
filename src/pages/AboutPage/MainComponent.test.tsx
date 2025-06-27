@@ -2,7 +2,7 @@ import { render, screen } from "@testing-library/react";
 import "@testing-library/jest-dom/vitest";
 import MainComponent from "./MainComponent";
 import React from "react";
-import { LanguageProvider } from "../../../contexts/LanguageContext";
+import { LanguageProvider } from "../../contexts/LanguageContext";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter } from "react-router-dom";
 

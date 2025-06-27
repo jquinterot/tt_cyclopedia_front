@@ -2,7 +2,6 @@ import { describe, test, expect, vi } from "vitest";
 import { render, screen, fireEvent } from "@testing-library/react";
 import "@testing-library/jest-dom/vitest";
 import PostCard from "./PostCard";
-import React from "react";
 
 const mockPost = {
   id: "1",
