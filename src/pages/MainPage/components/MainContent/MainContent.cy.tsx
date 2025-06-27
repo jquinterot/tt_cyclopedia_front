@@ -8,6 +8,11 @@ beforeEach(() => {
       // ...add more mock posts as needed
     ],
   }).as('getPosts');
+
+  cy.intercept('GET', '/comments?postId=123', {
+    statusCode: 200,
+    body: [],
+  }).as('getComments');
 });
 
 describe('<MainContent />', () => {
