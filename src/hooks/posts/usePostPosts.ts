@@ -5,6 +5,13 @@ import { useAuth } from "@/contexts/AuthContext";
 
 type OptimisticContext = { previousPosts?: Post[] };
 
+function uuid() {
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+    const r = Math.random() * 16 | 0, v = c === 'x' ? r : (r & 0x3 | 0x8);
+    return v.toString(16);
+  });
+}
+
 export const usePostPost = () => {
   const queryClient = useQueryClient();
   const { user } = useAuth();
@@ -23,12 +30,13 @@ export const usePostPost = () => {
       const previousPosts = queryClient.getQueryData<Post[]>(['posts']) || [];
       const imageFile = formData.get('image');
       const optimisticPost: Post = {
-        id: 'temp-' + Date.now(),
+        id: uuid(),
         title: formData.get('title') as string,
         content: formData.get('content') as string,
         image_url: imageFile && imageFile instanceof File ? URL.createObjectURL(imageFile) : "",
         likes: 0,
         author: user?.username || 'Unknown User',
+        likedByCurrentUser: false,
       };
       queryClient.setQueryData<Post[]>(['posts'], old => {
         return old ? [optimisticPost, ...old] : [optimisticPost];
