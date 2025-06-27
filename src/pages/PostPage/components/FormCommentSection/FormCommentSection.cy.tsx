@@ -1,5 +1,12 @@
 import FormComment from './FormCommentSection';
 
+beforeEach(() => {
+  cy.intercept('GET', /\/comments\?postId=.*/, {
+    statusCode: 200,
+    body: [],
+  }).as('getComments');
+});
+
 describe('<FormComment />', () => {
   const mockPostId = '123';
 
