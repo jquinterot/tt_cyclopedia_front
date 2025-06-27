@@ -4,6 +4,8 @@ import userEvent from "@testing-library/user-event";
 import Comments from "./CommentsSection";
 import "@testing-library/jest-dom/vitest";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { AuthProvider } from '@/contexts/AuthContext';
+import { BrowserRouter } from 'react-router-dom';
 
 // Mock the useMainComments hook to avoid API calls
 vi.mock("../../../../hooks/comments/useMainComments", () => ({
@@ -68,7 +70,13 @@ const queryClient = new QueryClient({
 
 const renderWithProviders = (ui: React.ReactElement) => {
   return render(
-    <QueryClientProvider client={queryClient}>{ui}</QueryClientProvider>
+    <QueryClientProvider client={queryClient}>
+      <BrowserRouter>
+        <AuthProvider>
+          {ui}
+        </AuthProvider>
+      </BrowserRouter>
+    </QueryClientProvider>
   );
 };
 

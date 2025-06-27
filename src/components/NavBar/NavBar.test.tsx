@@ -2,15 +2,18 @@ import { describe, test, expect, vi, afterEach } from "vitest";
 import { render, fireEvent, cleanup } from "@testing-library/react";
 import { BrowserRouter } from 'react-router-dom';
 import NavBar from './NavBar';
-import { LanguageProvider } from '../../../contexts/LanguageContext';
+import { LanguageProvider } from '@/contexts/LanguageContext';
 import '@testing-library/jest-dom/vitest';
+import { AuthProvider } from '@/contexts/AuthContext';
 
 const renderWithRouter = (component: React.ReactElement) => {
   return render(
     <BrowserRouter>
-      <LanguageProvider> 
-      {component}
-        </LanguageProvider> 
+      <LanguageProvider>
+        <AuthProvider>
+          {component}
+        </AuthProvider>
+      </LanguageProvider>
     </BrowserRouter>
   );
 };

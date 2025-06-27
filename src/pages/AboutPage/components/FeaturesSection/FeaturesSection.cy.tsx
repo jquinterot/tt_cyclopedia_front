@@ -1,6 +1,5 @@
-import React from "react";
 import FeaturesSection from "./FeaturesSection";
-import { LanguageProvider } from "../../../../contexts/LanguageContext";
+import { LanguageProvider } from "@/contexts/LanguageContext";
 
 describe("<FeaturesSection />", () => {
   it("renders the features section", () => {

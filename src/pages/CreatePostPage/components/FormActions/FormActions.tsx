@@ -1,4 +1,3 @@
-import React from "react";
 
 type FormActionsProps = {
   onCancel: () => void;

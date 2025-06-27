@@ -1,6 +1,6 @@
-import { Post } from "../../types/Post";
+import { Post } from "@/types/Post";
 import { useQuery } from "@tanstack/react-query";
-import { apiClient } from "../../config/apiClient";
+import { apiClient } from "@/config/apiClient";
 
 export const usePostById = (postId: string) => {
   const fetchPosts = async () => {
@@ -12,6 +12,7 @@ export const usePostById = (postId: string) => {
     data: post, 
     isLoading,
     error,
+    refetch,
   } = useQuery({
     queryKey: ["post", postId],
     queryFn: () => fetchPosts(),
@@ -19,5 +20,5 @@ export const usePostById = (postId: string) => {
     refetchOnMount: false,
   });
 
-  return { post, isLoading, error };
+  return { post, isLoading, error, refetch };
 };

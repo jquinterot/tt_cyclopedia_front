@@ -1,12 +1,13 @@
-import { useRef, useEffect, useState } from "react";
+import { useRef } from "react";
 import { Link } from "react-router-dom";
-import { useComments } from "../../../../hooks/comments/useComments";
-import { usePostComment } from "../../../../hooks/comments/usePostComments";
-import { useLanguage } from "../../../../contexts/LanguageContext";
+import { useComments } from '@/hooks/comments/useComments';
+import { usePostComment } from '@/hooks/comments/usePostComments';
+import { useLanguage } from '@/contexts/LanguageContext';
 import { useQueryClient } from "@tanstack/react-query";
 import toast, { Toaster } from "react-hot-toast";
 import Comments from "../CommentsSection/CommentsSection";
-import type { Comment } from "../../../../types/Comment";
+import type { Comment } from '@/types/Comment';
+import { useAuth } from '@/contexts/AuthContext';
 
 type TFunction = (key: string) => string;
 
@@ -101,14 +102,9 @@ export default function FormComment({ postId }: { postId: string }) {
   const { mutateAsync: postComment } = usePostComment(postId);
   const { comments, error: getCommentError, isLoading: isLoadingComment } = useComments(postId);
   const inputRef = useRef<HTMLInputElement>(null);
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const { isAuthenticated } = useAuth();
   const { t } = useLanguage();
   const queryClient = useQueryClient();
-
-  useEffect(() => {
-    const authStatus = localStorage.getItem("isAuthenticated");
-    setIsAuthenticated(!!authStatus);
-  }, []);
 
   const handleAddComment = async () => {
     if (!isAuthenticated) {
@@ -126,9 +122,6 @@ export default function FormComment({ postId }: { postId: string }) {
     try {
       await postComment({
         comment,
-        userId: "default_admin_id",
-        postId,
-        username: "admin",
         parentId: undefined,
       });
       queryClient.invalidateQueries({ queryKey: ["mainComments", postId] });

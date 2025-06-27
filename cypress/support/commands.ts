@@ -35,3 +35,6 @@
 //     }
 //   }
 // }
+
+// Add this at the top or after imports
+// Allows: import { mockUser } from '@mocks/userMocks';

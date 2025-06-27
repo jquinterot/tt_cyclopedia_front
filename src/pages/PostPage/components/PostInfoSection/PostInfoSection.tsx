@@ -1,14 +1,8 @@
-import { useLikes } from "../../../../states/useCommentsState";
-import likeIcon from "../../../assets/like.png";
-
-// LikeIcon.tsx
-type LikeIconProps = {
-  src: string;
-  alt?: string;
-};
-function LikeIcon({ src, alt = "Like icon" }: LikeIconProps) {
-  return <img src={src} alt={alt} className="w-7 h-7" />;
-}
+import { useMutation } from '@tanstack/react-query';
+import { apiClient } from '@/config/apiClient';
+import HeartIcon from '@/components/shared/HeartIcon';
+import HeartIconFilled from '@/components/shared/HeartIconFilled';
+import React from 'react';
 
 // LikeCount.tsx
 type LikeCountProps = {
@@ -18,33 +12,50 @@ function LikeCount({ count }: LikeCountProps) {
   return <p className="text-base font-medium">{count}</p>;
 }
 
-// LikeButton.tsx
-type LikeButtonProps = {
-  onClick: () => void;
-};
-function LikeButton({ onClick }: LikeButtonProps) {
-  return (
-    <button
-      className="px-3 py-1 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors"
-      onClick={onClick}
-    >
-      Like
-    </button>
-  );
-}
-
 // PostInfo.tsx
-export default function PostInfo() {
-  const likes = useLikes(state => state.likes);
-  const increase = useLikes(state => state.increase);
+type PostInfoProps = {
+  post: {
+    id: string;
+    likes: number;
+    likedByCurrentUser: boolean;
+  };
+  refetch: () => void;
+};
+
+export default function PostInfoSection({ post, refetch }: PostInfoProps) {
+  const likeMutation = useMutation({
+    mutationFn: () => apiClient.post(`/posts/${post.id}/like`),
+    onSuccess: refetch,
+  });
+  const unlikeMutation = useMutation({
+    mutationFn: () => apiClient.delete(`/posts/${post.id}/like`),
+    onSuccess: refetch,
+  });
+
+  const handleLikeToggle = () => {
+    if (post.likedByCurrentUser) {
+      unlikeMutation.mutate();
+    } else {
+      likeMutation.mutate();
+    }
+  };
 
   return (
     <section className="flex items-center gap-3">
-      <div className="flex items-center gap-2">
-        <LikeIcon src={likeIcon} />
-        <LikeCount count={likes} />
-      </div>
-      <LikeButton onClick={() => increase(1)} />
+      <button
+        className="flex items-center gap-2 focus:outline-none"
+        onClick={handleLikeToggle}
+        disabled={likeMutation.isPending || unlikeMutation.isPending}
+        aria-pressed={post.likedByCurrentUser}
+        style={{ cursor: (likeMutation.isPending || unlikeMutation.isPending) ? 'not-allowed' : 'pointer', background: 'none', border: 'none', padding: 0 }}
+      >
+        {post.likedByCurrentUser ? (
+          <HeartIconFilled className="w-7 h-7 text-blue-600 transition-colors" data-testid="like-icon-filled" />
+        ) : (
+          <HeartIcon className="w-7 h-7 text-blue-400 transition-colors" data-testid="like-icon-outline" />
+        )}
+        <LikeCount count={post.likes} />
+      </button>
     </section>
   );
 }

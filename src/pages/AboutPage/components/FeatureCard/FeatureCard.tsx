@@ -1,5 +1,3 @@
-import React from "react";
-
 type FeatureCardProps = {
   title: string;
   description: string;

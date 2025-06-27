@@ -1,6 +1,5 @@
-import React from "react";
 import AboutDescription from "./AboutDescription";
-import { LanguageProvider } from "../../../../contexts/LanguageContext";
+import { LanguageProvider } from "@/contexts/LanguageContext";
 
 describe("<AboutDescription />", () => {
   it("renders the about description", () => {

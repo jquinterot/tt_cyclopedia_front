@@ -1,36 +1,42 @@
-import { describe, test, expect } from "vitest";
 import { render, screen } from "@testing-library/react";
 import "@testing-library/jest-dom/vitest";
 import MainContent from "./MainContent";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter } from "react-router-dom";
-import React from "react";
+import { TestProviders } from "@/test-utils/TestProviders";
+import { describe, test, expect, vi } from "vitest";
 
-const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: { retry: false }
-  }
-});
-
-const renderWithProviders = (ui: React.ReactElement) => {
-  return render(
-    <QueryClientProvider client={queryClient}>
-      <BrowserRouter>
-        {ui}
-      </BrowserRouter>
-    </QueryClientProvider>
-  );
-};
+vi.mock("@/hooks/posts/usePosts", () => ({
+  usePosts: () => ({
+    posts: [
+      {
+        id: "1",
+        title: "Test Post",
+        content: "Test content",
+        image_url: "/test.jpg",
+        likes: 0,
+      },
+    ],
+    isLoading: false,
+    error: null,
+  }),
+}));
 
 describe("MainContent Component", () => {
+  const renderWithProviders = (ui: React.ReactElement) =>
+    render(<TestProviders>{ui}</TestProviders>);
+
   test("renders main content container", () => {
     renderWithProviders(<MainContent />);
-    expect(screen.getByTestId("main-content"));
+    expect(screen.getByTestId("main-content")).toBeInTheDocument();
+  });
+
+  test("renders PostList by default", () => {
+    renderWithProviders(<MainContent />);
+    expect(screen.getByTestId("post-list-container")).toBeInTheDocument();
   });
 
   test("renders custom children when provided", () => {
-    const customContent = <div data-testid="custom-content">Custom Content</div>;
+    const customContent = <div data-testid="custom-content">Custom</div>;
     renderWithProviders(<MainContent>{customContent}</MainContent>);
-    expect(screen.getByTestId("custom-content"));
+    expect(screen.getByTestId("custom-content")).toBeInTheDocument();
   });
 }); 

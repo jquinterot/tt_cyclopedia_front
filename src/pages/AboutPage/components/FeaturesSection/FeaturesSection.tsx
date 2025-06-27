@@ -1,5 +1,4 @@
-import React from "react";
-import { useLanguage } from "../../../../contexts/LanguageContext";
+import { useLanguage } from '@/contexts/LanguageContext';
 import FeatureCard from "../FeatureCard/FeatureCard";
 
 export default function FeaturesSection() {

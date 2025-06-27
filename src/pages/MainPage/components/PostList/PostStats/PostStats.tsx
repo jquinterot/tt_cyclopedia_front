@@ -1,22 +1,29 @@
-import React from 'react';
 import StatBar from '../StatBar/StatBar';
+import { STAT_CONFIG } from '@/config/statConfig';
 
-const CARD_STATS = [
-  { label: "Speed", value: 7.5, color: "bg-red-500" },
-  { label: "Spin", value: 8.2, color: "bg-green-500" },
-  { label: "Control", value: 8.8, color: "bg-blue-500" },
-  { label: "Overall", value: 8.3, color: "bg-purple-500" },
-];
+function getStatConfig(key: string) {
+  return STAT_CONFIG.find((item) => item.key === key);
+}
 
-export default function PostStats() {
+export default function PostStats({ stats }: { stats?: Record<string, number> }) {
+  if (!stats) return null;
+  const statKeys = Object.keys(stats);
   return (
     <div className="rounded-lg p-4 space-y-4">
       <h3 className="text-base font-semibold text-white text-center" data-testid="stats-heading">
         Stats
       </h3>
-      {CARD_STATS.map((stat) => (
-        <StatBar key={stat.label} {...stat} />
-      ))}
+      {statKeys.map((key) => {
+        const config = getStatConfig(key);
+        return (
+          <StatBar
+            key={key}
+            label={config?.label || key.charAt(0).toUpperCase() + key.slice(1)}
+            value={stats[key]}
+            color={config?.color || 'bg-gray-500'}
+          />
+        );
+      })}
     </div>
   );
 } 

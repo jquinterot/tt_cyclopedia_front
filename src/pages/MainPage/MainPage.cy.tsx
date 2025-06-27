@@ -1,17 +1,18 @@
-import React from 'react';
 import MainPage from './MainPage';
-import { BrowserRouter } from 'react-router-dom';
-import { LanguageProvider } from '../../contexts/LanguageContext';
+
+beforeEach(() => {
+  cy.intercept('GET', '/posts', {
+    statusCode: 200,
+    body: [
+      { id: '1', title: 'Test Post', content: 'Test content' },
+      // Add more mock posts if needed
+    ],
+  }).as('getPosts');
+});
 
 describe('<MainPage />', () => {
   it('renders complete main page structure', () => {
-    cy.mount(
-      <BrowserRouter>
-        <LanguageProvider>
-          <MainPage />
-        </LanguageProvider>
-      </BrowserRouter>
-    );
+    cy.mount(<MainPage />);
     
     // Check main page structure
     cy.get('[data-testid="main-page"]').should('exist');
@@ -26,13 +27,7 @@ describe('<MainPage />', () => {
   });
 
   it('has proper page layout', () => {
-    cy.mount(
-      <BrowserRouter>
-        <LanguageProvider>
-          <MainPage />
-        </LanguageProvider>
-      </BrowserRouter>
-    );
+    cy.mount(<MainPage />);
     
     // Check main page has proper styling
     cy.get('[data-testid="main-page"]')

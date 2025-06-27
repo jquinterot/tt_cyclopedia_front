@@ -17,31 +17,13 @@ vi.mock("../../../../../src/hooks/posts/usePosts", () => ({
 import { render, screen } from "@testing-library/react";
 import "@testing-library/jest-dom/vitest";
 import PostList from "./PostList";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter } from "react-router-dom";
-import React from "react";
-
-const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: { retry: false }
-  }
-});
+import { TestProviders } from "@/test-utils/TestProviders";
 
 const renderWithProviders = (ui: React.ReactElement) => {
-  return render(
-    <QueryClientProvider client={queryClient}>
-      <BrowserRouter>
-        {ui}
-      </BrowserRouter>
-    </QueryClientProvider>
-  );
+  return render(<TestProviders>{ui}</TestProviders>);
 };
 
 describe("PostList Component", () => {
-  beforeEach(() => {
-    queryClient.clear();
-  });
-
   test("renders the post list container", () => {
     renderWithProviders(<PostList />);
     expect(screen.getByTestId("post-list-container")).toBeInTheDocument();

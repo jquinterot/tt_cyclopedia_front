@@ -1,16 +1,14 @@
 import { useEffect } from "react";
 import { useParams } from "react-router-dom";
-import { usePostById } from "../../../../../src/hooks/posts/usePostById";
-import { usePostId } from "../../../../../src/hooks/usePostId";
+import { usePostById } from '@/hooks/posts/usePostById';
+import { usePostId } from '@/hooks/usePostId';
 import FormComment from "../FormCommentSection/FormCommentSection";
+import { STAT_CONFIG } from '@/config/statConfig';
+import PostInfoSection from '../PostInfoSection/PostInfoSection';
 
-// Static stats for all posts
-const CARD_STATS = {
-  speed: 7.5,
-  spin: 8.2,
-  control: 8.8,
-  overall: 8.3
-};
+function getStatConfig(key: string) {
+  return STAT_CONFIG.find((item) => item.key === key);
+}
 
 function StatBar({ label, value, color }: { label: string; value: number; color: string }) {
   return (
@@ -48,17 +46,26 @@ function PostImage({ src, alt }: { src: string; alt: string }) {
   );
 }
 
-function PostStats() {
+function PostStatsWrapper({ stats }: { stats?: Record<string, number> }) {
+  if (!stats) return null;
+  const statKeys = Object.keys(stats);
   return (
     <div className="flex flex-col justify-center space-y-6 px-4 sm:px-0" data-testid="post-stats-container">
       <div className="p-4 space-y-4">
         <h3 className="text-base font-semibold text-white text-center" data-testid="stats-heading">
           Stats
         </h3>
-        <StatBar label="Speed" value={CARD_STATS.speed} color="bg-red-500" />
-        <StatBar label="Spin" value={CARD_STATS.spin} color="bg-green-500" />
-        <StatBar label="Control" value={CARD_STATS.control} color="bg-blue-500" />
-        <StatBar label="Overall" value={CARD_STATS.overall} color="bg-purple-500" />
+        {statKeys.map((key) => {
+          const config = getStatConfig(key);
+          return (
+            <StatBar
+              key={key}
+              label={config?.label || key.charAt(0).toUpperCase() + key.slice(1)}
+              value={stats[key]}
+              color={config?.color || 'bg-gray-500'}
+            />
+          );
+        })}
       </div>
     </div>
   );
@@ -98,10 +105,10 @@ export default function PostDetails() {
     }
   }, [id, updatePostId]);
 
-  const { post, error } = usePostById(postId);
+  const { post, error, isLoading, refetch } = usePostById(postId);
 
   if (error) return <ErrorMessage />;
-  if (!post) return <LoadingSpinner />;
+  if (isLoading || !post) return <LoadingSpinner />;
 
   return (
     <div className="w-full max-w-4xl mx-auto px-4 py-6" data-testid="post-details-container">
@@ -109,8 +116,9 @@ export default function PostDetails() {
         <h1 className="text-center text-5xl">{post.title}</h1>
         <div className="rounded-xl bg-white/10 backdrop-blur-sm border border-white/10 grid grid-cols-1 sm:grid-cols-2 gap-8 mb-6">
           <PostImage src={`${import.meta.env.VITE_API_BASE_URL}${post.image_url}`} alt={post.title} />
-          <PostStats />
+          <PostStatsWrapper stats={post.stats} />
         </div>
+        <PostInfoSection post={post} refetch={refetch} />
         <PostContent content={post.content} />
       </div>
       <div className="mt-8 rounded-xl bg-white/10 backdrop-blur-sm border border-white/10 p-5" data-testid="comments-section">

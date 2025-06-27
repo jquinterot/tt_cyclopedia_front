@@ -6,6 +6,10 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactNode } from 'react';
 import type { MountOptions } from 'cypress/react18';
 import React from 'react';
+import { AuthProvider } from '@/contexts/AuthContext';
+import { LanguageProvider } from '@/contexts/LanguageContext';
+import { BrowserRouter } from 'react-router-dom';
+import { HelmetProvider } from 'react-helmet-async';
 
 // Create a new query client instance for tests
 const testQueryClient = new QueryClient({
@@ -18,9 +22,17 @@ const testQueryClient = new QueryClient({
 
 // Custom wrapper component
 const WithProviders = ({ children }: { children: ReactNode }) => (
-  <QueryClientProvider client={testQueryClient}>
-    {children}
-  </QueryClientProvider>
+  <HelmetProvider>
+    <BrowserRouter>
+      <QueryClientProvider client={testQueryClient}>
+        <LanguageProvider>
+          <AuthProvider>
+            {children}
+          </AuthProvider>
+        </LanguageProvider>
+      </QueryClientProvider>
+    </BrowserRouter>
+  </HelmetProvider>
 );
 
 declare global {

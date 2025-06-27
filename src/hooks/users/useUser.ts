@@ -1,5 +1,5 @@
-import { User } from "../../types/User";
-import { apiClient } from "../../config/apiClient";
+import { User } from "@/types/User";
+import { apiClient } from "@/config/apiClient";
 import { useQuery } from "@tanstack/react-query";
 
 export const useUser = (userId: string) => {

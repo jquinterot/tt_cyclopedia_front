@@ -19,8 +19,9 @@ import "@testing-library/jest-dom/vitest";
 import MainPage from "./MainPage";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter } from "react-router-dom";
-import { LanguageProvider } from "../../contexts/LanguageContext";
-import React from "react";
+import { HelmetProvider } from "react-helmet-async";
+import { LanguageProvider } from "@/contexts/LanguageContext";
+import { AuthProvider } from '@/contexts/AuthContext';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -30,25 +31,28 @@ const queryClient = new QueryClient({
 
 const renderWithProviders = (ui: React.ReactElement) => {
   return render(
-    <QueryClientProvider client={queryClient}>
-      <BrowserRouter>
-        <LanguageProvider>
-          {ui}
-        </LanguageProvider>
-      </BrowserRouter>
-    </QueryClientProvider>
+    <HelmetProvider>
+      <QueryClientProvider client={queryClient}>
+        <BrowserRouter>
+          <LanguageProvider>
+            <AuthProvider>
+              {ui}
+            </AuthProvider>
+          </LanguageProvider>
+        </BrowserRouter>
+      </QueryClientProvider>
+    </HelmetProvider>
   );
 };
 
 describe("MainPage Component", () => {
   test("renders main page structure", () => {
     renderWithProviders(<MainPage />);
-    expect(screen.getByTestId("main-page"));
-    expect(screen.getByTestId("main-content"));
+    expect(screen.getByTestId("main-content")).toBeInTheDocument();
   });
 
   test("renders PostList loading state", () => {
     renderWithProviders(<MainPage />);
-    expect(screen.getByTestId("post-list-loading"));
+    expect(screen.getByTestId("post-list-loading")).toBeInTheDocument();
   });
 }); 

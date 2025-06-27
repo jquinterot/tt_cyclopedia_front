@@ -1,4 +1,3 @@
-import React from 'react';
 import PostImage from './PostImage';
 
 describe('<PostImage />', () => {

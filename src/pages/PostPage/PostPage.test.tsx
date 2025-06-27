@@ -1,9 +1,9 @@
 import { render } from "@testing-library/react";
 import PostPage from "./PostPage";
-import React from "react";
 import { BrowserRouter } from "react-router-dom";
-import { LanguageProvider } from "../../contexts/LanguageContext";
+import { LanguageProvider } from "@/contexts/LanguageContext";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { AuthProvider } from '@/contexts/AuthContext';
 
 describe("PostPage", () => {
   it("renders the Post page", () => {
@@ -12,7 +12,9 @@ describe("PostPage", () => {
       <QueryClientProvider client={queryClient}>
         <BrowserRouter>
           <LanguageProvider>
-            <PostPage />
+            <AuthProvider>
+              <PostPage />
+            </AuthProvider>
           </LanguageProvider>
         </BrowserRouter>
       </QueryClientProvider>

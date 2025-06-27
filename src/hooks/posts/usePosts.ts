@@ -1,5 +1,5 @@
-import { apiClient } from "../../config/apiClient";
-import { Post } from "../../types/Post";
+import { apiClient } from "@/config/apiClient";
+import { Post } from "@/types/Post";
 import { useQuery } from "@tanstack/react-query";
 
 export const usePosts = () => {

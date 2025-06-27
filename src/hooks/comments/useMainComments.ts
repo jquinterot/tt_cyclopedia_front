@@ -1,5 +1,5 @@
-import { Comment } from "../../types/Comment";
-import { apiClient } from "../../config/apiClient";
+import { Comment } from "@/types/Comment";
+import { apiClient } from "@/config/apiClient";
 import { useQuery } from "@tanstack/react-query";
 
 export const useMainComments = (postId: string) => {

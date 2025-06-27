@@ -1,8 +1,8 @@
 import { create } from 'zustand';
-import { Post } from '../types/Post';
-import { PostState } from '../types/PostState';
+import { Post } from '@/types/Post';
+import { PostState } from '@/types/PostState';
 import axios from 'axios';
-import { apiClient } from "../config/apiClient";
+import { apiClient } from "@/config/apiClient";
 
 export const usePostStat= create<PostState>((set) => ({
   post: null,

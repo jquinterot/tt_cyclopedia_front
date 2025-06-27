@@ -1,10 +1,10 @@
 import { useState, useRef, useCallback } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import toast from "react-hot-toast";
-import { useDeleteComment } from "../../../../hooks/comments/useDeleteComment";
-import { usePostComment } from "../../../../hooks/comments/usePostComments";
-import { useMainComments } from "../../../../hooks/comments/useMainComments";
-import type { Comment } from "../../../../types/Comment";
+import { useDeleteComment } from '@/hooks/comments/useDeleteComment';
+import { usePostComment } from '@/hooks/comments/usePostComments';
+import { useMainComments } from '@/hooks/comments/useMainComments';
+import type { Comment } from '@/types/Comment';
 import { CommentItem } from "../CommentItem/CommentItem";
 
 export default function Comments({ postId }: { postId: string }) {
@@ -64,13 +64,8 @@ export default function Comments({ postId }: { postId: string }) {
       return;
     }
     try {
-      const userId = "default_admin_id";
-      const username = "admin";
       await postComment({
         comment: text,
-        userId,
-        username,
-        postId,
         parentId,
       });
 

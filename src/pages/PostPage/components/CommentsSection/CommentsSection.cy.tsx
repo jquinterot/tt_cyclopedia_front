@@ -1,6 +1,6 @@
-import React from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import Comments from "./CommentsSection";
+import { interceptGetMainComments, interceptGetReplies } from '../../../../../cypress/mocks/commentMocks';
 
 const queryClient = new QueryClient();
 
@@ -12,19 +12,8 @@ const mountWithProviders = (ui: React.ReactElement) => {
 
 describe("Comments Component", () => {
   beforeEach(() => {
-    cy.intercept("GET", "/comments/post/post1/main", [
-      {
-        id: "1",
-        comment: "Test comment 1",
-        likes: 5,
-        user_id: "user1",
-        post_id: "post1",
-        username: "admin",
-        timestamp: "2023-10-01T12:00:00Z",
-      },
-    ]).as("getMainComments");
-
-    cy.intercept("GET", "/comments/post/post1/replies*", []).as("getReplies");
+    interceptGetMainComments();
+    interceptGetReplies();
   });
 
   // Only keep tests that are passing or relevant

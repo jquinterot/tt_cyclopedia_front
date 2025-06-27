@@ -1,6 +1,7 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useRef } from 'react';
 import { Link } from 'react-router-dom';
-import { useLanguage } from '../../../contexts/LanguageContext';
+import { useLanguage } from '@/contexts/LanguageContext';
+import { useAuth } from '@/contexts/AuthContext';
 
 // Logo Section
 function LogoSection() {
@@ -19,25 +20,58 @@ function LogoSection() {
   );
 }
 
-// User Profile Section
-function UserProfile({ username, onLogout, t }: { username: string; onLogout: () => void; t: (key: string) => string }) {
+// User Profile Dropdown
+function UserProfileDropdown({ username, onLogout, t }: { username: string; onLogout: () => void; t: (key: string) => string }) {
+  const [open, setOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+
+  // Close dropdown on click outside
+  React.useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setOpen(false);
+      }
+    }
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
   return (
-    <div className="flex items-center space-x-3" data-testid="user-profile">
-      <div className="flex items-center space-x-2 px-3 py-2 rounded-md bg-white/5">
+    <div className="relative" ref={dropdownRef} data-testid="user-profile">
+      <button
+        className="flex items-center space-x-2 px-3 py-2 rounded-md bg-white/5 hover:bg-blue-600/20 transition"
+        onClick={() => setOpen((v) => !v)}
+        data-testid="user-profile-trigger"
+        aria-haspopup="true"
+        aria-expanded={open}
+      >
         <div className="h-8 w-8 rounded-full bg-blue-600 flex items-center justify-center">
-          <span className="text-sm font-medium text-white">
-            {username.charAt(0).toUpperCase()}
-          </span>
+          <span className="text-sm font-medium text-white">{username.charAt(0).toUpperCase()}</span>
         </div>
         <span className="text-sm font-medium text-gray-300">{username}</span>
-      </div>
-      <button
-        onClick={onLogout}
-        className="text-gray-300 hover:text-blue-400 transition-colors px-3 py-2 rounded-md text-sm font-medium"
-        data-testid="profile-button"
-      >
-        {t('nav.logout')}
+        <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+        </svg>
       </button>
+      {open && (
+        <div className="absolute right-0 mt-2 w-40 bg-slate-900 border border-white/10 rounded-md shadow-lg z-50" data-testid="user-profile-dropdown-menu">
+          <Link
+            to="/profile"
+            className="block px-4 py-2 text-sm text-gray-200 hover:bg-blue-600/20 rounded-t-md transition-colors"
+            onClick={() => setOpen(false)}
+            data-testid="dropdown-profile-link"
+          >
+            Profile
+          </Link>
+          <button
+            onClick={() => { setOpen(false); onLogout(); }}
+            className="block w-full text-left px-4 py-2 text-sm text-gray-200 hover:bg-blue-600/20 rounded-b-md transition-colors"
+            data-testid="profile-button"
+          >
+            {t('nav.logout')}
+          </button>
+        </div>
+      )}
     </div>
   );
 }
@@ -89,7 +123,7 @@ function DesktopNav({
         {language.toUpperCase()}
       </button>
       {username ? (
-        <UserProfile username={username} onLogout={handleLogout} t={t} />
+        <UserProfileDropdown username={username} onLogout={handleLogout} t={t} />
       ) : (
         <Link
           to="/login"
@@ -196,25 +230,24 @@ function MobileDropdownMenu({
           {language.toUpperCase()}
         </button>
         {username ? (
-          <>
-            <div className="flex items-center space-x-2 px-3 py-2">
-              <div className="h-8 w-8 rounded-full bg-blue-600 flex items-center justify-center">
-                <span className="text-sm font-medium text-white">
-                  {username.charAt(0).toUpperCase()}
-                </span>
-              </div>
-              <span className="text-sm font-medium text-gray-300">{username}</span>
-            </div>
+          <div className="mt-2" data-testid="mobile-user-profile-dropdown">
+            <span className="block px-4 py-2 text-base text-gray-200 font-medium" data-testid="mobile-username">{username}</span>
+            <Link
+              to="/profile"
+              className="block px-4 py-2 text-base text-gray-200 hover:bg-blue-600/20 rounded-t-md transition-colors"
+              onClick={() => setIsOpen(false)}
+              data-testid="mobile-dropdown-profile-link"
+            >
+              Profile
+            </Link>
             <button
-              onClick={() => {
-                handleLogout();
-                setIsOpen(false);
-              }}
-              className="block w-full text-left px-3 py-2 rounded-md text-base font-medium text-gray-300 hover:text-blue-400 hover:bg-white/5 transition-colors"
+              onClick={() => { setIsOpen(false); handleLogout(); }}
+              className="block w-full text-left px-4 py-2 text-base text-gray-200 hover:bg-blue-600/20 rounded-b-md transition-colors"
+              data-testid="mobile-dropdown-logout-button"
             >
               {t('nav.logout')}
             </button>
-          </>
+          </div>
         ) : (
           <Link
             to="/login"
@@ -233,19 +266,11 @@ function MobileDropdownMenu({
 // Main NavBar
 export default function NavBar() {
   const [isOpen, setIsOpen] = useState(false);
-  const [username, setUsername] = useState<string | null>(null);
   const { language, setLanguage, t } = useLanguage();
-
-  useEffect(() => {
-    const isAuthenticated = localStorage.getItem('isAuthenticated');
-    if (isAuthenticated) {
-      setUsername('test');
-    }
-  }, []);
+  const { user, logout } = useAuth();
 
   const handleLogout = () => {
-    localStorage.removeItem('isAuthenticated');
-    setUsername(null);
+    logout();
   };
 
   const toggleLanguage = () => {
@@ -258,7 +283,7 @@ export default function NavBar() {
         <div className="flex items-center justify-between h-16">
           <LogoSection />
           <DesktopNav
-            username={username}
+            username={user?.username || null}
             t={t}
             language={language}
             toggleLanguage={toggleLanguage}
@@ -268,7 +293,7 @@ export default function NavBar() {
         </div>
         <MobileDropdownMenu
           isOpen={isOpen}
-          username={username}
+          username={user?.username || null}
           t={t}
           language={language}
           toggleLanguage={toggleLanguage}

@@ -1,22 +1,16 @@
 import NavBar from './NavBar';
-import { BrowserRouter } from 'react-router-dom';
-import { LanguageProvider } from '../../../contexts/LanguageContext';
+import { interceptGetMe, setAuthenticatedUser, clearAuthenticatedUser } from '../../../cypress/mocks/userMocks';
 
 describe('<NavBar />', () => {
   // Helper to mount with all necessary providers
   const mountComponent = (isAuthenticated = false) => {
     if (isAuthenticated) {
-      localStorage.setItem('isAuthenticated', 'true');
+      setAuthenticatedUser();
+      interceptGetMe();
     } else {
-      localStorage.removeItem('isAuthenticated');
+      clearAuthenticatedUser();
     }
-    cy.mount(
-      <BrowserRouter>
-        <LanguageProvider> 
-          <NavBar />
-        </LanguageProvider>
-      </BrowserRouter>
-    );
+    cy.mount(<NavBar />);
   };
 
   beforeEach(() => {
@@ -26,7 +20,7 @@ describe('<NavBar />', () => {
 
   afterEach(() => {
     // Clear local storage after each test to ensure isolation
-    localStorage.removeItem('isAuthenticated');
+    clearAuthenticatedUser();
   });
 
   it('renders logo and navigation elements when unauthenticated', () => {
@@ -60,6 +54,7 @@ describe('<NavBar />', () => {
       cy.get('[data-testid="nav-login"]').should('not.exist');
       cy.get('[data-testid="user-profile"]').should('be.visible').within(() => {
         cy.contains('test'); // From setUsername('test')
+        cy.get('[data-testid="user-profile-trigger"]').click();
         cy.get('[data-testid="profile-button"]').should('be.visible'); // Checks for logout button presence
       });
     });
@@ -96,7 +91,7 @@ describe('<NavBar />', () => {
       cy.get('[data-testid="mobile-nav-about"]').should('be.visible');
       cy.get('[data-testid="mobile-language-toggle"]').should('be.visible');
       cy.get('[data-testid="mobile-nav-login"]').should('not.exist');
-      cy.contains('test'); // Username in mobile menu
+      cy.get('[data-testid="mobile-username"]').should('contain', 'test'); // Username in mobile menu
       // Check for logout button (assuming it uses the t() function or has static text)
       // cy.contains(t('nav.logout')) or a data-testid for the button itself
     });
@@ -110,6 +105,7 @@ describe('<NavBar />', () => {
 
     cy.viewport(1280, 800); // Desktop
     cy.get('[data-testid="user-profile"]').should('be.visible');
+    cy.get('[data-testid="user-profile-trigger"]').click();
     cy.get('[data-testid="profile-button"]').click();
 
     // After logout

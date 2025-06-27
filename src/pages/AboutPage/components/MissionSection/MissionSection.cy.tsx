@@ -1,6 +1,5 @@
-import React from "react";
 import MissionSection from "./MissionSection";
-import { LanguageProvider } from "../../../../contexts/LanguageContext";
+import { LanguageProvider } from "@/contexts/LanguageContext";
 
 describe("<MissionSection />", () => {
   it("renders the mission section", () => {

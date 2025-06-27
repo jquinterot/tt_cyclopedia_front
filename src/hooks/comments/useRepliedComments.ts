@@ -1,5 +1,5 @@
-import { Comment } from "../../types/Comment";
-import { apiClient } from "../../config/apiClient";
+import { Comment } from "@/types/Comment";
+import { apiClient } from "@/config/apiClient";
 import { useQuery } from "@tanstack/react-query";
 import type { AxiosError } from "axios";
 
@@ -7,7 +7,10 @@ export const useReplyComments = (postId: string, commentId: string) => {
   const fetchComments = async () => {
     try {
       const response = await apiClient.get<Comment[]>(`/comments/post/${postId}/replies/${commentId}`);
-      return response.data;
+      // Always sort by timestamp ascending
+      return response.data.sort(
+        (a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime()
+      );
     } catch (error) {
       const axiosError = error as AxiosError;
       if (axiosError.response && axiosError.response.status === 404) {

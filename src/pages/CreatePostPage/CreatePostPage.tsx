@@ -1,26 +1,25 @@
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import NavBar from '../../components/shared/NavBar/NavBar';
-import Footer from '../../components/shared/Footer/Footer';
 import CreatePostForm from './components/CreatePostForm/CreatePostForm';
+import { useAuth } from '@/contexts/AuthContext';
 
 function CreatePostPage() {
   const navigate = useNavigate();
+  const { isAuthenticated } = useAuth();
 
   useEffect(() => {
-    const isAuthenticated = localStorage.getItem('isAuthenticated');
     if (!isAuthenticated) {
-      navigate('/');
+      navigate('/login');
     }
-  }, [navigate]);
+  }, [isAuthenticated, navigate]);
+
+  if (!isAuthenticated) {
+    return null; // Don't render anything while redirecting
+  }
 
   return (
-    <div className="min-h-screen flex flex-col font-sans text-white" data-testid="create-post-page">
-      <NavBar />
-      <main className="flex-grow" data-testid="create-post-content">
-        <CreatePostForm/>
-      </main>
-      <Footer />
+    <div className="max-w-2xl mx-auto px-4 py-8" data-testid="create-post-page">
+      <CreatePostForm/>
     </div>
   );
 }

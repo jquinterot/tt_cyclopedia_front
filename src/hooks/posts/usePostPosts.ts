@@ -1,11 +1,13 @@
-import { Post } from "../../types/Post";
+import { Post } from "@/types/Post";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { apiClient } from "../../config/apiClient";
+import { apiClient } from "@/config/apiClient";
+import { useAuth } from "@/contexts/AuthContext";
 
 type OptimisticContext = { previousPosts?: Post[] };
 
 export const usePostPost = () => {
   const queryClient = useQueryClient();
+  const { user } = useAuth();
 
   return useMutation<Post, unknown, { formData: FormData }, OptimisticContext>({
     mutationFn: async ({ formData }) => {
@@ -26,7 +28,7 @@ export const usePostPost = () => {
         content: formData.get('content') as string,
         image_url: imageFile && imageFile instanceof File ? URL.createObjectURL(imageFile) : "",
         likes: 0,
-        author: formData.get('author') as string,
+        author: user?.username || 'Unknown User',
       };
       queryClient.setQueryData<Post[]>(['posts'], old => {
         return old ? [optimisticPost, ...old] : [optimisticPost];

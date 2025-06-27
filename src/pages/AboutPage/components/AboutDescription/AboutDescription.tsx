@@ -1,5 +1,4 @@
-import React from "react";
-import { useLanguage } from "../../../../contexts/LanguageContext";
+import { useLanguage } from '@/contexts/LanguageContext';
 
 export default function AboutDescription() {
   const { t } = useLanguage();

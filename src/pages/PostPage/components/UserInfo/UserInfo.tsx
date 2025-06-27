@@ -1,15 +1,18 @@
-import React from "react";
-import { useUser } from "../../../../hooks/users/useUser";
+import { memo } from "react";
+import { useUser } from '@/hooks/users/useUser';
+import Avatar from '@/components/Avatar/Avatar';
 
 interface UserInfoProps {
   userId: string;
 }
 
 function UserAvatar() {
+  // You can extend this to fetch user avatar from the user data
+  // For now, we'll use the default avatar
   return (
-    <img
-      className="h-8 w-8 mr-2"
-      alt="User avatar"
+    <Avatar
+      size="sm"
+      className="mr-2"
       data-testid="user-avatar"
     />
   );
@@ -23,7 +26,7 @@ interface UserDetailsProps {
 function UserDetails({ id, username }: UserDetailsProps) {
   return (
     <div className="mb-2" data-testid={`user-details-${id}`}>
-      <p className="" data-testid={`username-${id}`}>{username}</p>
+      <p className="text-sm font-medium text-gray-200" data-testid={`username-${id}`}>{username}</p>
     </div>
   );
 }
@@ -31,8 +34,8 @@ function UserDetails({ id, username }: UserDetailsProps) {
 function UserInfo({ userId }: UserInfoProps) {
   const { user, isLoading, error } = useUser(userId);
 
-  if (isLoading) return <div>Loading...</div>;
-  if (error || !user) return <div>Error fetching user</div>;
+  if (isLoading) return <div className="flex items-center space-x-2"><Avatar size="sm" data-testid="user-avatar" /><span className="text-sm text-gray-400">Loading...</span></div>;
+  if (error || !user) return <div className="flex items-center space-x-2"><Avatar size="sm" data-testid="user-avatar" /><span className="text-sm text-gray-400">Unknown User</span></div>;
 
   return (
     <section className="flex justify-start items-center" data-testid="user-info">
@@ -42,4 +45,4 @@ function UserInfo({ userId }: UserInfoProps) {
   );
 }
 
-export default React.memo(UserInfo);
+export default memo(UserInfo);

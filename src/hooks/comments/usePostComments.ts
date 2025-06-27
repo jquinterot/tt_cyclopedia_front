@@ -1,24 +1,28 @@
-import { apiClient } from "../../config/apiClient";
+import { apiClient } from "@/config/apiClient";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useAuth } from "@/contexts/AuthContext";
 
 export const usePostComment = (postId: string) => {
     const queryClient = useQueryClient();
+    const { user } = useAuth();
   
     return useMutation({
-    mutationFn: ({ comment, userId, postId, parentId, username }: { 
+    mutationFn: ({ comment, parentId }: { 
       comment: string; 
-      userId: string; 
-      postId: string;
       parentId?: string;
-      username?: string;
-    }) =>
-      apiClient.post(`/comments`, { 
+    }) => {
+      if (!user) {
+        throw new Error('User must be authenticated to post comments');
+      }
+      
+      return apiClient.post(`/comments`, { 
         comment, 
-        user_id: userId, 
+        user_id: user.id, 
         post_id: postId,
         parent_id: parentId,
-        username: username 
-      }),
+        username: user.username 
+      });
+    },
       onSettled: () => {
         queryClient.invalidateQueries({ 
           queryKey: ['comments', postId]

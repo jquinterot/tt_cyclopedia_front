@@ -1,4 +1,3 @@
-import React from "react";
 import TextAreaField from "./TextAreaField";
 
 describe("<TextAreaField />", () => {

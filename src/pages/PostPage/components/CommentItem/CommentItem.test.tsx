@@ -1,8 +1,8 @@
 import { render } from "@testing-library/react";
 import { CommentItem } from "./CommentItem";
-import React from "react";
 import { BrowserRouter } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { AuthProvider } from '@/contexts/AuthContext';
 
 describe("CommentItem", () => {
   it("renders without crashing", () => {
@@ -21,18 +21,20 @@ describe("CommentItem", () => {
     render(
       <QueryClientProvider client={queryClient}>
         <BrowserRouter>
-          <CommentItem
-            comment={mockComment}
-            replyingTo={null}
-            replyText={{}}
-            setReplyText={() => {}}
-            setReplyingTo={() => {}}
-            setReplyInputRef={() => () => {}}
-            handleReply={() => {}}
-            handleDeleteComment={() => {}}
-            postId="post1"
-            handleDeleteReply={() => {}}
-          />
+          <AuthProvider>
+            <CommentItem
+              comment={mockComment}
+              replyingTo={null}
+              replyText={{}}
+              setReplyText={() => {}}
+              setReplyingTo={() => {}}
+              setReplyInputRef={() => () => {}}
+              handleReply={() => {}}
+              handleDeleteComment={() => {}}
+              postId="post1"
+              handleDeleteReply={() => {}}
+            />
+          </AuthProvider>
         </BrowserRouter>
       </QueryClientProvider>
     );

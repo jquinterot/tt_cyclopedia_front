@@ -1,14 +1,18 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import toast, { Toaster } from "react-hot-toast";
+import { useLogin } from "@/hooks/users";
+import { useAuth } from "@/contexts/AuthContext";
 
 function LoginPage() {
     const navigate = useNavigate();
+    const { login } = useAuth();
     const [formData, setFormData] = useState({
         username: "",
         password: ""
     });
     const [error, setError] = useState("");
+    const loginMutation = useLogin();
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
@@ -19,17 +23,33 @@ function LoginPage() {
         setError("");
     };
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        
-        // Mock authentication
-        if (formData.username === "admin" && formData.password === "admin") {
+        setError("");
+        try {
+            const result = await loginMutation.mutateAsync({
+                username: formData.username,
+                password: formData.password
+            });
+            
+            // Use the new authentication context
+            login(result.access_token, result.user);
+            
             toast.success("Successfully logged in!");
-            localStorage.setItem("isAuthenticated", "true");
             navigate("/");
-        } else {
-            setError("Invalid username or password");
-            toast.error("Login failed. Please check your credentials.");
+        } catch (err: unknown) {
+            let message = "Login failed. Please check your credentials.";
+            if (err && typeof err === 'object' && 'response' in err) {
+                const errorResponse = err as { response?: { data?: unknown, status?: number } };
+                if (errorResponse.response?.status === 401) {
+                    message = "Invalid username or password.";
+                } else if (errorResponse.response?.data && typeof errorResponse.response.data === 'object' && 'detail' in errorResponse.response.data) {
+                    // @ts-expect-error accessing detail property from backend error response
+                    message = errorResponse.response.data.detail;
+                }
+            }
+            setError(message);
+            toast.error(message);
         }
     };
 
@@ -68,10 +88,11 @@ function LoginPage() {
                                         value={formData.username}
                                         onChange={handleChange}
                                         data-testid="username-input"
-                                        className="w-full px-4 py-2 bg-white/5 border border-white/10 rounded-md text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
+                                        className="w-full w-[22rem] px-4 py-2 bg-white/5 border border-white/10 rounded-md text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
                                         type="text"
                                         placeholder="Enter your username"
                                         autoComplete="username"
+                                        required
                                     />
                                 </div>
                             </div>
@@ -87,10 +108,11 @@ function LoginPage() {
                                         value={formData.password}
                                         onChange={handleChange}
                                         data-testid="password-input"
-                                        className="w-full px-4 py-2 bg-white/5 border border-white/10 rounded-md text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
+                                        className="w-full w-[22rem] px-4 py-2 bg-white/5 border border-white/10 rounded-md text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
                                         type="password"
                                         placeholder="Enter your password"
                                         autoComplete="current-password"
+                                        required
                                     />
                                 </div>
                             </div>
@@ -101,14 +123,18 @@ function LoginPage() {
                                 {error}
                             </div>
                         )}
+                        {loginMutation.status === 'pending' && (
+                            <div className="text-blue-400 text-sm mt-4">Signing in...</div>
+                        )}
 
                         <div className="flex flex-col gap-4 pt-6">
                             <button
                                 type="submit"
                                 data-testid="login-submit"
-                                className="w-full px-4 py-2 bg-blue-600 border border-transparent rounded-md text-sm font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors"
+                                className="w-full px-4 py-2 bg-blue-600 border border-transparent rounded-md text-sm font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                                disabled={loginMutation.status === 'pending'}
                             >
-                                Sign in
+                                {loginMutation.status === 'pending' ? 'Signing in...' : 'Sign in'}
                             </button>
         
                             <div className="relative">

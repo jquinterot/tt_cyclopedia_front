@@ -7,6 +7,7 @@ export type Comment = {
     replies?: Comment[];
     created_at?: string;
     likes?: number;
-    username:string
+    username: string;
     timestamp: string;
+    liked_by_current_user?: boolean;
 }

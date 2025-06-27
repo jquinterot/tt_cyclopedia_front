@@ -1,6 +1,7 @@
-import React from 'react';
 import PostImage from '../PostImage/PostImage';
 import PostStats from '../PostStats/PostStats';
+import HeartIcon from '@/components/shared/HeartIcon';
+import HeartIconFilled from '@/components/shared/HeartIconFilled';
 
 interface Post {
   id: string;
@@ -8,6 +9,8 @@ interface Post {
   content: string;
   image_url: string;
   likes?: number;
+  stats?: Record<string, number>;
+  likedByCurrentUser?: boolean;
 }
 
 interface PostCardProps {
@@ -31,7 +34,7 @@ export default function PostCard({ post, onClick }: PostCardProps) {
           postId={post.id}
         />
         <div className="w-full md:w-1/2 flex flex-col justify-center space-y-6 px-4" data-testid={`post-stats-section-${post.id}`}>
-          <PostStats />
+          <PostStats stats={post.stats} />
         </div>
       </div>
       <div className="px-6 pb-6" data-testid={`post-details-${post.id}`}>
@@ -46,15 +49,12 @@ export default function PostCard({ post, onClick }: PostCardProps) {
             <span className="text-sm text-blue-400 hover:text-blue-300 transition-colors" data-testid={`read-more-${post.id}`}>
               Read more →
             </span>
-            <div className="flex items-center space-x-2" data-testid={`likes-container-${post.id}`}>
-              <svg className="h-5 w-5 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" data-testid={`like-icon-${post.id}`}>
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
-                />
-              </svg>
+            <div className="flex items-center space-x-2" data-testid={`likes-container-${post.id}`}> 
+              {post.likedByCurrentUser ? (
+                <HeartIconFilled className="h-5 w-5 text-blue-600" data-testid={`like-icon-filled-${post.id}`}/>
+              ) : (
+                <HeartIcon className="h-5 w-5 text-blue-400" data-testid={`like-icon-${post.id}`}/>
+              )}
               <span className="text-sm text-gray-300">{post.likes || 0}</span>
             </div>
           </div>

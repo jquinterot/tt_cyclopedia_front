@@ -2,7 +2,6 @@ import { describe, test, expect, vi } from "vitest";
 import { render, screen, fireEvent } from "@testing-library/react";
 import "@testing-library/jest-dom/vitest";
 import SearchBar from "./SearchBar";
-import React from "react";
 
 describe("SearchBar Component", () => {
   test("renders search input", () => {

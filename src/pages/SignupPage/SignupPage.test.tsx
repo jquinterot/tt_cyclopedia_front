@@ -1,17 +1,25 @@
 import { render } from "@testing-library/react";
 import SignupPage from "./SignupPage";
-import React from "react";
 import { BrowserRouter } from "react-router-dom";
-import { LanguageProvider } from "../../contexts/LanguageContext";
+import { LanguageProvider } from "@/contexts/LanguageContext";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: { retry: false }
+  }
+});
 
 describe("SignupPage", () => {
   it("renders the Signup page", () => {
     render(
-      <BrowserRouter>
-        <LanguageProvider>
-          <SignupPage />
-        </LanguageProvider>
-      </BrowserRouter>
+      <QueryClientProvider client={queryClient}>
+        <BrowserRouter>
+          <LanguageProvider>
+            <SignupPage />
+          </LanguageProvider>
+        </BrowserRouter>
+      </QueryClientProvider>
     );
   });
 }); 
