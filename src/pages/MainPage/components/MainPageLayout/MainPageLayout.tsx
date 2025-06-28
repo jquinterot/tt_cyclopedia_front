@@ -1,5 +1,3 @@
-import NavBar from '@/components/NavBar/NavBar';
-import Footer from '@/components/Footer/Footer';
 // Removed unused imports for NavBar and Footer
 
 interface MainPageLayoutProps {
@@ -9,9 +7,7 @@ interface MainPageLayoutProps {
 export default function MainPageLayout({ children }: MainPageLayoutProps) {
   return (
     <div className="min-h-screen flex flex-col font-sans text-white" data-testid="main-page">
-      <NavBar />
       {children}
-      <Footer />
     </div>
   );
 } 

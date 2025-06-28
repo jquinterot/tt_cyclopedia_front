@@ -15,7 +15,9 @@ describe("CommentItem", () => {
       parent_id: null,
       created_at: "2023-01-01",
       username: "testuser",
-      timestamp: "2023-01-01T00:00:00Z"
+      timestamp: "2023-01-01T00:00:00Z",
+      liked_by_current_user: false,
+      likes: 0
     };
 
     render(

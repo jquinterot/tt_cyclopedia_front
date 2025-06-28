@@ -18,10 +18,7 @@ describe('<MainPage />', () => {
     cy.get('[data-testid="main-page"]').should('exist');
     cy.get('[data-testid="main-content"]').should('exist');
     
-    // Check navigation and footer
-    cy.get('[data-testid="navbar"]').should('exist');
-    cy.get('[data-testid="footer"]').should('exist');
-    
+    // NavBar and Footer are handled by AppRouter's DefaultLayout, not MainPage
     // Check PostList is rendered
     cy.get('[data-testid="post-list-container"]').should('exist');
   });

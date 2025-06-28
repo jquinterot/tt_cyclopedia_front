@@ -8,6 +8,9 @@ const LoginPage = lazy(() => import('@pages/LoginPage/LoginPage'));
 const CreatePostPage = lazy(() => import('@pages/CreatePostPage/CreatePostPage'));
 const SignupPage = lazy(() => import('@pages/SignupPage/SignupPage'));
 const ProfilePage = lazy(() => import('@pages/ProfilePage'));
+const CreateForumPage = lazy(() => import('@pages/CreateForumPage/CreateForumPage'));
+const ForumsPage = lazy(() => import('@pages/ForumsPage/ForumsPage'));
+const ForumPage = lazy(() => import('@pages/ForumPage/ForumPage'));
 
 export interface RouteConfig {
   path: string;
@@ -23,6 +26,9 @@ export const ROUTES = {
   SIGNUP: '/signup',
   POST: '/posts/:id',
   CREATE_POST: '/createPost',
+  CREATE_FORUM: '/create-forum',
+  FORUMS: '/forums',
+  FORUM: '/forums/:id',
   ABOUT: '/about',
   PROFILE: '/profile',
 } as const;
@@ -60,6 +66,25 @@ export const routes: RouteConfig[] = [
     requiresAuth: true,
   },
   {
+    path: ROUTES.CREATE_FORUM,
+    component: CreateForumPage,
+    title: 'Create Forum',
+    layout: 'default',
+    requiresAuth: true,
+  },
+  {
+    path: ROUTES.FORUMS,
+    component: ForumsPage,
+    title: 'Forums',
+    layout: 'default',
+  },
+  {
+    path: ROUTES.FORUM,
+    component: ForumPage,
+    title: 'Forum Details',
+    layout: 'default',
+  },
+  {
     path: ROUTES.ABOUT,
     component: AboutPage,
     title: 'About',
@@ -86,4 +111,8 @@ export const isProtectedRoute = (path: string): boolean => {
 
 export const generatePostPath = (postId: string): string => {
   return ROUTES.POST.replace(':id', postId);
+};
+
+export const generateForumPath = (forumId: string): string => {
+  return ROUTES.FORUM.replace(':id', forumId);
 }; 

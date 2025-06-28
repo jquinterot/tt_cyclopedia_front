@@ -6,8 +6,7 @@ describe('<MainPageLayout />', () => {
     const content = <div data-testid="page-content">Page Content</div>;
     cy.mount(<MainPageLayout>{content}</MainPageLayout>);
     cy.get('[data-testid="main-page"]').should('exist');
-    cy.get('[data-testid="navbar"]').should('exist');
-    cy.get('[data-testid="footer"]').should('exist');
+    // NavBar and Footer are handled by AppRouter's DefaultLayout, not MainPageLayout
     cy.get('[data-testid="page-content"]').should('exist');
   });
 

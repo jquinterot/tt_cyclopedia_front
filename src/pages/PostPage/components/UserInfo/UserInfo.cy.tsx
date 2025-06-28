@@ -10,7 +10,7 @@ describe('<UserInfo />', () => {
     cy.mount(<UserInfo userId="test-user-id" />);
     cy.wait('@getUser');
     cy.get('[data-testid="user-info"]').should('be.visible');
-    cy.get('[data-testid="user-avatar"]').should('be.visible');
+    cy.get('[data-testid="avatar-fallback"]').should('be.visible');
     cy.get('[data-testid="username-test-user-id"]').should('contain', 'Test User');
   });
 
@@ -19,7 +19,7 @@ describe('<UserInfo />', () => {
     const uniqueUserId = 'loading-user-id';
     interceptGetUser(uniqueUserId, 1500);
     cy.mount(<UserInfo userId={uniqueUserId} />);
-    cy.get('[data-testid="user-avatar"]').should('exist');
+    cy.get('[data-testid="avatar-fallback"]').should('exist');
     cy.contains('Loading').should('exist');
     cy.wait('@getUser');
   });

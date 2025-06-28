@@ -13,7 +13,6 @@ function UserAvatar() {
     <Avatar
       size="sm"
       className="mr-2"
-      data-testid="user-avatar"
     />
   );
 }
@@ -34,8 +33,8 @@ function UserDetails({ id, username }: UserDetailsProps) {
 function UserInfo({ userId }: UserInfoProps) {
   const { user, isLoading, error } = useUser(userId);
 
-  if (isLoading) return <div className="flex items-center space-x-2"><Avatar size="sm" data-testid="user-avatar" /><span className="text-sm text-gray-400">Loading...</span></div>;
-  if (error || !user) return <div className="flex items-center space-x-2"><Avatar size="sm" data-testid="user-avatar" /><span className="text-sm text-gray-400">Unknown User</span></div>;
+  if (isLoading) return <div className="flex items-center space-x-2"><Avatar size="sm" /><span className="text-sm text-gray-400">Loading...</span></div>;
+  if (error || !user) return <div className="flex items-center space-x-2"><Avatar size="sm" /><span className="text-sm text-gray-400">Unknown User</span></div>;
 
   return (
     <section className="flex justify-start items-center" data-testid="user-info">

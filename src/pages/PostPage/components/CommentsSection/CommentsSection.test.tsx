@@ -46,7 +46,6 @@ vi.mock("../UserInfo/UserInfo", () => ({
 
 // Mock useReplyComments to avoid API calls for replies
 vi.mock("../../../../hooks/comments/useRepliedComments", () => ({
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   useReplyComments: () => ({
     comments: [],
     isLoading: false,

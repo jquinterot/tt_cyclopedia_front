@@ -48,6 +48,7 @@ describe('<NavBar />', () => {
     cy.viewport(1280, 800); // Desktop view
     cy.get('[data-testid="desktop-nav"]').within(() => {
       cy.get('[data-testid="nav-home"]').should('be.visible');
+      cy.get('[data-testid="create-dropdown-trigger"]').click();
       cy.get('[data-testid="nav-create-post"]').should('be.visible');
       cy.get('[data-testid="nav-about"]').should('be.visible');
       cy.get('[data-testid="language-toggle"]').should('be.visible');

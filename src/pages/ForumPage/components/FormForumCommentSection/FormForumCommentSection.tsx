@@ -1,29 +1,29 @@
 import { useRef } from "react";
 import { Link } from "react-router-dom";
-import { useMainComments } from '@/hooks/comments/useMainComments';
-import { usePostComment } from '@/hooks/comments/usePostComments';
+import { useForumComments } from '@/hooks/forums/useForumComments';
+import { usePostForumComment } from '@/hooks/forums/usePostForumComment';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useQueryClient } from "@tanstack/react-query";
 import toast, { Toaster } from "react-hot-toast";
-import Comments from "../CommentsSection/CommentsSection";
+import ForumCommentsSection from "../ForumCommentsSection/ForumCommentsSection";
 import type { Comment } from '@/types/Comment';
 import { useAuth } from '@/contexts/AuthContext';
 
 type TFunction = (key: string) => string;
 
-interface CommentInputProps {
+interface ForumCommentInputProps {
   inputRef: React.RefObject<HTMLInputElement>;
   isAuthenticated: boolean;
   t: TFunction;
   handleAddComment: () => void;
 }
 
-function CommentInput({
+function ForumCommentInput({
   inputRef,
   isAuthenticated,
   t,
   handleAddComment,
-}: CommentInputProps) {
+}: ForumCommentInputProps) {
   return (
     <form
       onSubmit={(ev) => {
@@ -31,7 +31,7 @@ function CommentInput({
         handleAddComment();
       }}
       className="space-y-4"
-      data-testid="comment-form"
+      data-testid="forum-comment-form"
     >
       <div className="space-y-2">
         <input
@@ -44,13 +44,13 @@ function CommentInput({
               : t("form.comment.signInPlaceholder")
           }
           disabled={!isAuthenticated}
-          data-testid="comment-input"
+          data-testid="forum-comment-input"
         />
         {isAuthenticated ? (
           <button
             type="submit"
             className="px-4 py-2 bg-blue-600 text-sm font-medium text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors"
-            data-testid="submit-comment"
+            data-testid="forum-submit-comment"
           >
             {t("form.comment.submit")}
           </button>
@@ -67,19 +67,19 @@ function CommentInput({
   );
 }
 
-interface CommentsListProps {
-  postId: string;
+interface ForumCommentsListProps {
+  forumId: string;
   comments: Comment[];
   t: TFunction;
 }
 
-function CommentsList({ postId, comments, t }: CommentsListProps) {
+function ForumCommentsList({ forumId, comments, t }: ForumCommentsListProps) {
   return (
-    <div className="space-y-4" data-testid="comments-list-container">
-      <h2 className="text-xl font-semibold" data-testid="comments-count">
+    <div className="space-y-4" data-testid="forum-comments-list-container">
+      <h2 className="text-xl font-semibold" data-testid="forum-comments-count">
         {t("comments.title")} ({comments.length})
       </h2>
-      <Comments postId={postId} />
+      <ForumCommentsSection forumId={forumId} />
     </div>
   );
 }
@@ -98,9 +98,9 @@ function ErrorMessage() {
 
 // --- Main Component ---
 
-export default function FormComment({ postId }: { postId: string }) {
-  const { mutateAsync: postComment } = usePostComment(postId);
-  const { mainComments, error: getCommentError, isLoading: isLoadingComment } = useMainComments(postId);
+export default function FormForumComment({ forumId }: { forumId: string }) {
+  const { mutateAsync: postComment } = usePostForumComment(forumId);
+  const { mainComments, error: getCommentError, isLoading: isLoadingComment } = useForumComments(forumId);
   const inputRef = useRef<HTMLInputElement>(null);
   const { isAuthenticated } = useAuth();
   const { t } = useLanguage();
@@ -124,7 +124,7 @@ export default function FormComment({ postId }: { postId: string }) {
         comment,
         parentId: undefined,
       });
-      queryClient.invalidateQueries({ queryKey: ["mainComments", postId] });
+      queryClient.invalidateQueries({ queryKey: ["forumComments", forumId] });
       toast.success("Comment added successfully");
       if (inputRef.current) inputRef.current.value = "";
     } catch (error) {
@@ -138,7 +138,7 @@ export default function FormComment({ postId }: { postId: string }) {
   const hasComments = mainComments && mainComments.length > 0;
 
   return (
-    <div className="space-y-6" data-testid="comment-form-container">
+    <div className="space-y-6" data-testid="forum-comment-form-container">
       <Toaster
         position="top-center"
         toastOptions={{
@@ -150,7 +150,7 @@ export default function FormComment({ postId }: { postId: string }) {
         }}
       />
 
-      <CommentInput
+      <ForumCommentInput
         inputRef={inputRef}
         isAuthenticated={isAuthenticated}
         t={t}
@@ -158,8 +158,8 @@ export default function FormComment({ postId }: { postId: string }) {
       />
 
       {hasComments && (
-        <CommentsList postId={postId} comments={mainComments as Comment[]} t={t} />
+        <ForumCommentsList forumId={forumId} comments={mainComments as Comment[]} t={t} />
       )}
     </div>
   );
-}
+} 
