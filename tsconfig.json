@@ -38,6 +38,8 @@
   "references": [{ "path": "./tsconfig.node.json" }],
   "exclude": [
     "**/*.spec.ts",
-    "**/*.spec.tsx"
+    "**/*.spec.tsx",
+    "**/*.cy.ts",
+    "**/*.cy.tsx"
   ]
 }
