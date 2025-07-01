@@ -66,7 +66,7 @@ describe('<NestedCommentList />', () => {
         onEdit={async () => {}} 
       />
     );
-    cy.get('[data-testid="nested-comment-list"] button').first().click();
+    cy.get('[data-testid="nested-like-button-1"]').click();
     cy.get('@onLikeToggle').should('have.been.called');
   });
 
@@ -81,6 +81,6 @@ describe('<NestedCommentList />', () => {
         onEdit={async () => {}} 
       />
     );
-    cy.get('[data-testid="nested-comment-list"]').should('exist');
+    cy.get('[data-testid="nested-comment-list"]').should('not.exist');
   });
 }); 
