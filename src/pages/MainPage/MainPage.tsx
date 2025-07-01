@@ -25,7 +25,7 @@ function MainPage() {
         ogUrl="/"
         structuredData={structuredData}
       />
-      <div data-testid="main-content" className="flex-grow flex justify-center">
+      <div className="flex-grow flex justify-center">
         <MainContent />
       </div>
     </div>
