@@ -33,9 +33,9 @@ export default function ForumDetails() {
       <div className="space-y-8">
         <h1 className="text-center text-5xl">{forum.title}</h1>
         <div className="rounded-xl bg-white/10 backdrop-blur-sm border border-white/10 p-6 mb-6">
-          <ForumInfoSection forum={forum} refetch={refetch} />
           <ForumContent content={forum.content} />
         </div>
+        <ForumInfoSection forum={forum} refetch={refetch} />
       </div>
       <div className="mt-8 rounded-xl bg-white/10 backdrop-blur-sm border border-white/10 p-5" data-testid="forum-comments-section">
         {id && <FormForumComment forumId={id} />}
