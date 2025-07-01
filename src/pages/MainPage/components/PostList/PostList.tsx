@@ -39,7 +39,7 @@ export default function PostList() {
     );
 
   return (
-    <div className="max-w-6xl mx-auto" data-testid="post-list-container">
+    <div className="max-w-6xl w-full mx-auto" data-testid="post-list-container">
       {/* Header with Title and Create Button */}
       <div className="flex items-center justify-between mb-8">
         <h1 className="text-3xl font-bold text-white">Posts</h1>

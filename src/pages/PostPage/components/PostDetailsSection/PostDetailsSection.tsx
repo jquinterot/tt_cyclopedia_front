@@ -111,8 +111,8 @@ export default function PostDetails() {
           <PostImage src={`${import.meta.env.VITE_API_BASE_URL}${post.image_url}`} alt={post.title} />
           <PostStatsWrapper stats={post.stats} />
         </div>
-        <PostInfoSection post={post} refetch={refetch} />
         <PostContent content={post.content} />
+        <PostInfoSection post={post} refetch={refetch} />
       </div>
       <div className="mt-8 rounded-xl bg-white/10 backdrop-blur-sm border border-white/10 p-5" data-testid="comments-section">
         {id && <FormComment postId={id} />}
