@@ -12,6 +12,6 @@ describe('<PostDetails />', () => {
   it('renders loading spinner', () => {
     cy.mount(<PostDetails />);
     cy.get('.animate-spin').should('exist');
-    cy.get('.border-t-2.border-b-2.border-blue-500').should('exist');
+    cy.get('[data-testid="loading-spinner-icon"]').should('exist');
   });
 }); 
