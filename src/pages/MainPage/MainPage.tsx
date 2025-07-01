@@ -14,7 +14,7 @@ function MainPage() {
   });
 
   return (
-    <>
+    <div data-testid="main-page" className="min-h-screen flex flex-col">
       <SEOHead
         title="TT Cyclopedia - Table Tennis Knowledge & Community"
         description="Discover the latest table tennis equipment reviews, tips, and community discussions. Join TT Cyclopedia for comprehensive table tennis knowledge and insights."
@@ -25,8 +25,10 @@ function MainPage() {
         ogUrl="/"
         structuredData={structuredData}
       />
-      <MainContent />
-    </>
+      <div data-testid="main-content" className="flex-grow flex justify-center">
+        <MainContent />
+      </div>
+    </div>
   );
 }
 
