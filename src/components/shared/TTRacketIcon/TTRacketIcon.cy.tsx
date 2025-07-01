@@ -7,12 +7,12 @@ describe('<TTRacketIcon />', () => {
     cy.get('[data-testid="tt-racket-icon"]').should('exist');
   });
 
-  test('applies custom className', () => {
+  it('applies custom className', () => {
     cy.mount(<TTRacketIcon className="custom-class" />);
     cy.get('[data-testid="tt-racket-icon"]').should('have.class', 'custom-class');
   });
 
-  test('uses default className when not provided', () => {
+  it('uses default className when not provided', () => {
     cy.mount(<TTRacketIcon />);
     cy.get('[data-testid="tt-racket-icon"]').should('have.class', 'w-6').and('have.class', 'h-6');
   });

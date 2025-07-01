@@ -49,7 +49,7 @@ export const NestedCommentList: React.FC<NestedCommentListProps> = ({
   if (!replies.length) return null;
 
   return (
-    <div className="ml-4 mt-2 space-y-2 border-l-2 border-white/10 pl-4" data-testid="nested-comments-list">
+    <div data-testid="nested-comment-list" className="ml-4 mt-2 space-y-2 border-l-2 border-white/10 pl-4">
       {replies.map((reply) => {
         const isEditing = editingId === reply.id;
         return (
