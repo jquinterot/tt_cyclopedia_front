@@ -31,7 +31,7 @@ describe('NestedCommentList', () => {
 
   test('renders nested comments list', () => {
     render(<NestedCommentList {...mockProps} />);
-    expect(screen.getByTestId('nested-comments-list')).toBeInTheDocument();
+    expect(screen.getByTestId('nested-comment-list')).toBeInTheDocument();
   });
 
   test('renders individual comment', () => {
