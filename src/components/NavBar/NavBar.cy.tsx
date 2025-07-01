@@ -1,4 +1,5 @@
 import NavBar from './NavBar';
+import React from 'react';
 import { interceptGetMe, setAuthenticatedUser, clearAuthenticatedUser } from '../../../cypress/mocks/userMocks';
 
 describe('<NavBar />', () => {
@@ -33,7 +34,7 @@ describe('<NavBar />', () => {
 
     cy.viewport(1280, 800); // Desktop view
     cy.get('[data-testid="desktop-nav"]').within(() => {
-      cy.get('[data-testid="nav-home"]').should('be.visible');
+      cy.get('[data-testid="nav-posts"]').should('be.visible');
       cy.get('[data-testid="nav-create-post"]').should('not.exist'); // Not visible when unauthenticated
       cy.get('[data-testid="nav-about"]').should('be.visible');
       cy.get('[data-testid="language-toggle"]').should('be.visible');
@@ -47,7 +48,7 @@ describe('<NavBar />', () => {
 
     cy.viewport(1280, 800); // Desktop view
     cy.get('[data-testid="desktop-nav"]').within(() => {
-      cy.get('[data-testid="nav-home"]').should('be.visible');
+      cy.get('[data-testid="nav-posts"]').should('be.visible');
       cy.get('[data-testid="create-dropdown-trigger"]').click();
       cy.get('[data-testid="nav-create-post"]').should('be.visible');
       cy.get('[data-testid="nav-about"]').should('be.visible');
@@ -68,7 +69,7 @@ describe('<NavBar />', () => {
     cy.get('[data-testid="mobile-menu"]').should('not.exist');
     cy.get('button[data-testid="mobile-menu-button"]').first().click(); // Ensure to click the correct button
     cy.get('[data-testid="mobile-menu"]').should('be.visible').within(() => {
-      cy.get('[data-testid="mobile-nav-home"]').should('be.visible');
+      cy.get('[data-testid="mobile-nav-posts"]').should('be.visible');
       cy.get('[data-testid="mobile-nav-create-post"]').should('not.exist'); // Not visible
       cy.get('[data-testid="mobile-nav-about"]').should('be.visible');
       cy.get('[data-testid="mobile-language-toggle"]').should('be.visible');
@@ -87,7 +88,7 @@ describe('<NavBar />', () => {
     cy.get('[data-testid="mobile-menu"]').should('not.exist');
     cy.get('button[data-testid="mobile-menu-button"]').first().click();
     cy.get('[data-testid="mobile-menu"]').should('be.visible').within(() => {
-      cy.get('[data-testid="mobile-nav-home"]').should('be.visible');
+      cy.get('[data-testid="mobile-nav-posts"]').should('be.visible');
       cy.get('[data-testid="mobile-nav-create-post"]').should('be.visible');
       cy.get('[data-testid="mobile-nav-about"]').should('be.visible');
       cy.get('[data-testid="mobile-language-toggle"]').should('be.visible');

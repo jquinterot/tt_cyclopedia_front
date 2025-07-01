@@ -3,7 +3,7 @@ import { useReplyComments } from '@/hooks/comments/useRepliedComments';
 import UserInfo from "../UserInfo/UserInfo";
 import { useLikeComment } from '@/hooks/comments/useLikeComment';
 import { useEditComment } from '@/hooks/comments/useEditComment';
-import { NestedCommentList, NestedComment } from '@/components/shared/NestedCommentList';
+import { NestedCommentList, NestedComment } from '@/components/shared/NestedCommentList/NestedCommentList';
 
 type ReplyListProps = {
   parentId: string;

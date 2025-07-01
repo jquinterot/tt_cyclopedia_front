@@ -1,4 +1,5 @@
 import Avatar from "./Avatar";
+import React from 'react';
 
 describe("<Avatar />", () => {
   it("renders default avatar icon", () => {

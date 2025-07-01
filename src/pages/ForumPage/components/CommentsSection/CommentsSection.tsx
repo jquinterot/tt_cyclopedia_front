@@ -1,4 +1,4 @@
-import { ForumCommentTree } from "../ForumCommentTree";
+import { ForumCommentTree } from "../ForumCommentTree/ForumCommentTree";
 
 export default function ForumCommentsSection({ forumId }: { forumId: string }) {
   return (

@@ -1,3 +1,4 @@
+import React from "react";
 import PostPage from "./PostPage";
 
 describe("<PostPage />", () => {

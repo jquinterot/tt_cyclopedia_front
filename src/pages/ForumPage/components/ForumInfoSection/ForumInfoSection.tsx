@@ -1,7 +1,7 @@
 import { useMutation } from '@tanstack/react-query';
 import { apiClient } from '@/config/apiClient';
-import HeartIcon from '@/components/shared/HeartIcon';
-import HeartIconFilled from '@/components/shared/HeartIconFilled';
+import HeartIcon from '@/components/shared/HeartIcon/HeartIcon';
+import HeartIconFilled from '@/components/shared/HeartIconFilled/HeartIconFilled';
 
 // LikeCount.tsx
 type LikeCountProps = {

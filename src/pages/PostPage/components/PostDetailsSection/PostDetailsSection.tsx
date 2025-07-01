@@ -5,6 +5,7 @@ import { usePostId } from '@/hooks/usePostId';
 import FormComment from "../FormCommentSection/FormCommentSection";
 import { STAT_CONFIG } from '@/config/statConfig';
 import PostInfoSection from '../PostInfoSection/PostInfoSection';
+import LoadingSpinner from '@/components/shared/LoadingSpinner/LoadingSpinner';
 
 function getStatConfig(key: string) {
   return STAT_CONFIG.find((item) => item.key === key);
@@ -75,14 +76,6 @@ function PostContent({ content }: { content: string }) {
   return (
     <div className="prose prose-invert max-w-none text-sm sm:text-base" data-testid="post-content">
       <p className="text-gray-300 text-xl leading-relaxed whitespace-pre-wrap">{content}</p>
-    </div>
-  );
-}
-
-function LoadingSpinner() {
-  return (
-    <div className="flex justify-center items-center h-64">
-      <div data-testid="loading-spinner" className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
     </div>
   );
 }

@@ -1,4 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
+import HeartIcon from '@/components/shared/HeartIcon/HeartIcon';
+import HeartIconFilled from '@/components/shared/HeartIconFilled/HeartIconFilled';
 
 export interface NestedComment {
   id: string;
@@ -47,11 +49,11 @@ export const NestedCommentList: React.FC<NestedCommentListProps> = ({
   if (!replies.length) return null;
 
   return (
-    <div className="ml-4 mt-2 space-y-2 border-l-2 border-white/10 pl-4">
+    <div className="ml-4 mt-2 space-y-2 border-l-2 border-white/10 pl-4" data-testid="nested-comments-list">
       {replies.map((reply) => {
         const isEditing = editingId === reply.id;
         return (
-          <div key={reply.id} className="p-3 rounded bg-white/10 border border-white/10">
+          <div key={reply.id} className="p-3 rounded bg-white/10 border border-white/10" data-testid={`nested-comment-${reply.id}`}>
             <div className="flex items-center justify-between">
               {renderUserInfo(reply.user_id)}
               <div className="flex items-center space-x-2">
@@ -60,8 +62,13 @@ export const NestedCommentList: React.FC<NestedCommentListProps> = ({
                   onClick={() => onLikeToggle(reply)}
                   disabled={isLikePending}
                   aria-pressed={!!reply.liked_by_current_user}
+                  data-testid={`nested-like-button-${reply.id}`}
                 >
-                  {/* Heart icons should be rendered by parent if needed */}
+                  {reply.liked_by_current_user ? (
+                    <HeartIconFilled className="h-4 w-4 text-blue-600" data-testid={`nested-like-icon-filled-${reply.id}`} />
+                  ) : (
+                    <HeartIcon className="h-4 w-4 text-blue-400" data-testid={`nested-like-icon-outline-${reply.id}`} />
+                  )}
                   <span className="text-xs text-gray-300">{reply.likes || 0}</span>
                 </button>
                 <button
@@ -75,12 +82,14 @@ export const NestedCommentList: React.FC<NestedCommentListProps> = ({
                       setEditValue(reply.comment);
                     }
                   }}
+                  data-testid={`nested-edit-button-${reply.id}`}
                 >
                   {isEditing ? "Cancel" : "Edit"}
                 </button>
                 <button
                   className="p-1 text-xs text-red-400 hover:text-red-300 hover:bg-white/5 rounded transition-colors"
                   onClick={() => onDeleteReply(reply.id, parentId)}
+                  data-testid={`nested-delete-button-${reply.id}`}
                 >
                   Delete
                 </button>
@@ -96,6 +105,7 @@ export const NestedCommentList: React.FC<NestedCommentListProps> = ({
                     onChange={(e) => setEditValue(e.target.value)}
                     rows={2}
                     disabled={editLoading || isEditPending}
+                    data-testid={`nested-edit-input-${reply.id}`}
                   />
                   <div className="flex space-x-2 justify-end">
                     <button
@@ -107,6 +117,7 @@ export const NestedCommentList: React.FC<NestedCommentListProps> = ({
                         setEditingId(null);
                       }}
                       disabled={editLoading || isEditPending}
+                      data-testid={`nested-save-edit-${reply.id}`}
                     >
                       Save
                     </button>
@@ -117,13 +128,14 @@ export const NestedCommentList: React.FC<NestedCommentListProps> = ({
                         setEditValue("");
                       }}
                       disabled={editLoading || isEditPending}
+                      data-testid={`nested-cancel-edit-${reply.id}`}
                     >
                       Cancel
                     </button>
                   </div>
                 </div>
               ) : (
-                reply.comment
+                <span data-testid={`nested-comment-text-${reply.id}`}>{reply.comment}</span>
               )}
             </div>
           </div>

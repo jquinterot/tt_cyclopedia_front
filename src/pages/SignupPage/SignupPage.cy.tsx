@@ -1,3 +1,4 @@
+import React from "react";
 import SignupPage from "./SignupPage";
 
 describe("<SignupPage />", () => {

@@ -41,7 +41,7 @@ describe("NavBar Component", () => {
     const desktopNav = getByTestId("desktop-nav");
     expect(desktopNav).toBeInTheDocument();
     
-    expect(getByTestId("nav-home")).toHaveTextContent("Home");
+    expect(getByTestId("nav-posts")).toHaveTextContent("Posts");
     expect(getByTestId("nav-about")).toHaveTextContent("About");
   });
 

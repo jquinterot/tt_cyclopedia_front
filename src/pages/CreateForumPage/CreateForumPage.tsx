@@ -37,9 +37,9 @@ export default function CreateForumPage() {
   };
 
   return (
-    <div className="max-w-2xl mx-auto px-4 py-8">
-      <h1 className="text-2xl font-bold mb-6 text-white">Create New Forum</h1>
-      <form onSubmit={handleSubmit} className="space-y-6 bg-slate-900/80 p-6 rounded-lg shadow-lg border border-white/10">
+    <div className="max-w-2xl mx-auto px-4 py-8" data-testid="create-forum-page">
+      <h1 className="text-2xl font-bold mb-6 text-white" data-testid="create-forum-title">Create New Forum</h1>
+      <form onSubmit={handleSubmit} className="space-y-6 bg-slate-900/80 p-6 rounded-lg shadow-lg border border-white/10" data-testid="create-forum-form">
         <div>
           <label htmlFor="title" className="block text-sm font-medium text-gray-300 mb-1">Title</label>
           <input
@@ -50,6 +50,7 @@ export default function CreateForumPage() {
             onChange={e => setTitle(e.target.value)}
             disabled={isPending}
             required
+            data-testid="forum-title-input"
           />
         </div>
         <div>
@@ -62,15 +63,17 @@ export default function CreateForumPage() {
             rows={6}
             disabled={isPending}
             required
+            data-testid="forum-content-input"
           />
         </div>
-        {error && <div className="text-red-400 text-sm">{error}</div>}
+        {error && <div className="text-red-400 text-sm" data-testid="forum-error-message">{error}</div>}
         <div className="flex justify-end gap-2">
           <button
             type="button"
             className="px-4 py-2 rounded-md bg-gray-700 text-gray-200 hover:bg-gray-600 transition-colors"
             onClick={() => navigate('/forums')}
             disabled={isPending}
+            data-testid="forum-cancel-button"
           >
             Cancel
           </button>
@@ -78,6 +81,7 @@ export default function CreateForumPage() {
             type="submit"
             className="px-4 py-2 rounded-md bg-blue-600 text-white hover:bg-blue-700 transition-colors"
             disabled={isPending}
+            data-testid="forum-submit-button"
           >
             {isPending ? 'Creating...' : 'Create Forum'}
           </button>

@@ -29,7 +29,7 @@ describe("PostDetails Component", () => {
 
   test("renders loading state initially", () => {
     renderWithProviders(<PostDetails />);
-    const spinner = screen.getByTestId("loading-spinner");
+    const spinner = screen.getByTestId("loading-spinner-icon");
     expect(spinner).toBeInTheDocument();
     expect(spinner).toHaveClass("animate-spin");
   });

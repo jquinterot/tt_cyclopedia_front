@@ -3,8 +3,8 @@ import UserInfo from "../UserInfo/UserInfo";
 import { ReplyList } from "../ReplyList/ReplyList";
 import type { Comment } from '@/types/Comment';
 import { useAuth } from '@/contexts/AuthContext';
-import HeartIcon from '@/components/shared/HeartIcon';
-import HeartIconFilled from '@/components/shared/HeartIconFilled';
+import HeartIcon from '@/components/shared/HeartIcon/HeartIcon';
+import HeartIconFilled from '@/components/shared/HeartIconFilled/HeartIconFilled';
 import { useLikeComment } from '@/hooks/comments/useLikeComment';
 import { useEditComment } from '@/hooks/comments/useEditComment';
 

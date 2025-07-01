@@ -7,7 +7,7 @@ interface PostImageProps {
 
 export default function PostImage({ src, alt, postId }: PostImageProps) {
   return (
-    <div className="w-full md:w-1/2 relative rounded-lg overflow-hidden" data-testid={`post-image-container-${postId}`}>
+    <div className="w-full relative rounded-lg overflow-hidden" data-testid={`post-image-container-${postId}`}>
       <div className="aspect-square w-full group relative overflow-hidden rounded-lg">
         <img
           data-testid={`post-image-${postId}`}

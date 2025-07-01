@@ -1,7 +1,6 @@
 import MainContent from './components/MainContent/MainContent';
 import SEOHead from '@/components/SEO/SEOHead';
 import { generateWebSiteSchema } from '@/components/SEO/StructuredData';
-import MainPageLayout from './components/MainPageLayout/MainPageLayout';
 
 function MainPage() {
   const structuredData = generateWebSiteSchema({
@@ -15,7 +14,7 @@ function MainPage() {
   });
 
   return (
-    <MainPageLayout>
+    <>
       <SEOHead
         title="TT Cyclopedia - Table Tennis Knowledge & Community"
         description="Discover the latest table tennis equipment reviews, tips, and community discussions. Join TT Cyclopedia for comprehensive table tennis knowledge and insights."
@@ -27,7 +26,7 @@ function MainPage() {
         structuredData={structuredData}
       />
       <MainContent />
-    </MainPageLayout>
+    </>
   );
 }
 

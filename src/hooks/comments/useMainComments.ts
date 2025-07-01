@@ -22,5 +22,5 @@ export const useMainComments = (postId: string) => {
     refetchOnMount: false,
   });
 
-  return { mainComments, isLoading, error };
+  return { mainComments: mainComments ?? [], isLoading, error };
 };

@@ -1,8 +1,7 @@
 export default function SideBar() {
   return (
-   
-<div className="sidebar"> this is a nav bar</div>
-
-   
+    <div className="sidebar" data-testid="sidebar">
+      this is a nav bar
+    </div>
   );
 }

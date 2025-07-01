@@ -37,39 +37,39 @@ export function validatePassword(password: string): PasswordValidationResult {
 
   // Check length
   if (password.length < PASSWORD_REQUIREMENTS.minLength) {
-    errors.push(`Password must be at least ${PASSWORD_REQUIREMENTS.minLength} characters long`);
+    errors.push(`Min ${PASSWORD_REQUIREMENTS.minLength} chars`);
   } else {
     strengthScore += 1;
   }
 
   if (password.length > PASSWORD_REQUIREMENTS.maxLength) {
-    errors.push(`Password must be no more than ${PASSWORD_REQUIREMENTS.maxLength} characters long`);
+    errors.push(`Max ${PASSWORD_REQUIREMENTS.maxLength} chars`);
   }
 
   // Check for uppercase letters
   if (PASSWORD_REQUIREMENTS.requireUppercase && !/[A-Z]/.test(password)) {
-    errors.push('Password must contain at least one uppercase letter');
+    errors.push('Need uppercase');
   } else if (/[A-Z]/.test(password)) {
     strengthScore += 1;
   }
 
   // Check for lowercase letters
   if (PASSWORD_REQUIREMENTS.requireLowercase && !/[a-z]/.test(password)) {
-    errors.push('Password must contain at least one lowercase letter');
+    errors.push('Need lowercase');
   } else if (/[a-z]/.test(password)) {
     strengthScore += 1;
   }
 
   // Check for numbers
   if (PASSWORD_REQUIREMENTS.requireNumbers && !/\d/.test(password)) {
-    errors.push('Password must contain at least one number');
+    errors.push('Need number');
   } else if (/\d/.test(password)) {
     strengthScore += 1;
   }
 
   // Check for special characters
   if (PASSWORD_REQUIREMENTS.requireSpecialChars && !/[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]/.test(password)) {
-    errors.push('Password must contain at least one special character');
+    errors.push('Need special char');
   } else if (/[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]/.test(password)) {
     strengthScore += 1;
   }
@@ -97,22 +97,22 @@ export function validateUsername(username: string): InputValidationResult {
 
   // Check length
   if (username.length < USERNAME_REQUIREMENTS.minLength) {
-    errors.push(`Username must be at least ${USERNAME_REQUIREMENTS.minLength} characters long`);
+    errors.push(`Min ${USERNAME_REQUIREMENTS.minLength} chars`);
   }
 
   if (username.length > USERNAME_REQUIREMENTS.maxLength) {
-    errors.push(`Username must be no more than ${USERNAME_REQUIREMENTS.maxLength} characters long`);
+    errors.push(`Max ${USERNAME_REQUIREMENTS.maxLength} chars`);
   }
 
   // Check allowed characters
   if (!USERNAME_REQUIREMENTS.allowedChars.test(username)) {
-    errors.push('Username can only contain letters, numbers, underscores, and hyphens');
+    errors.push('Letters, numbers, _ and - only');
   }
 
   // Check for common reserved usernames
   const reservedUsernames = ['admin', 'root', 'system', 'guest', 'test', 'user'];
   if (reservedUsernames.includes(username.toLowerCase())) {
-    errors.push('This username is reserved and cannot be used');
+    errors.push('Username reserved');
   }
 
   return {
@@ -139,7 +139,7 @@ export function validatePasswordMatch(password: string, confirmPassword: string)
   const errors: string[] = [];
 
   if (password !== confirmPassword) {
-    errors.push('Passwords do not match');
+    errors.push('Passwords mismatch');
   }
 
   return {
@@ -222,17 +222,17 @@ export function validateEmail(email: string): InputValidationResult {
   
   // Check minimum length
   if (email.length < 5) {
-    errors.push('Email must be at least 5 characters long');
+    errors.push('Min 5 chars');
   }
   
   // Check for @ symbol
   if (!email.includes('@')) {
-    errors.push('Email must contain @ symbol');
+    errors.push('Need @ symbol');
   }
   
   // Check for dot
   if (!email.includes('.')) {
-    errors.push('Email must contain a dot');
+    errors.push('Need dot');
   }
   
   return {

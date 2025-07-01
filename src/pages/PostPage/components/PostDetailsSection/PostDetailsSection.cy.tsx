@@ -1,4 +1,5 @@
 /// <reference types="cypress" />
+import React from 'react';
 import '../../../../../cypress/support/component';
 import PostDetails from './PostDetailsSection';
 

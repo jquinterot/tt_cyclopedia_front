@@ -2,7 +2,7 @@ import React, { Suspense } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { routes, ROUTES } from '@/config/routes';
 import { useAuth } from '@/contexts/AuthContext';
-import LoadingSpinner from '@/components/LoadingSpinner/LoadingSpinner';
+import LoadingSpinner from '@/components/shared/LoadingSpinner/LoadingSpinner';
 import NavBar from '@/components/NavBar/NavBar';
 import Footer from '@/components/Footer/Footer';
 

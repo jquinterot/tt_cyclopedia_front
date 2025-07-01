@@ -52,5 +52,5 @@ export const useForumComments = (forumId: string) => {
 
   console.log('🔄 Forum main comments hook result:', { mainComments, isLoading, error, forumId });
 
-  return { mainComments, isLoading, error };
+  return { mainComments: mainComments ?? [], isLoading, error };
 }; 

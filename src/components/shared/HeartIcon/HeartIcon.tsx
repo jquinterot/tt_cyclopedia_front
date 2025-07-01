@@ -7,6 +7,7 @@ const HeartIcon: React.FC<HeartIconProps> = (props) => (
     fill="none"
     stroke="currentColor"
     viewBox="0 0 24 24"
+    data-testid="heart-icon"
     {...props}
   >
     <path

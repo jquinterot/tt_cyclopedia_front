@@ -1,20 +1,13 @@
 import { useParams } from "react-router-dom";
 import { useForum } from '@/hooks/forums/useForum';
-import FormForumComment from "../FormForumCommentSection/FormForumCommentSection";
+import FormForumComment from "../FormCommentSection/FormCommentSection";
 import ForumInfoSection from '../ForumInfoSection/ForumInfoSection';
+import LoadingSpinner from '@/components/shared/LoadingSpinner/LoadingSpinner';
 
 function ForumContent({ content }: { content: string }) {
   return (
     <div className="prose prose-invert max-w-none text-sm sm:text-base" data-testid="forum-content">
       <p className="text-gray-300 text-xl leading-relaxed whitespace-pre-wrap">{content}</p>
-    </div>
-  );
-}
-
-function LoadingSpinner() {
-  return (
-    <div className="flex justify-center items-center h-64">
-      <div data-testid="loading-spinner" className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
     </div>
   );
 }

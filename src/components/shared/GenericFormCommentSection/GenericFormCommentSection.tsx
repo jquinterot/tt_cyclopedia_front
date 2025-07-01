@@ -1,29 +1,34 @@
 import { useRef } from "react";
 import { Link } from "react-router-dom";
-import { useForumComments } from '@/hooks/forums/useForumComments';
-import { usePostForumComment } from '@/hooks/forums/usePostForumComment';
-import { useLanguage } from '@/contexts/LanguageContext';
 import { useQueryClient } from "@tanstack/react-query";
 import toast, { Toaster } from "react-hot-toast";
-import ForumCommentsSection from "../ForumCommentsSection/ForumCommentsSection";
 import type { Comment } from '@/types/Comment';
-import { useAuth } from '@/contexts/AuthContext';
+import LoadingSpinner from '@/components/shared/LoadingSpinner/LoadingSpinner';
 
-type TFunction = (key: string) => string;
-
-interface ForumCommentInputProps {
-  inputRef: React.RefObject<HTMLInputElement>;
+// Types for hooks and props
+export interface GenericFormCommentSectionProps {
+  id: string; // postId or forumId
+  useMainComments: (id: string) => { mainComments: Comment[]; error: unknown; isLoading: boolean };
+  usePostComment: (id: string) => { mutateAsync: (data: { comment: string; parentId?: string }) => Promise<unknown> };
   isAuthenticated: boolean;
-  t: TFunction;
-  handleAddComment: () => void;
+  t: (key: string) => string;
+  testIdPrefix?: string;
+  CommentsSectionComponent: React.ComponentType<{ id: string }>;
 }
 
-function ForumCommentInput({
+function GenericCommentInput({
   inputRef,
   isAuthenticated,
   t,
   handleAddComment,
-}: ForumCommentInputProps) {
+  testIdPrefix = "",
+}: {
+  inputRef: React.RefObject<HTMLInputElement>;
+  isAuthenticated: boolean;
+  t: (key: string) => string;
+  handleAddComment: () => void;
+  testIdPrefix?: string;
+}) {
   return (
     <form
       onSubmit={(ev) => {
@@ -31,7 +36,7 @@ function ForumCommentInput({
         handleAddComment();
       }}
       className="space-y-4"
-      data-testid="forum-comment-form"
+      data-testid={`${testIdPrefix}comment-form`}
     >
       <div className="space-y-2">
         <input
@@ -44,13 +49,13 @@ function ForumCommentInput({
               : t("form.comment.signInPlaceholder")
           }
           disabled={!isAuthenticated}
-          data-testid="forum-comment-input"
+          data-testid={`${testIdPrefix}comment-input`}
         />
         {isAuthenticated ? (
           <button
             type="submit"
             className="px-4 py-2 bg-blue-600 text-sm font-medium text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors"
-            data-testid="forum-submit-comment"
+            data-testid={`${testIdPrefix}submit-comment`}
           >
             {t("form.comment.submit")}
           </button>
@@ -67,27 +72,19 @@ function ForumCommentInput({
   );
 }
 
-interface ForumCommentsListProps {
-  forumId: string;
+function GenericCommentsList({ id, comments, t, testIdPrefix = "", CommentsSectionComponent }: {
+  id: string;
   comments: Comment[];
-  t: TFunction;
-}
-
-function ForumCommentsList({ forumId, comments, t }: ForumCommentsListProps) {
+  t: (key: string) => string;
+  testIdPrefix?: string;
+  CommentsSectionComponent: React.ComponentType<{ id: string }>;
+}) {
   return (
-    <div className="space-y-4" data-testid="forum-comments-list-container">
-      <h2 className="text-xl font-semibold" data-testid="forum-comments-count">
+    <div className="space-y-4" data-testid={`${testIdPrefix}comments-list-container`}>
+      <h2 className="text-xl font-semibold" data-testid={`${testIdPrefix}comments-count`}>
         {t("comments.title")} ({comments.length})
       </h2>
-      <ForumCommentsSection forumId={forumId} />
-    </div>
-  );
-}
-
-function LoadingSpinner() {
-  return (
-    <div className="flex justify-center py-4">
-      <div className="animate-spin rounded-full h-6 w-6 border-t-2 border-b-2 border-blue-500"></div>
+      <CommentsSectionComponent id={id} />
     </div>
   );
 }
@@ -96,14 +93,18 @@ function ErrorMessage() {
   return <div className="text-red-400 text-sm">Error loading comments</div>;
 }
 
-// --- Main Component ---
-
-export default function FormForumComment({ forumId }: { forumId: string }) {
-  const { mutateAsync: postComment } = usePostForumComment(forumId);
-  const { mainComments, error: getCommentError, isLoading: isLoadingComment } = useForumComments(forumId);
+export default function GenericFormCommentSection({
+  id,
+  useMainComments,
+  usePostComment,
+  isAuthenticated,
+  t,
+  testIdPrefix = "",
+  CommentsSectionComponent,
+}: GenericFormCommentSectionProps) {
+  const { mutateAsync: postComment } = usePostComment(id);
+  const { mainComments, error: getCommentError, isLoading: isLoadingComment } = useMainComments(id);
   const inputRef = useRef<HTMLInputElement>(null);
-  const { isAuthenticated } = useAuth();
-  const { t } = useLanguage();
   const queryClient = useQueryClient();
 
   const handleAddComment = async () => {
@@ -124,7 +125,7 @@ export default function FormForumComment({ forumId }: { forumId: string }) {
         comment,
         parentId: undefined,
       });
-      queryClient.invalidateQueries({ queryKey: ["forumComments", forumId] });
+      queryClient.invalidateQueries();
       toast.success("Comment added successfully");
       if (inputRef.current) inputRef.current.value = "";
     } catch (error) {
@@ -138,7 +139,7 @@ export default function FormForumComment({ forumId }: { forumId: string }) {
   const hasComments = mainComments && mainComments.length > 0;
 
   return (
-    <div className="space-y-6" data-testid="forum-comment-form-container">
+    <div className="space-y-6" data-testid={`${testIdPrefix}comment-form-container`}>
       <Toaster
         position="top-center"
         toastOptions={{
@@ -150,15 +151,22 @@ export default function FormForumComment({ forumId }: { forumId: string }) {
         }}
       />
 
-      <ForumCommentInput
+      <GenericCommentInput
         inputRef={inputRef}
         isAuthenticated={isAuthenticated}
         t={t}
         handleAddComment={handleAddComment}
+        testIdPrefix={testIdPrefix}
       />
 
       {hasComments && (
-        <ForumCommentsList forumId={forumId} comments={mainComments as Comment[]} t={t} />
+        <GenericCommentsList
+          id={id}
+          comments={mainComments as Comment[]}
+          t={t}
+          testIdPrefix={testIdPrefix}
+          CommentsSectionComponent={CommentsSectionComponent}
+        />
       )}
     </div>
   );

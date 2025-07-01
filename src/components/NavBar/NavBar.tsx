@@ -155,9 +155,9 @@ function DesktopNav({
       <Link
         to="/"
         className="text-gray-300 hover:text-blue-400 transition-colors px-3 py-2 rounded-md text-sm font-medium"
-        data-testid="nav-home"
+        data-testid="nav-posts"
       >
-        {t('nav.home')}
+        Posts
       </Link>
       <Link
         to="/forums"
@@ -256,9 +256,9 @@ function MobileDropdownMenu({
           to="/"
           className="block px-3 py-2 rounded-md text-base font-medium text-gray-300 hover:text-blue-400 hover:bg-white/5 transition-colors"
           onClick={() => setIsOpen(false)}
-          data-testid="mobile-nav-home"
+          data-testid="mobile-nav-posts"
         >
-          {t('nav.home')}
+          Posts
         </Link>
         <Link
           to="/forums"

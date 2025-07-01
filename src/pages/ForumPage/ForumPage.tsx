@@ -3,7 +3,7 @@ import SEOHead from '@/components/SEO/SEOHead';
 import { generateArticleSchema, generateBreadcrumbSchema } from '@/components/SEO/StructuredData';
 import { useParams } from 'react-router-dom';
 import { useForum } from '@/hooks/forums/useForum';
-import LoadingSpinner from '@/components/LoadingSpinner/LoadingSpinner';
+import LoadingSpinner from '@/components/shared/LoadingSpinner/LoadingSpinner';
 
 function ForumPage() {
   const { id } = useParams<{ id: string }>();
