@@ -248,6 +248,7 @@ function MobileDropdownMenu({
   handleLogout: () => void;
   setIsOpen: (open: boolean) => void;
 }) {
+  const navigate = useNavigate();
   if (!isOpen) return null;
   return (
     <div className="sm:hidden absolute left-0 right-0 bg-slate-900/95 backdrop-blur-md border-b border-white/10" id="mobile-menu" data-testid="mobile-menu">
@@ -272,14 +273,14 @@ function MobileDropdownMenu({
           <>
             <button
               className="block w-full text-left px-3 py-2 rounded-md text-base font-medium text-white bg-blue-600 hover:bg-blue-700 transition-colors mb-1"
-              onClick={() => { setIsOpen(false); window.location.href = '/createPost'; }}
+              onClick={() => { setIsOpen(false); navigate('/createPost'); }}
               data-testid="mobile-nav-create-post"
             >
               + Create Post
             </button>
             <button
               className="block w-full text-left px-3 py-2 rounded-md text-base font-medium text-white bg-blue-600 hover:bg-blue-700 transition-colors mb-1"
-              onClick={() => { setIsOpen(false); window.location.href = '/create-forum'; }}
+              onClick={() => { setIsOpen(false); navigate('/create-forum'); }}
               data-testid="mobile-nav-create-forum"
             >
               + Create Forum

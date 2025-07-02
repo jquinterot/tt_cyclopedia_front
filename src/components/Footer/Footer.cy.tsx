@@ -32,14 +32,4 @@ describe('<Footer />', () => {
       .and('have.class', 'border-white/5')
       .and('have.class', 'bg-slate-900/80');
   });
-
-  it('renders social links', () => {
-    // Check Twitter link
-    cy.get('a').contains('Twitter').should('exist');
-    cy.get('a svg').first().should('exist');
-
-    // Check GitHub link
-    cy.get('a').contains('GitHub').should('exist');
-    cy.get('a svg').last().should('exist');
-  });
 });

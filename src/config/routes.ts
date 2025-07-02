@@ -11,6 +11,7 @@ const ProfilePage = lazy(() => import('@pages/ProfilePage'));
 const CreateForumPage = lazy(() => import('@pages/CreateForumPage/CreateForumPage'));
 const ForumsPage = lazy(() => import('@pages/ForumsPage/ForumsPage'));
 const ForumPage = lazy(() => import('@pages/ForumPage/ForumPage'));
+const DonatePage = lazy(() => import('@pages/DonatePage/DonatePage'));
 
 export interface RouteConfig {
   path: string;
@@ -31,6 +32,7 @@ export const ROUTES = {
   FORUM: '/forums/:id',
   ABOUT: '/about',
   PROFILE: '/profile',
+  DONATE: '/donate',
 } as const;
 
 export const routes: RouteConfig[] = [
@@ -96,6 +98,12 @@ export const routes: RouteConfig[] = [
     title: 'Profile',
     layout: 'default',
     requiresAuth: true,
+  },
+  {
+    path: ROUTES.DONATE,
+    component: DonatePage,
+    title: 'Support Us',
+    layout: 'default',
   },
 ];
 
