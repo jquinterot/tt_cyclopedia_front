@@ -40,11 +40,7 @@ apiClient.interceptors.response.use(
       localStorage.removeItem('authToken');
       localStorage.removeItem('user');
       localStorage.removeItem('isAuthenticated');
-      
-      // Redirect to login if not already there
-      if (window.location.pathname !== '/login') {
-        window.location.href = '/login';
-      }
+      // Do NOT redirect to login, just let the app handle the state
     }
     return Promise.reject(error);
   }

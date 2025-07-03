@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 
 export const usePostId = () => {
@@ -9,4 +8,4 @@ export const usePostId = () => {
     }
 
   return { postId, updatePostId };
-};
+}; 

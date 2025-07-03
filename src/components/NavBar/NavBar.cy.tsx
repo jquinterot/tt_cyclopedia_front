@@ -49,8 +49,6 @@ describe('<NavBar />', () => {
     cy.viewport(1280, 800); // Desktop view
     cy.get('[data-testid="desktop-nav"]').within(() => {
       cy.get('[data-testid="nav-posts"]').should('be.visible');
-      cy.get('[data-testid="create-dropdown-trigger"]').click();
-      cy.get('[data-testid="nav-create-post"]').should('be.visible');
       cy.get('[data-testid="nav-about"]').should('be.visible');
       cy.get('[data-testid="language-toggle"]').should('be.visible');
       cy.get('[data-testid="nav-login"]').should('not.exist');
@@ -89,7 +87,7 @@ describe('<NavBar />', () => {
     cy.get('button[data-testid="mobile-menu-button"]').first().click();
     cy.get('[data-testid="mobile-menu"]').should('be.visible').within(() => {
       cy.get('[data-testid="mobile-nav-posts"]').should('be.visible');
-      cy.get('[data-testid="mobile-nav-create-post"]').should('be.visible');
+      cy.get('[data-testid="mobile-nav-create-post"]').should('not.exist');
       cy.get('[data-testid="mobile-nav-about"]').should('be.visible');
       cy.get('[data-testid="mobile-language-toggle"]').should('be.visible');
       cy.get('[data-testid="mobile-nav-login"]').should('not.exist');

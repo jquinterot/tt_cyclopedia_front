@@ -1,5 +1,5 @@
 import { render } from '@testing-library/react';
-import { TestProviders } from '@/test-utils/TestProviders';
+import { TestProviders } from '../../../../test-utils/TestProviders';
 import ForumInfoSection from './ForumInfoSection';
 
 describe('ForumInfoSection', () => {

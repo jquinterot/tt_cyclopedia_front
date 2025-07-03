@@ -1,4 +1,5 @@
 import FormActions from "./FormActions";
+import React from 'react';
 
 describe("<FormActions />", () => {
   it("renders buttons correctly", () => {

@@ -1,4 +1,5 @@
 import MainContent from './MainContent';
+import React from 'react';
 
 beforeEach(() => {
   cy.intercept('GET', '/posts', {

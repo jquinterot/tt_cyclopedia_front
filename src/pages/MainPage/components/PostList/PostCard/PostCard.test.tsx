@@ -2,6 +2,7 @@ import { describe, test, expect, vi } from "vitest";
 import { render, screen, fireEvent } from "@testing-library/react";
 import "@testing-library/jest-dom/vitest";
 import PostCard from "./PostCard";
+import { TestProviders } from '@/test-utils/TestProviders';
 
 const mockPost = {
   id: "1",
@@ -14,7 +15,11 @@ const mockPost = {
 describe("PostCard Component", () => {
   test("renders post card with correct data", () => {
     const mockOnClick = vi.fn();
-    render(<PostCard post={mockPost} onClick={mockOnClick} />);
+    render(
+      <TestProviders>
+        <PostCard post={mockPost} onClick={mockOnClick} />
+      </TestProviders>
+    );
     
     expect(screen.getByTestId("post-card-1"));
     expect(screen.getByTestId("post-title-1")).toHaveTextContent("Test Post");
@@ -23,7 +28,11 @@ describe("PostCard Component", () => {
 
   test("calls onClick when card is clicked", () => {
     const mockOnClick = vi.fn();
-    render(<PostCard post={mockPost} onClick={mockOnClick} />);
+    render(
+      <TestProviders>
+        <PostCard post={mockPost} onClick={mockOnClick} />
+      </TestProviders>
+    );
     
     const card = screen.getByTestId("post-card-1");
     fireEvent.click(card);
@@ -33,7 +42,11 @@ describe("PostCard Component", () => {
 
   test("displays likes count", () => {
     const mockOnClick = vi.fn();
-    render(<PostCard post={mockPost} onClick={mockOnClick} />);
+    render(
+      <TestProviders>
+        <PostCard post={mockPost} onClick={mockOnClick} />
+      </TestProviders>
+    );
     
     expect(screen.getByText("5"));
   });

@@ -1,4 +1,4 @@
-import { useLanguage } from '@/contexts/LanguageContext';
+import { useLanguage } from '@/contexts/LanguageContext.utils';
 import FeatureCard from "../FeatureCard/FeatureCard";
 
 export default function FeaturesSection() {

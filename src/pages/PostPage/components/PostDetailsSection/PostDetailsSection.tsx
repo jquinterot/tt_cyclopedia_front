@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { usePostById } from '@/hooks/posts/usePostById';
-import { usePostId } from '@/hooks/usePostId';
+import { usePostId } from '@/hooks/posts/usePostId';
 import FormComment from "../FormCommentSection/FormCommentSection";
 import { STAT_CONFIG } from '@/config/statConfig';
 import PostInfoSection from '../PostInfoSection/PostInfoSection';
@@ -17,7 +17,7 @@ function StatBar({ label, value, color }: { label: string; value: number; color:
       <span className="text-xs font-medium text-gray-400 w-16 group-hover:text-white transition-colors">
         {label}
       </span>
-      <div className="flex-1 h-3 bg-white/10 rounded-lg overflow-hidden backdrop-blur-sm border border-white/5">
+      <div className="flex-1 h-3 bg-white/10 rounded-lg overflow-hidden backdrop-blur-sm border border-white/5 group-hover:border-white group-hover:shadow-md transition-colors transition-shadow duration-200">
         <div 
           className={`h-full ${color} transition-all duration-500 ease-out`}
           style={{ 
@@ -72,14 +72,6 @@ function PostStatsWrapper({ stats }: { stats?: Record<string, number> }) {
   );
 }
 
-function PostContent({ content }: { content: string }) {
-  return (
-    <div className="prose prose-invert max-w-none text-sm sm:text-base" data-testid="post-content">
-      <p className="text-gray-300 text-xl leading-relaxed whitespace-pre-wrap">{content}</p>
-    </div>
-  );
-}
-
 function ErrorMessage() {
   return (
     <div className="w-full max-w-4xl text-center p-8 rounded-xl bg-white/10 backdrop-blur-sm border border-white/10">
@@ -111,7 +103,6 @@ export default function PostDetails() {
           <PostImage src={`${import.meta.env.VITE_API_BASE_URL}${post.image_url}`} alt={post.title} />
           <PostStatsWrapper stats={post.stats} />
         </div>
-        <PostContent content={post.content} />
         <PostInfoSection post={post} refetch={refetch} />
       </div>
       <div className="mt-8 rounded-xl bg-white/10 backdrop-blur-sm border border-white/10 p-5" data-testid="comments-section">

@@ -1,4 +1,5 @@
 import PostImage from './PostImage';
+import React from 'react';
 
 describe('<PostImage />', () => {
   it('renders image with correct attributes', () => {

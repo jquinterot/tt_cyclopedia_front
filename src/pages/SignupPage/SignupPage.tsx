@@ -16,6 +16,7 @@ import {
 } from "@/utils/security";
 import PasswordStrength from "@/components/PasswordStrength/PasswordStrength";
 import toast, { Toaster } from "react-hot-toast";
+import { ErrorCode, ErrorMessages } from '@/enums/ErrorCode';
 
 // Initialize rate limiter
 const rateLimiter = new RateLimiter(5, 15 * 60 * 1000); // 5 attempts per 15 minutes
@@ -106,7 +107,7 @@ export default function SignupPage() {
     const storedToken = sessionStorage.getItem('csrfToken');
     if (!validateCSRFToken(csrfToken, storedToken || '')) {
       console.log('CSRF validation failed', { csrfToken, storedToken });
-      toast.error('Security validation failed. Please refresh the page and try again.');
+      toast.error(ErrorMessages[ErrorCode.CSRF]);
       return;
     }
 
@@ -114,14 +115,14 @@ export default function SignupPage() {
     const clientId = 'signup-form'; // In a real app, you might use IP or user agent
     if (!rateLimiter.isAllowed(clientId)) {
       console.log('Rate limiter blocked signup');
-      toast.error(`Too many signup attempts. Please try again later.`);
+      toast.error(ErrorMessages[ErrorCode.RATE_LIMIT]);
       return;
     }
 
     // Validate form
     if (!validateForm()) {
       console.log('Form validation failed', validation);
-      toast.error('Please fix the validation errors before submitting.');
+      toast.error(ErrorMessages[ErrorCode.VALIDATION]);
       return;
     }
 
@@ -220,32 +221,32 @@ export default function SignupPage() {
             const emailError = (errorData?.errors?.email && errorData.errors.email.length > 0) || (errorData?.email && errorData.email.length > 0);
             
             if (usernameError && emailError) {
-              toast.error('Both username and email are already taken. Please choose different ones or try signing in instead.');
+              toast.error(ErrorMessages[ErrorCode.DUPLICATE_BOTH]);
             } else if (usernameError) {
-              toast.error('Username is already taken. Try adding numbers or special characters to make it unique.');
+              toast.error(ErrorMessages[ErrorCode.DUPLICATE_USERNAME]);
             } else if (emailError) {
-              toast.error('Email is already registered. Please use a different email address or try signing in.');
+              toast.error(ErrorMessages[ErrorCode.DUPLICATE_EMAIL]);
             } else {
-              toast.error('Please fix the highlighted errors above.');
+              toast.error(ErrorMessages[ErrorCode.VALIDATION]);
             }
           } else if (errorData?.detail) {
             toast.error(errorData.detail);
           } else if (errorData?.message) {
             toast.error(errorData.message);
           } else {
-            toast.error('Username or email already exists. Please choose a different one.');
+            toast.error(ErrorMessages[ErrorCode.DUPLICATE_BOTH]);
           }
         } else if (status === 422) {
-          toast.error('Please check your input and try again.');
+          toast.error(ErrorMessages[ErrorCode.VALIDATION]);
         } else if (status === 429) {
-          toast.error('Too many signup attempts. Please wait a moment and try again.');
+          toast.error(ErrorMessages[ErrorCode.RATE_LIMIT]);
         } else if (status && status >= 500) {
-          toast.error('Server error. Please try again later.');
+          toast.error(ErrorMessages[ErrorCode.SERVER]);
         } else {
-          toast.error('Failed to create account. Please try again.');
+          toast.error(ErrorMessages[ErrorCode.SERVER]);
         }
       } else {
-        toast.error('Network error. Please check your connection and try again.');
+        toast.error(ErrorMessages[ErrorCode.NETWORK]);
       }
     } finally {
       setIsSubmitting(false);
@@ -266,27 +267,6 @@ export default function SignupPage() {
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center font-sans text-white py-12 px-4 sm:px-6 lg:px-8" data-testid="signup-page">
-      <Toaster
-        position="top-center"
-        toastOptions={{
-          duration: 4000,
-          style: {
-            background: "#1f2937",
-            color: "#fff",
-            border: "1px solid #ef4444",
-            borderRadius: "8px",
-            padding: "12px 16px",
-            fontSize: "14px",
-            fontWeight: "500",
-          },
-          error: {
-            iconTheme: {
-              primary: "#ef4444",
-              secondary: "#fff",
-            },
-          },
-        }}
-      />
       <div className="max-w-md w-full">
         <div className="text-center mb-8" data-testid="signup-header">
           <h1 className="text-3xl font-bold">Create Account</h1>
@@ -451,6 +431,27 @@ export default function SignupPage() {
           </form>
         </div>
       </div>
+      <Toaster
+        position="top-center"
+        toastOptions={{
+          duration: 4000,
+          style: {
+            background: "#1f2937",
+            color: "#fff",
+            border: "1px solid #ef4444",
+            borderRadius: "8px",
+            padding: "12px 16px",
+            fontSize: "14px",
+            fontWeight: "500",
+          },
+          error: {
+            iconTheme: {
+              primary: "#ef4444",
+              secondary: "#fff",
+            },
+          },
+        }}
+      />
     </div>
   );
 } 

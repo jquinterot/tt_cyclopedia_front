@@ -1,9 +1,10 @@
 import { useRef } from "react";
 import { Link } from "react-router-dom";
 import { useQueryClient } from "@tanstack/react-query";
-import toast, { Toaster } from "react-hot-toast";
+import toast from "react-hot-toast";
 import type { Comment } from '@/types/Comment';
 import LoadingSpinner from '@/components/shared/LoadingSpinner/LoadingSpinner';
+import { ErrorCode, ErrorMessages } from '@/enums/ErrorCode';
 
 // Types for hooks and props
 export interface GenericFormCommentSectionProps {
@@ -90,7 +91,7 @@ function GenericCommentsList({ id, comments, t, testIdPrefix = "", CommentsSecti
 }
 
 function ErrorMessage() {
-  return <div className="text-red-400 text-sm">Error loading comments</div>;
+  return <div className="text-red-400 text-sm">{ErrorMessages[ErrorCode.SERVER]}</div>;
 }
 
 export default function GenericFormCommentSection({
@@ -109,14 +110,14 @@ export default function GenericFormCommentSection({
 
   const handleAddComment = async () => {
     if (!isAuthenticated) {
-      toast.error("Please sign in to comment");
+      toast.error(ErrorMessages[ErrorCode.LOGIN_REQUIRED]);
       return;
     }
 
     const comment = inputRef.current?.value.trim() || "";
 
     if (!comment) {
-      toast.error("Please enter a comment");
+      toast.error(ErrorMessages[ErrorCode.COMMENT_REQUIRED]);
       return;
     }
 
@@ -129,7 +130,7 @@ export default function GenericFormCommentSection({
       toast.success("Comment added successfully");
       if (inputRef.current) inputRef.current.value = "";
     } catch (error) {
-      toast.error("Failed to add comment");
+      toast.error(ErrorMessages[ErrorCode.SERVER]);
     }
   };
 
@@ -140,17 +141,6 @@ export default function GenericFormCommentSection({
 
   return (
     <div className="space-y-6" data-testid={`${testIdPrefix}comment-form-container`}>
-      <Toaster
-        position="top-center"
-        toastOptions={{
-          duration: 3000,
-          style: {
-            background: "#363636",
-            color: "#fff",
-          },
-        }}
-      />
-
       <GenericCommentInput
         inputRef={inputRef}
         isAuthenticated={isAuthenticated}

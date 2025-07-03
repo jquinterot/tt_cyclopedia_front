@@ -1,5 +1,6 @@
 /// <reference types="cypress" />
 import MainPageLayout from './MainPageLayout';
+import React from 'react';
 
 describe('<MainPageLayout />', () => {
   it('renders page layout with navigation and footer', () => {

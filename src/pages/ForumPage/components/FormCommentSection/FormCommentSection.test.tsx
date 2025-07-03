@@ -1,12 +1,12 @@
 import { render } from '@testing-library/react';
 import { TestProviders } from '../../../../test-utils/TestProviders';
-import ForumDetailsSection from './ForumDetailsSection';
+import FormForumComment from './FormCommentSection';
 
-describe('ForumDetailsSection', () => {
+describe('FormForumComment', () => {
   it('renders without crashing', () => {
     render(
       <TestProviders>
-        <ForumDetailsSection />
+        <FormForumComment forumId="test-id" />
       </TestProviders>
     );
   });

@@ -1,4 +1,5 @@
 import InputField from "./InputField";
+import React from 'react';
 
 describe("<InputField />", () => {
   it("renders with correct props", () => {

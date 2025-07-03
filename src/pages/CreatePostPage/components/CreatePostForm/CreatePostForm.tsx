@@ -1,4 +1,3 @@
-import toast, { Toaster } from "react-hot-toast";
 import { usePostPost } from '@/hooks/posts/usePostPosts';
 import { useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -11,6 +10,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import type { StatsState } from '@/types/Post';
 import StatBar from '@/pages/MainPage/components/PostList/StatBar/StatBar';
 import { STAT_CONFIG } from '@/config/statConfig';
+import toast, { Toaster } from "react-hot-toast";
 
 const DEFAULT_STAT = '5';
 
@@ -115,17 +115,6 @@ export default function CreatePostForm() {
 
   return (
     <div className="max-w-2xl mx-auto px-4 py-8" data-testid="create-post-container">
-      <Toaster 
-        position="top-center"
-        toastOptions={{
-          duration: 3000,
-          style: {
-            background: '#363636',
-            color: '#fff',
-          },
-        }}
-      />
-
       <div className="bg-white/10 backdrop-blur-sm rounded-xl p-8 border border-white/10">
         <form
           ref={formRef}
@@ -199,6 +188,16 @@ export default function CreatePostForm() {
           <FormActions onCancel={handleCancel} isPending={isPending} />
         </form>
       </div>
+      <Toaster 
+        position="top-center"
+        toastOptions={{
+          duration: 3000,
+          style: {
+            background: '#363636',
+            color: '#fff',
+          },
+        }}
+      />
     </div>
   );
 }

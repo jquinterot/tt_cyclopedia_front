@@ -1,4 +1,5 @@
 import LoginPage from "./LoginPage";
+import React from 'react';
 
 describe("<LoginPage />", () => {
   it("renders the Login page", () => {

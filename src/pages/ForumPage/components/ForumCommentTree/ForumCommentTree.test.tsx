@@ -1,12 +1,12 @@
 import { render } from '@testing-library/react';
 import { TestProviders } from '../../../../test-utils/TestProviders';
-import ForumDetailsSection from './ForumDetailsSection';
+import { ForumCommentTree } from './ForumCommentTree';
 
-describe('ForumDetailsSection', () => {
+describe('ForumCommentTree', () => {
   it('renders without crashing', () => {
     render(
       <TestProviders>
-        <ForumDetailsSection />
+        <ForumCommentTree forumId="test-id" />
       </TestProviders>
     );
   });

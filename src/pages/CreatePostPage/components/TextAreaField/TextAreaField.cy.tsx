@@ -1,4 +1,5 @@
 import TextAreaField from "./TextAreaField";
+import React from 'react';
 
 describe("<TextAreaField />", () => {
   it("renders with correct props", () => {

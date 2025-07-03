@@ -1,8 +1,9 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
-import toast, { Toaster } from "react-hot-toast";
 import { useLogin } from "@/hooks/users";
 import { useAuth } from "@/contexts/AuthContext";
+import { ErrorCode, ErrorMessages } from '@/enums/ErrorCode';
+import toast, { Toaster } from "react-hot-toast";
 
 function LoginPage() {
     const navigate = useNavigate();
@@ -34,39 +35,26 @@ function LoginPage() {
             
             // Use the new authentication context
             login(result.access_token, result.user);
-            
             toast.success("Successfully logged in!");
             navigate("/");
         } catch (err: unknown) {
-            let message = "Login failed. Please check your credentials.";
+            let message = ErrorMessages[ErrorCode.AUTH];
             if (err && typeof err === 'object' && 'response' in err) {
                 const errorResponse = err as { response?: { data?: unknown, status?: number } };
                 if (errorResponse.response?.status === 401) {
-                    message = "Invalid username or password.";
+                    message = ErrorMessages[ErrorCode.AUTH];
                 } else if (errorResponse.response?.data && typeof errorResponse.response.data === 'object' && 'detail' in errorResponse.response.data) {
                     // @ts-expect-error accessing detail property from backend error response
                     message = errorResponse.response.data.detail;
                 }
             }
             setError(message);
-            toast.error(message);
         }
     };
 
     return (
         <div className="min-h-screen flex flex-col items-center justify-center font-sans text-white py-12 px-4 sm:px-6 lg:px-8" data-testid="login-page">
             <div className="max-w-md w-full">
-                <Toaster
-                    position="top-center"
-                    toastOptions={{
-                        duration: 3000,
-                        style: {
-                            background: '#363636',
-                            color: '#fff',
-                        },
-                    }}
-                />
-
                 <div className="text-center mb-8" data-testid="login-header">
                     <h1 className="text-3xl font-bold">Welcome Back</h1>
                     <p className="mt-3 text-sm text-gray-300">
@@ -157,6 +145,16 @@ function LoginPage() {
                     </form>
                 </div>
             </div>
+            <Toaster
+                position="top-center"
+                toastOptions={{
+                    duration: 3000,
+                    style: {
+                        background: '#363636',
+                        color: '#fff',
+                    },
+                }}
+            />
         </div>
     );
 }

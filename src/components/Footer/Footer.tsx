@@ -16,7 +16,7 @@ function FooterDescription() {
       className="text-sm text-gray-300 leading-relaxed max-w-2xl"
       data-testid="footer-description"
     >
-      Your premier destination for comprehensive blade equipment reviews. Share experiences, read detailed analyses, and connect with cutting enthusiasts worldwide.
+      Your premier destination for comprehensive blade equipment reviews. Share experiences, read detailed analyses, and connect with cutting enthusiasts worldwide. Support us through Buy Me a Coffee!
     </p>
   );
 }

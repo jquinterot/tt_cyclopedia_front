@@ -1,12 +1,7 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
-
-interface User {
-  id: string;
-  username: string;
-  email?: string;
-}
+import type { User } from '@/types/User';
 
 interface AuthContextType {
   user: User | null;
@@ -101,4 +96,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       {children}
     </AuthContext.Provider>
   );
-}; 
+};
+
+export { AuthContext }; 

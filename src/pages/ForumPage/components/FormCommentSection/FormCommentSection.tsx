@@ -1,4 +1,4 @@
-import { useLanguage } from '@/contexts/LanguageContext';
+import { useLanguage } from '@/contexts/LanguageContext.utils';
 import { useAuth } from '@/contexts/AuthContext';
 import GenericFormCommentSection from '@/components/shared/GenericFormCommentSection/GenericFormCommentSection';
 import { useForumComments } from '@/hooks/forums/useForumComments';

@@ -7,6 +7,7 @@ import HeartIcon from '@/components/shared/HeartIcon/HeartIcon';
 import HeartIconFilled from '@/components/shared/HeartIconFilled/HeartIconFilled';
 import { useLikeComment } from '@/hooks/comments/useLikeComment';
 import { useEditComment } from '@/hooks/comments/useEditComment';
+import toast from 'react-hot-toast';
 
 type CommentItemProps = {
   comment: Comment;
@@ -52,6 +53,10 @@ export const CommentItem = memo(function CommentItem({
   }, [isEditing]);
 
   const handleLikeToggle = () => {
+    if (!user) {
+      toast('Please login to like!', { icon: '⚠️', id: 'login-to-like' });
+      return;
+    }
     if (comment.liked_by_current_user) {
       unlikeMutation.mutate(comment.id);
     } else {
@@ -95,7 +100,7 @@ export const CommentItem = memo(function CommentItem({
         <UserInfo userId={comment.user_id} />
         <div className="flex items-center space-x-2">
           <button
-            className="flex items-center gap-1 p-1.5 text-blue-400 hover:text-blue-300 hover:bg-white/5 rounded-md transition-colors"
+            className="relative flex items-center gap-1 p-1.5 text-blue-400 hover:text-blue-300 hover:bg-white/5 rounded-md transition-colors group"
             onClick={handleLikeToggle}
             disabled={likeMutation.isPending || unlikeMutation.isPending}
             aria-pressed={!!comment.liked_by_current_user}
@@ -104,7 +109,10 @@ export const CommentItem = memo(function CommentItem({
             {comment.liked_by_current_user ? (
               <HeartIconFilled className="h-5 w-5 text-blue-600 transition-colors" data-testid={`like-icon-filled-${comment.id}`}/>
             ) : (
-              <HeartIcon className="h-5 w-5 text-blue-400 transition-colors" data-testid={`like-icon-outline-${comment.id}`}/>
+              <>
+                <HeartIcon className="h-5 w-5 text-blue-400 transition-colors group-hover:opacity-0" data-testid={`like-icon-outline-${comment.id}`}/>
+                <HeartIconFilled className="h-5 w-5 text-blue-600 absolute left-0 top-0 opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none" data-testid={`like-icon-filled-hover-${comment.id}`}/>
+              </>
             )}
             <span className="text-sm text-gray-300">{comment.likes || 0}</span>
           </button>

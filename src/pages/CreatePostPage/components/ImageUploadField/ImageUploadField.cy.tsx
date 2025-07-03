@@ -1,4 +1,5 @@
 import ImageUploadField from "./ImageUploadField";
+import React from 'react';
 
 describe("<ImageUploadField />", () => {
   it("renders image upload area", () => {

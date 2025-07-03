@@ -3,12 +3,14 @@ import { useNavigate } from "react-router-dom";
 import { useState, useMemo } from "react";
 import PostCard from "./PostCard/PostCard";
 import SearchBar from "@/components/shared/SearchBar/SearchBar";
+import { useAuth } from '@/contexts/AuthContext';
 
 // --- Main PostList Component ---
 export default function PostList() {
   const { posts, isLoading, error } = usePosts();
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState("");
+  const { user } = useAuth();
 
   const filteredPosts = useMemo(() => {
     if (!posts) return [];
@@ -43,13 +45,15 @@ export default function PostList() {
       {/* Header with Title and Create Button */}
       <div className="flex items-center justify-between mb-8">
         <h1 className="text-3xl font-bold text-white">Posts</h1>
-        <button
-          onClick={() => navigate('/createPost')}
-          className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
-          data-testid="create-post-button"
-        >
-          Create Post
-        </button>
+        {user && (
+          <button
+            onClick={() => navigate('/createPost')}
+            className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
+            data-testid="create-post-button"
+          >
+            Create Post
+          </button>
+        )}
       </div>
 
       {/* Search Filter */}

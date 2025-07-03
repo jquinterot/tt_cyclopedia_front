@@ -1,4 +1,5 @@
 import CreatePostForm from './CreatePostForm';
+import React from 'react';
 
 describe('<CreatePostForm />', () => {
   beforeEach(() => {

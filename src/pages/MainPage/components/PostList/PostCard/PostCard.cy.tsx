@@ -1,4 +1,5 @@
 import PostCard from './PostCard';
+import React from 'react';
 
 const mockPost = {
   id: "1",

@@ -6,6 +6,7 @@ import { usePostComment } from '@/hooks/comments/usePostComments';
 import { useMainComments } from '@/hooks/comments/useMainComments';
 import type { Comment } from '@/types/Comment';
 import { CommentItem } from "../CommentItem/CommentItem";
+import { ErrorCode, ErrorMessages } from '@/enums/ErrorCode';
 
 export default function Comments({ postId }: { postId: string }) {
   const queryClient = useQueryClient();
@@ -38,7 +39,7 @@ export default function Comments({ postId }: { postId: string }) {
       toast.success("Comment deleted successfully");
       queryClient.invalidateQueries({ queryKey: ["mainComments", postId] });
     } catch (error) {
-      toast.error("Failed to delete comment");
+      toast.error(ErrorMessages[ErrorCode.SERVER]);
       queryClient.invalidateQueries({ queryKey: ["mainComments", postId] });
     }
   }, [deleteCommentMutation, postId, queryClient]);
@@ -52,7 +53,7 @@ export default function Comments({ postId }: { postId: string }) {
       toast.success("Reply deleted successfully");
       queryClient.invalidateQueries({ queryKey: ["repliedComments", postId, parentId] });
     } catch (error) {
-      toast.error("Failed to delete reply");
+      toast.error(ErrorMessages[ErrorCode.SERVER]);
       queryClient.invalidateQueries({ queryKey: ["repliedComments", postId, parentId] });
     }
   }, [deleteCommentMutation, postId, queryClient]);
@@ -60,7 +61,7 @@ export default function Comments({ postId }: { postId: string }) {
   const handleReply = useCallback(async (parentId: string) => {
     const text = replyText[parentId]?.trim() || "";
     if (!text) {
-      toast.error("Please enter a reply");
+      toast.error(ErrorMessages[ErrorCode.REPLY_REQUIRED]);
       return;
     }
     try {
@@ -75,12 +76,12 @@ export default function Comments({ postId }: { postId: string }) {
       setReplyingTo(null);
       queryClient.invalidateQueries({ queryKey: ["repliedComments", postId, parentId] });
     } catch (error) {
-      toast.error("Failed to add reply");
+      toast.error(ErrorMessages[ErrorCode.SERVER]);
     }
   }, [postComment, postId, replyText, queryClient]);
 
   if (isLoading) return <div>Loading comments...</div>;
-  if (error) return <div className="text-red-400">Error loading comments</div>;
+  if (error) return <div className="text-red-400">{ErrorMessages[ErrorCode.SERVER]}</div>;
 
   return (
     <div className="space-y-4" data-testid="comments-list">

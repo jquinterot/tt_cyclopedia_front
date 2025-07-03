@@ -1,0 +1,33 @@
+export enum ErrorCode {
+  NETWORK = 'NETWORK',
+  SERVER = 'SERVER',
+  AUTH = 'AUTH',
+  VALIDATION = 'VALIDATION',
+  NOT_FOUND = 'NOT_FOUND',
+  LOGIN_REQUIRED = 'LOGIN_REQUIRED',
+  CSRF = 'CSRF',
+  RATE_LIMIT = 'RATE_LIMIT',
+  DUPLICATE_USERNAME = 'DUPLICATE_USERNAME',
+  DUPLICATE_EMAIL = 'DUPLICATE_EMAIL',
+  DUPLICATE_BOTH = 'DUPLICATE_BOTH',
+  COMMENT_REQUIRED = 'COMMENT_REQUIRED',
+  REPLY_REQUIRED = 'REPLY_REQUIRED',
+  TITLE_CONTENT_REQUIRED = 'TITLE_CONTENT_REQUIRED',
+}
+
+export const ErrorMessages: Record<ErrorCode, string> = {
+  [ErrorCode.NETWORK]: 'Network error. Please check your connection and try again.',
+  [ErrorCode.SERVER]: 'Server error. Please try again later.',
+  [ErrorCode.AUTH]: 'Authentication failed. Please log in again.',
+  [ErrorCode.VALIDATION]: 'Please fix the validation errors before submitting.',
+  [ErrorCode.NOT_FOUND]: 'Resource not found.',
+  [ErrorCode.LOGIN_REQUIRED]: 'You must be logged in to view your profile.',
+  [ErrorCode.CSRF]: 'Security validation failed. Please refresh the page and try again.',
+  [ErrorCode.RATE_LIMIT]: 'Too many signup attempts. Please try again later.',
+  [ErrorCode.DUPLICATE_USERNAME]: 'Username is already taken. Try adding numbers or special characters to make it unique.',
+  [ErrorCode.DUPLICATE_EMAIL]: 'Email is already registered. Please use a different email address or try signing in.',
+  [ErrorCode.DUPLICATE_BOTH]: 'Both username and email are already taken. Please choose different ones or try signing in instead.',
+  [ErrorCode.COMMENT_REQUIRED]: 'Please enter a comment',
+  [ErrorCode.REPLY_REQUIRED]: 'Please enter a reply',
+  [ErrorCode.TITLE_CONTENT_REQUIRED]: 'Title and content are required.',
+}; 

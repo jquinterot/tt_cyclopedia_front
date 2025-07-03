@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useCreateForum } from '@/hooks/forums/useCreateForum';
 import type { ForumCreate } from '@/types/Forum';
+import { ErrorCode, ErrorMessages } from '@/enums/ErrorCode';
 
 export default function CreateForumPage() {
   const [title, setTitle] = useState('');
@@ -14,7 +15,7 @@ export default function CreateForumPage() {
     e.preventDefault();
     setError(null);
     if (!title.trim() || !content.trim()) {
-      setError('Title and content are required.');
+      setError(ErrorMessages[ErrorCode.TITLE_CONTENT_REQUIRED]);
       return;
     }
     try {
@@ -29,9 +30,9 @@ export default function CreateForumPage() {
         (err as { response?: { data?: { detail?: string } } }).response !== null
       ) {
         const response = (err as { response?: { data?: { detail?: string } } }).response;
-        setError(response?.data?.detail || 'Failed to create forum.');
+        setError(response?.data?.detail || ErrorMessages[ErrorCode.SERVER]);
       } else {
-        setError('Failed to create forum.');
+        setError(ErrorMessages[ErrorCode.SERVER]);
       }
     }
   };

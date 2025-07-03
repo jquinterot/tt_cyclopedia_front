@@ -1,8 +1,7 @@
-import React, { useState, useRef, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { useLanguage } from '@/contexts/LanguageContext';
+import React, { useState, useRef } from 'react';
+import { Link } from 'react-router-dom';
+import { useLanguage } from '@/contexts/LanguageContext.utils';
 import { useAuth } from '@/contexts/AuthContext';
-import { FaTableTennis } from 'react-icons/fa';
 
 // Logo Section
 function LogoSection() {
@@ -77,65 +76,6 @@ function UserProfileDropdown({ username, onLogout, t }: { username: string; onLo
   );
 }
 
-// Create Dropdown Component
-function CreateDropdown() {
-  const [open, setOpen] = useState(false);
-  const navigate = useNavigate();
-  const dropdownRef = useRef<HTMLDivElement>(null);
-
-  // Close dropdown when clicking outside
-  useEffect(() => {
-    function handleClickOutside(event: MouseEvent) {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
-        setOpen(false);
-      }
-    }
-    if (open) {
-      document.addEventListener('mousedown', handleClickOutside);
-    } else {
-      document.removeEventListener('mousedown', handleClickOutside);
-    }
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, [open]);
-
-  return (
-    <div className="relative" ref={dropdownRef}>
-      <button
-        onClick={() => setOpen((v) => !v)}
-        className="px-3 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors text-sm font-medium flex items-center gap-1"
-        data-testid="create-dropdown-trigger"
-        type="button"
-      >
-        <FaTableTennis className="w-4 h-4 text-white" />
-        New
-        <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
-        </svg>
-      </button>
-      {open && (
-        <div className="absolute right-0 mt-2 w-40 bg-slate-900 border border-white/10 rounded-md shadow-lg z-50" data-testid="create-dropdown-menu">
-          <button
-            className="block w-full text-left px-4 py-2 text-sm text-gray-200 hover:bg-blue-600/20 rounded-t-md transition-colors"
-            onClick={() => { navigate('/createPost'); setOpen(false); }}
-            data-testid="nav-create-post"
-          >
-            Create Post
-          </button>
-          <button
-            className="block w-full text-left px-4 py-2 text-sm text-gray-200 hover:bg-blue-600/20 rounded-b-md transition-colors"
-            onClick={() => { navigate('/create-forum'); setOpen(false); }}
-            data-testid="nav-create-forum"
-          >
-            Create Forum
-          </button>
-        </div>
-      )}
-    </div>
-  );
-}
-
 // Desktop Navigation
 function DesktopNav({
   username,
@@ -166,7 +106,6 @@ function DesktopNav({
       >
         Forums
       </Link>
-      {username && <CreateDropdown />}
       <Link
         to="/about"
         className="text-gray-300 hover:text-blue-400 transition-colors px-3 py-2 rounded-md text-sm font-medium"
@@ -248,7 +187,6 @@ function MobileDropdownMenu({
   handleLogout: () => void;
   setIsOpen: (open: boolean) => void;
 }) {
-  const navigate = useNavigate();
   if (!isOpen) return null;
   return (
     <div className="sm:hidden absolute left-0 right-0 bg-slate-900/95 backdrop-blur-md border-b border-white/10" id="mobile-menu" data-testid="mobile-menu">
@@ -269,24 +207,6 @@ function MobileDropdownMenu({
         >
           Forums
         </Link>
-        {username && (
-          <>
-            <button
-              className="block w-full text-left px-3 py-2 rounded-md text-base font-medium text-white bg-blue-600 hover:bg-blue-700 transition-colors mb-1"
-              onClick={() => { setIsOpen(false); navigate('/createPost'); }}
-              data-testid="mobile-nav-create-post"
-            >
-              + Create Post
-            </button>
-            <button
-              className="block w-full text-left px-3 py-2 rounded-md text-base font-medium text-white bg-blue-600 hover:bg-blue-700 transition-colors mb-1"
-              onClick={() => { setIsOpen(false); navigate('/create-forum'); }}
-              data-testid="mobile-nav-create-forum"
-            >
-              + Create Forum
-            </button>
-          </>
-        )}
         <Link
           to="/about"
           className="block px-3 py-2 rounded-md text-base font-medium text-gray-300 hover:text-blue-400 hover:bg-white/5 transition-colors"
