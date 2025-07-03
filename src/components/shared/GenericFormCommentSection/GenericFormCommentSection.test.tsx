@@ -87,7 +87,7 @@ describe('GenericFormCommentSection', () => {
       isLoading: false
     });
     render(<GenericFormCommentSection {...mockProps} />, { wrapper: createWrapper() });
-    expect(screen.getByText('Error loading comments')).toBeInTheDocument();
+    expect(screen.getByText('Server error. Please try again later.')).toBeInTheDocument();
   });
 
   test('renders comments list when there are comments', () => {
