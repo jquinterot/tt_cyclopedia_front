@@ -3,7 +3,7 @@ import { ForumCommentTree } from './ForumCommentTree';
 
 describe('<ForumCommentTree />', () => {
   it('mounts and displays comment tree', () => {
-    cy.intercept('GET', /forums\/test-id\/comments\?parentId=null/, {
+    cy.intercept('GET', '/comments/forum/test-id/main', {
       statusCode: 200,
       body: [
         {
@@ -17,7 +17,7 @@ describe('<ForumCommentTree />', () => {
         },
       ],
     }).as('getForumComments');
-    cy.intercept('GET', /forums\/test-id\/comments\?parentId=comment-1/, {
+    cy.intercept('GET', '/comments/forum/test-id/replies/comment-1', {
       statusCode: 200,
       body: [
         {

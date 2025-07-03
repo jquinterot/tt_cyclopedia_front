@@ -3,7 +3,7 @@ import FormForumComment from './FormCommentSection';
 
 describe('<FormForumComment />', () => {
   it('mounts and displays comment form', () => {
-    cy.intercept('GET', /forums\/test-id\/comments\?parentId=null/, {
+    cy.intercept('GET', '/comments/forum/test-id/main', {
       statusCode: 200,
       body: [
         {
