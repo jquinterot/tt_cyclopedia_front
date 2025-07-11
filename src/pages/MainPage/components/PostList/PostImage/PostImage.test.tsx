@@ -5,7 +5,7 @@ import PostImage from "./PostImage";
 
 describe("PostImage Component", () => {
   test("renders image with correct attributes", () => {
-    render(<PostImage src="/test.jpg" alt="Test Post" postId="1" />);
+    render(<PostImage src="/test.jpg" alt="Test Post" postId="1" defaultImageUrl="/default.jpg" />);
     
     const image = screen.getByTestId("post-image-1");
     expect(image).toHaveAttribute("src", "/test.jpg");
@@ -13,7 +13,7 @@ describe("PostImage Component", () => {
   });
 
   test("renders image container", () => {
-    render(<PostImage src="/test.jpg" alt="Test Post" postId="1" />);
+    render(<PostImage src="/test.jpg" alt="Test Post" postId="1" defaultImageUrl="/default.jpg" />);
     
     expect(screen.getByTestId("post-image-container-1"));
   });

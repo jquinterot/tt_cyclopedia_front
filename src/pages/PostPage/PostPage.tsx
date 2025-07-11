@@ -1,6 +1,6 @@
 import PostDetails from './components/PostDetailsSection/PostDetailsSection';
 import SEOHead from '@/components/SEO/SEOHead';
-import { generateArticleSchema, generateBreadcrumbSchema } from '@/components/SEO/StructuredData';
+import { generateArticleSchema, generateBreadcrumbSchema } from '@/types/StructuredData';
 import { useParams } from 'react-router-dom';
 import { usePostById } from '@/hooks/posts/usePostById';
 import LoadingSpinner from '@/components/shared/LoadingSpinner/LoadingSpinner';

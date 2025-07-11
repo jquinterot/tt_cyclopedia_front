@@ -24,6 +24,8 @@ interface PostCardProps {
   onClick: () => void;
 }
 
+const DEFAULT_IMAGE_URL = import.meta.env.VITE_DEFAULT_IMAGE_URL;
+
 export default function PostCard({ post, onClick }: PostCardProps) {
   const { user } = useAuth();
   const queryClient = useQueryClient();
@@ -69,9 +71,10 @@ export default function PostCard({ post, onClick }: PostCardProps) {
     >
       <div className="w-full mb-3" data-testid={`post-content-${post.id}`}>
         <PostImage
-          src={`${import.meta.env.VITE_API_BASE_URL}${post.image_url}`}
+          src={post.image_url}
           alt={post.title}
           postId={post.id}
+          defaultImageUrl={DEFAULT_IMAGE_URL}
         />
       </div>
       <div className="w-full mb-3" data-testid={`post-stats-section-${post.id}`}>

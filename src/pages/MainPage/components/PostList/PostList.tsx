@@ -58,10 +58,8 @@ export default function PostList() {
 
       {/* Search Filter */}
       <SearchBar 
-        value={searchQuery} 
-        onChange={setSearchQuery} 
+        onSearch={setSearchQuery}
         placeholder="Search posts..."
-        testId="post-search-input"
       />
 
       {/* No Results Message */}

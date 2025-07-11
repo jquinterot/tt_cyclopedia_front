@@ -1,6 +1,6 @@
 import MainContent from './components/MainContent/MainContent';
 import SEOHead from '@/components/SEO/SEOHead';
-import { generateWebSiteSchema } from '@/components/SEO/StructuredData';
+import { generateWebSiteSchema } from '@/types/StructuredData';
 
 function MainPage() {
   const structuredData = generateWebSiteSchema({

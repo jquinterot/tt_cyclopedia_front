@@ -3,7 +3,7 @@ import AboutDescription from "./components/AboutDescription/AboutDescription";
 import MissionSection from "./components/MissionSection/MissionSection";
 import FeaturesSection from "./components/FeaturesSection/FeaturesSection";
 import SEOHead from '@/components/SEO/SEOHead';
-import { generateOrganizationSchema, generateFAQSchema } from '@/components/SEO/StructuredData';
+import { generateOrganizationSchema, generateFAQSchema } from '@/types/StructuredData';
 
 function AboutPage() {
   const organizationData = generateOrganizationSchema({
@@ -13,7 +13,8 @@ function AboutPage() {
     logo: 'https://ttcyclopedia.space/favicon.png'
   });
 
-  const faqData = generateFAQSchema([
+  const faqData = generateFAQSchema({
+    questions: [
     {
       question: 'What is TT Cyclopedia?',
       answer: 'TT Cyclopedia is a comprehensive platform dedicated to table tennis knowledge, equipment reviews, player tips, and community discussions.'
@@ -26,7 +27,8 @@ function AboutPage() {
       question: 'Is TT Cyclopedia free to use?',
       answer: 'Yes, TT Cyclopedia is completely free to use and join our community.'
     }
-  ]);
+  ]
+  });
 
   return (
     <>

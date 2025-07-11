@@ -129,10 +129,8 @@ export default function ForumsPage() {
       </div>
 
       <SearchBar 
-        value={searchQuery} 
-        onChange={setSearchQuery} 
+        onSearch={setSearchQuery}
         placeholder="Search forums..."
-        testId="forum-search-input"
       />
 
       {filteredForums.length === 0 && searchQuery && (

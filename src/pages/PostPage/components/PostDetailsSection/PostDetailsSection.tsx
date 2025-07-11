@@ -33,7 +33,11 @@ function StatBar({ label, value, color }: { label: string; value: number; color:
   );
 }
 
-function PostImage({ src, alt }: { src: string; alt: string }) {
+function PostImage({ src, alt, defaultImageUrl }: { src: string; alt: string; defaultImageUrl: string }) {
+  const handleError = (e: React.SyntheticEvent<HTMLImageElement, Event>) => {
+    e.currentTarget.onerror = null;
+    e.currentTarget.src = defaultImageUrl;
+  };
   return (
     <div className="aspect-square w-full group relative overflow-hidden rounded-lg" data-testid="post-image-container">
       <img
@@ -41,6 +45,7 @@ function PostImage({ src, alt }: { src: string; alt: string }) {
         src={src}
         alt={alt}
         data-testid="post-image"
+        onError={handleError}
       />
       <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
     </div>
@@ -80,6 +85,8 @@ function ErrorMessage() {
   );
 }
 
+const DEFAULT_IMAGE_URL = import.meta.env.VITE_DEFAULT_IMAGE_URL;
+
 export default function PostDetails() {
   const { id } = useParams();
   const { postId, updatePostId } = usePostId();
@@ -100,7 +107,7 @@ export default function PostDetails() {
       <div className="space-y-8">
         <h1 className="text-center text-5xl">{post.title}</h1>
         <div className="rounded-xl bg-white/10 backdrop-blur-sm border border-white/10 grid grid-cols-1 sm:grid-cols-2 gap-8 mb-6">
-          <PostImage src={`${import.meta.env.VITE_API_BASE_URL}${post.image_url}`} alt={post.title} />
+          <PostImage src={post.image_url} alt={post.title} defaultImageUrl={DEFAULT_IMAGE_URL} />
           <PostStatsWrapper stats={post.stats} />
         </div>
         <PostInfoSection post={post} refetch={refetch} />

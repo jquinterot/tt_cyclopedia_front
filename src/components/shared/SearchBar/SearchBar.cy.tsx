@@ -3,33 +3,36 @@ import SearchBar from './SearchBar';
 
 describe('<SearchBar />', () => {
   it('renders search input', () => {
-    cy.mount(<SearchBar value="" onChange={() => {}} placeholder="Search..." testId="search-input" />);
+    cy.mount(<SearchBar onSearch={() => {}} placeholder="Search..." />);
     cy.get('[data-testid="search-input"]').should('exist');
     cy.get('input').should('have.attr', 'placeholder', 'Search...');
   });
 
-  it('renders search icon', () => {
-    const mockOnChange = cy.stub().as('onChange');
-    cy.mount(<SearchBar value="" onChange={mockOnChange} placeholder="Search..." testId="search-input" />);
-    cy.get('[data-testid="search-icon"]').should('exist');
+  it('renders search button', () => {
+    const mockOnSearch = cy.stub().as('onSearch');
+    cy.mount(<SearchBar onSearch={mockOnSearch} placeholder="Search..." />);
+    cy.get('[data-testid="search-button"]').should('exist');
   });
 
-  it('calls onChange when input changes', () => {
-    const mockOnChange = cy.stub().as('onChange');
-    cy.mount(<SearchBar value="" onChange={mockOnChange} placeholder="Search..." testId="search-input" />);
+  it('calls onSearch when input changes', () => {
+    const mockOnSearch = cy.stub().as('onSearch');
+    cy.mount(<SearchBar onSearch={mockOnSearch} placeholder="Search..." />);
     cy.get('[data-testid="search-input"]').type('test');
-    cy.get('@onChange').should('be.called');
+    // Wait for debounce
+    cy.wait(600);
+    cy.get('@onSearch').should('be.called');
   });
 
   it('displays the current value', () => {
-    const mockOnChange = cy.stub().as('onChange');
-    cy.mount(<SearchBar value="current value" onChange={mockOnChange} placeholder="Search..." testId="search-input" />);
+    const mockOnSearch = cy.stub().as('onSearch');
+    cy.mount(<SearchBar onSearch={mockOnSearch} placeholder="Search..." />);
+    cy.get('[data-testid="search-input"]').type('current value');
     cy.get('[data-testid="search-input"]').should('have.value', 'current value');
   });
 
-  it('applies custom test id', () => {
-    const mockOnChange = cy.stub().as('onChange');
-    cy.mount(<SearchBar value="" onChange={mockOnChange} placeholder="Search..." testId="custom-test-id" />);
-    cy.get('[data-testid="custom-test-id"]').should('exist');
+  it('applies custom className', () => {
+    const mockOnSearch = cy.stub().as('onSearch');
+    cy.mount(<SearchBar onSearch={mockOnSearch} placeholder="Search..." className="custom-class" />);
+    cy.get('[data-testid="search-form"]').should('have.class', 'custom-class');
   });
 }); 

@@ -2,39 +2,65 @@ import { describe, test, expect, vi } from "vitest";
 import { render, screen, fireEvent } from "@testing-library/react";
 import "@testing-library/jest-dom/vitest";
 import SearchBar from './SearchBar';
+import { TestProviders } from '@/test-utils/TestProviders';
 
 describe('SearchBar', () => {
-  const mockOnChange = vi.fn();
+  const mockOnSearch = vi.fn();
 
   beforeEach(() => {
-    mockOnChange.mockClear();
+    mockOnSearch.mockClear();
   });
 
   test('renders search input with correct placeholder', () => {
-    render(<SearchBar value="" onChange={mockOnChange} placeholder="Search..." testId="search-input" />);
+    render(
+      <TestProviders>
+        <SearchBar onSearch={mockOnSearch} placeholder="Search..." />
+      </TestProviders>
+    );
     expect(screen.getByPlaceholderText('Search...')).toBeInTheDocument();
   });
 
-  test('renders search icon', () => {
-    render(<SearchBar value="" onChange={mockOnChange} placeholder="Search..." testId="search-input" />);
-    expect(screen.getByTestId('search-icon')).toBeInTheDocument();
+  test('renders search button', () => {
+    render(
+      <TestProviders>
+        <SearchBar onSearch={mockOnSearch} placeholder="Search..." />
+      </TestProviders>
+    );
+    expect(screen.getByTestId('search-button')).toBeInTheDocument();
   });
 
-  test('calls onChange when input changes', () => {
-    render(<SearchBar value="" onChange={mockOnChange} placeholder="Search..." testId="search-input" />);
+  test('calls onSearch when input changes', () => {
+    render(
+      <TestProviders>
+        <SearchBar onSearch={mockOnSearch} placeholder="Search..." />
+      </TestProviders>
+    );
     const input = screen.getByTestId('search-input');
     fireEvent.change(input, { target: { value: 'test' } });
-    expect(mockOnChange).toHaveBeenCalledWith('test');
+    // Wait for debounce
+    setTimeout(() => {
+      expect(mockOnSearch).toHaveBeenCalledWith('test');
+    }, 600);
   });
 
   test('displays the current value', () => {
-    render(<SearchBar value="current value" onChange={mockOnChange} placeholder="Search..." testId="search-input" />);
+    render(
+      <TestProviders>
+        <SearchBar onSearch={mockOnSearch} placeholder="Search..." />
+      </TestProviders>
+    );
     const input = screen.getByTestId('search-input');
+    fireEvent.change(input, { target: { value: 'current value' } });
     expect(input).toHaveValue('current value');
   });
 
-  test('applies custom test id', () => {
-    render(<SearchBar value="" onChange={mockOnChange} placeholder="Search..." testId="custom-test-id" />);
-    expect(screen.getByTestId('custom-test-id')).toBeInTheDocument();
+  test('applies custom className', () => {
+    render(
+      <TestProviders>
+        <SearchBar onSearch={mockOnSearch} placeholder="Search..." className="custom-class" />
+      </TestProviders>
+    );
+    const form = screen.getByTestId('search-form');
+    expect(form).toHaveClass('custom-class');
   });
 }); 

@@ -1,35 +1,87 @@
+import React, { useState, useCallback } from 'react';
+import { useDDoSProtection } from '@/hooks/useDDoSProtection';
+import { useAuth } from '@/contexts/AuthContext';
+
 interface SearchBarProps {
-  value: string;
-  onChange: (value: string) => void;
-  placeholder: string;
-  testId?: string;
+  onSearch: (query: string) => void;
+  placeholder?: string;
+  className?: string;
 }
 
-export default function SearchBar({ value, onChange, placeholder, testId }: SearchBarProps) {
+export default function SearchBar({ onSearch, placeholder = "Search...", className = "" }: SearchBarProps) {
+  const [query, setQuery] = useState('');
+  const { user } = useAuth();
+  const { createDebouncedFunction, isActionAllowed, recordUserAction } = useDDoSProtection();
+
+  // Create a debounced search function to prevent rapid API calls
+  const debouncedSearch = useCallback(
+    createDebouncedFunction((...args: unknown[]) => {
+      const searchQuery = args[0] as string;
+      // Check if search action is allowed
+      if (!isActionAllowed('search', user?.id)) {
+        console.warn('Search blocked due to rate limiting');
+        return;
+      }
+      
+      // Record the search action
+      recordUserAction('search', user?.id);
+      
+      // Perform the search
+      onSearch(searchQuery);
+    }, 500), // 500ms debounce delay
+    [createDebouncedFunction, isActionAllowed, recordUserAction, onSearch, user?.id]
+  );
+
+  // Handle input changes
+  const handleInputChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    const newQuery = e.target.value;
+    setQuery(newQuery);
+    
+    // Only search if query has content
+    if (newQuery.trim()) {
+      debouncedSearch(newQuery);
+    } else {
+      // Clear search immediately if query is empty
+      onSearch('');
+    }
+  }, [debouncedSearch, onSearch]);
+
+  // Handle form submission
+  const handleSubmit = useCallback((e: React.FormEvent) => {
+    e.preventDefault();
+    
+    // Check if search action is allowed
+    if (!isActionAllowed('search_submit', user?.id)) {
+      console.warn('Search submission blocked due to rate limiting');
+      return;
+    }
+    
+    // Record the search submission action
+    recordUserAction('search_submit', user?.id);
+    
+    // Perform immediate search
+    onSearch(query);
+  }, [isActionAllowed, recordUserAction, onSearch, query, user?.id]);
+
   return (
-    <div className="relative mb-8">
+    <form onSubmit={handleSubmit} className={`relative ${className}`} data-testid="search-form">
       <input
         type="text"
+        value={query}
+        onChange={handleInputChange}
         placeholder={placeholder}
-        value={value}
-        onChange={(e) => onChange(e.target.value)}
-        className="w-full px-4 py-2 pl-10 bg-white/5 border border-white/10 rounded-md text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
-        data-testid={testId}
+        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+        aria-label="Search"
+        data-testid="search-input"
       />
-      <svg
-        className="absolute left-3 top-2.5 h-5 w-5 text-gray-400"
-        fill="none"
-        stroke="currentColor"
-        viewBox="0 0 24 24"
-        data-testid="search-icon"
+      <button
+        type="submit"
+        className="absolute right-2 top-1/2 transform -translate-y-1/2 px-3 py-1 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+        aria-label="Submit search"
+        data-testid="search-button"
       >
-        <path
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          strokeWidth={2}
-          d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-        />
-      </svg>
-    </div>
+        Search
+      </button>
+    </form>
   );
 } 
