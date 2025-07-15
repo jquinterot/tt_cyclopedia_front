@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test';
-import { deleteTestUser } from '../helpers/teardown';
+import { deleteTestUser } from '../../helpers/teardown';
 
 test.describe('Signup Negative Scenarios', () => {
   test.afterEach(async () => {
