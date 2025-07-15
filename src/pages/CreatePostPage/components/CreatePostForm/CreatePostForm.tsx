@@ -147,7 +147,7 @@ export default function CreatePostForm() {
                 <div className="w-full max-w-md">
                   <h3 className="text-lg font-semibold text-white text-center mb-4">Stats</h3>
                   {STAT_CONFIG.map(({ key, label, color, tooltip }) => (
-                    <div key={key} className="flex items-center gap-4 mb-4">
+                    <div key={key} className="flex items-center gap-2 mb-4">
                       <label htmlFor={key} className="w-20 text-sm font-medium text-gray-300 flex items-center gap-1">
                         {label}
                         <span className="ml-1 text-xs text-gray-400" title={tooltip}>ⓘ</span>
