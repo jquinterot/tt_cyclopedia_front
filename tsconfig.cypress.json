@@ -3,6 +3,16 @@
   "compilerOptions": {
     "types": ["cypress", "cypress/react18"]
   },
-  "include": ["cypress", "src/**/*.cy.ts", "src/**/*.cy.tsx"],
-  "exclude": []
+  "include": [
+    "cypress/**/*.ts",
+    "cypress/**/*.tsx",
+    "src/**/*.cy.ts",
+    "src/**/*.cy.tsx"
+  ],
+  "exclude": [
+    "**/*.spec.ts",
+    "**/*.spec.tsx",
+    "**/*.test.ts",
+    "**/*.test.tsx"
+  ]
 } 

@@ -1,5 +1,4 @@
 /// <reference types="cypress" />
-import React from 'react';
 import PasswordStrength from './PasswordStrength';
 import { validatePassword } from '../../utils/security';
 

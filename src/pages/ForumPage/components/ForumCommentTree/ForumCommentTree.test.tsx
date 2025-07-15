@@ -19,6 +19,7 @@ vi.mock('@/config/apiClient', () => ({
       ],
     }),
   },
+  SESSION_EXPIRED_EVENT: 'session-expired',
 }));
 
 describe('ForumCommentTree', () => {

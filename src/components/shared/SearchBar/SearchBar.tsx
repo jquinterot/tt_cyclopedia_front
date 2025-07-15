@@ -64,7 +64,7 @@ export default function SearchBar({ onSearch, placeholder = "Search...", classNa
   }, [isActionAllowed, recordUserAction, onSearch, query, user?.id]);
 
   return (
-    <form onSubmit={handleSubmit} className={`relative ${className}`} data-testid="search-form">
+    <form onSubmit={handleSubmit} className={`relative ${className} py-2`} data-testid="search-form">
       <input
         type="text"
         value={query}

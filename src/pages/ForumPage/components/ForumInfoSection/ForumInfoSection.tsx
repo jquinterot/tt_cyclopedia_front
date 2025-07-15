@@ -1,9 +1,10 @@
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { apiClient } from '@/config/apiClient';
 import HeartIcon from '@/components/shared/HeartIcon/HeartIcon';
 import HeartIconFilled from '@/components/shared/HeartIconFilled/HeartIconFilled';
 import { useAuth } from '@/contexts/AuthContext';
 import toast from 'react-hot-toast';
+import type { Forum } from '@/types/Forum';
 
 // LikeCount.tsx
 type LikeCountProps = {
@@ -25,13 +26,74 @@ type ForumInfoProps = {
 
 export default function ForumInfoSection({ forum, refetch }: ForumInfoProps) {
   const { user } = useAuth();
+  const queryClient = useQueryClient();
+
   const likeMutation = useMutation({
     mutationFn: () => apiClient.post(`/forums/${forum.id}/like`),
-    onSuccess: refetch,
+    onMutate: async () => {
+      // Cancel any outgoing refetches
+      await queryClient.cancelQueries({ queryKey: ['forum', forum.id] });
+      
+      // Snapshot the previous value
+      const previousForum = queryClient.getQueryData(['forum', forum.id]);
+      
+      // Optimistically update to the new value
+      queryClient.setQueryData(['forum', forum.id], (old: Forum | undefined) => {
+        if (!old) return old;
+        return {
+          ...old,
+          likes: old.likes + 1,
+          liked_by_current_user: true,
+        };
+      });
+      
+      // Return a context object with the snapshotted value
+      return { previousForum };
+    },
+    onError: (err, variables, context) => {
+      // If the mutation fails, use the context returned from onMutate to roll back
+      if (context?.previousForum) {
+        queryClient.setQueryData(['forum', forum.id], context.previousForum);
+      }
+    },
+    onSettled: () => {
+      // Always refetch after error or success
+      refetch();
+    },
   });
+
   const unlikeMutation = useMutation({
     mutationFn: () => apiClient.delete(`/forums/${forum.id}/like`),
-    onSuccess: refetch,
+    onMutate: async () => {
+      // Cancel any outgoing refetches
+      await queryClient.cancelQueries({ queryKey: ['forum', forum.id] });
+      
+      // Snapshot the previous value
+      const previousForum = queryClient.getQueryData(['forum', forum.id]);
+      
+      // Optimistically update to the new value
+      queryClient.setQueryData(['forum', forum.id], (old: Forum | undefined) => {
+        if (!old) return old;
+        return {
+          ...old,
+          likes: Math.max(0, old.likes - 1),
+          liked_by_current_user: false,
+        };
+      });
+      
+      // Return a context object with the snapshotted value
+      return { previousForum };
+    },
+    onError: (err, variables, context) => {
+      // If the mutation fails, use the context returned from onMutate to roll back
+      if (context?.previousForum) {
+        queryClient.setQueryData(['forum', forum.id], context.previousForum);
+      }
+    },
+    onSettled: () => {
+      // Always refetch after error or success
+      refetch();
+    },
   });
 
   const handleLikeToggle = () => {

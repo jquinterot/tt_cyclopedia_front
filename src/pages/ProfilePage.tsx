@@ -1,4 +1,5 @@
 import { useAuth } from '@/contexts/AuthContext';
+import SessionStatus from '@/components/shared/SessionStatus/SessionStatus';
 
 export default function ProfilePage() {
   const { user } = useAuth();
@@ -26,6 +27,11 @@ export default function ProfilePage() {
           <span className="ml-2 text-white">{user.email}</span>
         </div>
         {/* Add more fields as needed */}
+      </div>
+      
+      {/* Session Status Component for Testing */}
+      <div className="mt-6">
+        <SessionStatus />
       </div>
     </div>
   );

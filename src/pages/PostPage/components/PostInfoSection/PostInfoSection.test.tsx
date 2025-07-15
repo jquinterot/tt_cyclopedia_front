@@ -12,6 +12,7 @@ vi.mock("@/config/apiClient", () => ({
     post: vi.fn(),
     delete: vi.fn(),
   },
+  SESSION_EXPIRED_EVENT: 'session-expired',
 }));
 
 // Mock react-hot-toast

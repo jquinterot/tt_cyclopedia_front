@@ -138,7 +138,7 @@ function DesktopNav({
 // Mobile Menu Button
 function MobileMenuButton({ isOpen, setIsOpen }: { isOpen: boolean; setIsOpen: (open: boolean) => void }) {
   return (
-    <div className="sm:hidden" data-testid="mobile-menu-button">
+    <div className="sm:hidden">
       <button
         type="button"
         onClick={() => setIsOpen(!isOpen)}

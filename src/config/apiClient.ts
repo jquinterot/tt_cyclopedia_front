@@ -19,6 +19,9 @@ setInterval(() => {
   apiCallLimiter.cleanup();
 }, 60000); // Every minute
 
+// Custom event for session expiration
+export const SESSION_EXPIRED_EVENT = 'session-expired';
+
 export const apiClient = axios.create({
   baseURL,
   headers: {
@@ -92,11 +95,13 @@ apiClient.interceptors.response.use(
 
     // Handle authentication errors
     if (error.response?.status === 401 || error.response?.status === 403) {
-      // Clear authentication data
+      // Clear authentication data from localStorage
       localStorage.removeItem('authToken');
       localStorage.removeItem('user');
       localStorage.removeItem('isAuthenticated');
-      // Do NOT redirect to login, just let the app handle the state
+      
+      // Dispatch custom event to notify AuthContext
+      window.dispatchEvent(new CustomEvent(SESSION_EXPIRED_EVENT));
     }
 
     // Log errors for monitoring

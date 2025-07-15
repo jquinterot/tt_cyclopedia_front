@@ -2,7 +2,7 @@ import { describe, test, expect, vi } from "vitest";
 import { render, screen, fireEvent } from "@testing-library/react";
 import "@testing-library/jest-dom/vitest";
 import SearchBar from './SearchBar';
-import { TestProviders } from '@/test-utils/TestProviders';
+import { TestProviders } from '../../../test-utils/TestProviders';
 
 describe('SearchBar', () => {
   const mockOnSearch = vi.fn();
