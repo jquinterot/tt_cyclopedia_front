@@ -17,6 +17,8 @@
   "devDependencies": {
     "@playwright/test": "^1.53.2",
     "@types/node": "^24.0.10",
-    "playwright": "^1.53.2"
+    "@types/sinon": "^17.0.4",
+    "playwright": "^1.53.2",
+    "sinon": "^21.0.0"
   }
 }

@@ -37,6 +37,11 @@
   "include": ["src"],
   "references": [{ "path": "./tsconfig.node.json" }],
   "exclude": [
-    "cypress"
+    "cypress",
+    "e2e",
+    "**/*.cy.ts",
+    "**/*.cy.tsx",
+    "**/*.test.ts",
+    "**/*.test.tsx"
   ]
 }

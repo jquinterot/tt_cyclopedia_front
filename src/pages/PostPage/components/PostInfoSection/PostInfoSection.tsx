@@ -50,7 +50,7 @@ export default function PostInfoSection({ post, refetch }: PostInfoProps) {
       // Return a context object with the snapshotted value
       return { previousPost };
     },
-    onError: (err, variables, context) => {
+    onError: (_err, _variables, context) => {
       // If the mutation fails, use the context returned from onMutate to roll back
       if (context?.previousPost) {
         queryClient.setQueryData(['post', post.id], context.previousPost);
@@ -84,7 +84,7 @@ export default function PostInfoSection({ post, refetch }: PostInfoProps) {
       // Return a context object with the snapshotted value
       return { previousPost };
     },
-    onError: (err, variables, context) => {
+    onError: (_err, _variables, context) => {
       // If the mutation fails, use the context returned from onMutate to roll back
       if (context?.previousPost) {
         queryClient.setQueryData(['post', post.id], context.previousPost);
