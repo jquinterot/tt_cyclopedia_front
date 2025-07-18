@@ -96,26 +96,11 @@ export const CommentItem = memo(function CommentItem({
 
   return (
     <div className="mb-4 p-4 rounded-lg bg-white/5 border border-white/10" data-testid={`comment-${comment.id}`}>
-      <div className="flex items-center justify-between">
+      {/* 1. User info at the top */}
+      <div className="flex flex-col items-start">
         <UserInfo userId={comment.user_id} />
-        <div className="flex items-center space-x-2">
-          <button
-            className="relative flex items-center gap-1 p-1.5 text-blue-400 hover:text-blue-300 hover:bg-white/5 rounded-md transition-colors group"
-            onClick={handleLikeToggle}
-            disabled={likeMutation.isPending || unlikeMutation.isPending}
-            aria-pressed={!!comment.liked_by_current_user}
-            data-testid={`like-button-${comment.id}`}
-          >
-            {comment.liked_by_current_user ? (
-              <HeartIconFilled className="h-5 w-5 text-blue-600 transition-colors" data-testid={`like-icon-filled-${comment.id}`}/>
-            ) : (
-              <>
-                <HeartIcon className="h-5 w-5 text-blue-400 transition-colors group-hover:opacity-0" data-testid={`like-icon-outline-${comment.id}`}/>
-                <HeartIconFilled className="h-5 w-5 text-blue-600 absolute left-0 top-0 opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none" data-testid={`like-icon-filled-hover-${comment.id}`}/>
-              </>
-            )}
-            <span className="text-sm text-gray-300">{comment.likes || 0}</span>
-          </button>
+        {/* 2. Options row below user info */}
+        <div className="flex items-center space-x-2 mt-2 mb-2">
           <button
             className="p-1.5 text-sm text-blue-400 hover:text-blue-300 hover:bg-white/5 rounded-md transition-colors"
             onClick={handleReplyButton}
@@ -142,42 +127,64 @@ export const CommentItem = memo(function CommentItem({
             </button>
           )}
         </div>
-      </div>
-      <div className="mt-2">
-        {isEditing ? (
-          <div className="space-y-2">
-            <textarea
-              ref={editInputRef}
-              className="w-full px-3 py-2 bg-white/5 border border-white/10 rounded-md text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors resize-none"
-              value={editValue}
-              onChange={e => setEditValue(e.target.value)}
-              rows={2}
-              disabled={editLoading}
-              data-testid={`edit-input-${comment.id}`}
-            />
-            <div className="flex space-x-2 justify-end">
-              <button
-                className="px-3 py-1.5 text-sm bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
-                onClick={handleEdit}
+        {/* 3. Comment content below options */}
+        <div className="mt-2 w-full">
+          {isEditing ? (
+            <div className="space-y-2">
+              <textarea
+                ref={editInputRef}
+                className="w-full px-3 py-2 bg-white/5 border border-white/10 rounded-md text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors resize-none"
+                value={editValue}
+                onChange={e => setEditValue(e.target.value)}
+                rows={2}
                 disabled={editLoading}
-                data-testid={`save-edit-${comment.id}`}
-              >
-                Save
-              </button>
-              <button
-                className="px-3 py-1.5 text-sm text-gray-300 hover:text-white hover:bg-white/5 rounded-md transition-colors"
-                onClick={() => { setIsEditing(false); setEditValue(comment.comment); }}
-                disabled={editLoading}
-                data-testid={`cancel-edit-${comment.id}`}
-              >
-                Cancel
-              </button>
+                data-testid={`edit-input-${comment.id}`}
+              />
+              <div className="flex space-x-2 justify-end">
+                <button
+                  className="px-3 py-1.5 text-sm bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
+                  onClick={handleEdit}
+                  disabled={editLoading}
+                  data-testid={`save-edit-${comment.id}`}
+                >
+                  Save
+                </button>
+                <button
+                  className="px-3 py-1.5 text-sm text-gray-300 hover:text-white hover:bg-white/5 rounded-md transition-colors"
+                  onClick={() => { setIsEditing(false); setEditValue(comment.comment); }}
+                  disabled={editLoading}
+                  data-testid={`cancel-edit-${comment.id}`}
+                >
+                  Cancel
+                </button>
+              </div>
             </div>
-          </div>
-        ) : (
-          <p className="text-gray-300" data-testid={`comment-text-${comment.id}`}>{comment.comment}</p>
-        )}
+          ) : (
+            <p className="text-gray-300" data-testid={`comment-text-${comment.id}`}>{comment.comment}</p>
+          )}
+        </div>
+        {/* 4. Likes at the bottom */}
+        <div className="flex items-center mt-2">
+          <button
+            className="relative flex items-center gap-1 p-1.5 text-blue-400 hover:text-blue-300 hover:bg-white/5 rounded-md transition-colors group"
+            onClick={handleLikeToggle}
+            disabled={likeMutation.isPending || unlikeMutation.isPending}
+            aria-pressed={!!comment.liked_by_current_user}
+            data-testid={`like-button-${comment.id}`}
+          >
+            {comment.liked_by_current_user ? (
+              <HeartIconFilled className="h-5 w-5 text-blue-600 transition-colors" data-testid={`like-icon-filled-${comment.id}`}/>
+            ) : (
+              <>
+                <HeartIcon className="h-5 w-5 text-blue-400 transition-colors group-hover:opacity-0" data-testid={`like-icon-outline-${comment.id}`}/>
+                <HeartIconFilled className="h-5 w-5 text-blue-600 absolute left-0 top-0 opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none" data-testid={`like-icon-filled-hover-${comment.id}`}/>
+              </>
+            )}
+            <span className="text-sm text-gray-300">{comment.likes || 0}</span>
+          </button>
+        </div>
       </div>
+      {/* Reply form and replies remain unchanged */}
       {replyingTo === comment.id && (
         <div className="mt-4 space-y-3" data-testid={`reply-form-${comment.id}`}>
           <textarea
