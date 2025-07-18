@@ -1,5 +1,6 @@
-import React from 'react';
 import TTRacketIcon from './TTRacketIcon';
+import { describe, it } from 'vitest';
+import React from 'react';
 
 describe('<TTRacketIcon />', () => {
   it('renders TT racket icon with correct test id', () => {

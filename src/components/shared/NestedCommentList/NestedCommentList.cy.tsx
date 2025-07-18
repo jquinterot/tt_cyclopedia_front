@@ -1,5 +1,6 @@
-import React from 'react';
 import { NestedCommentList } from './NestedCommentList';
+import React from 'react';
+import { describe, it, expect } from 'vitest';
 
 const mockReply = {
   id: '1',
@@ -55,7 +56,8 @@ describe('<NestedCommentList />', () => {
   });
 
   it('calls onLikeToggle when like button is clicked', () => {
-    const onLikeToggle = cy.stub().as('onLikeToggle');
+    let called = false;
+    const onLikeToggle = () => { called = true; };
     cy.mount(
       <NestedCommentList 
         replies={[mockReply]} 
@@ -66,8 +68,9 @@ describe('<NestedCommentList />', () => {
         onEdit={async () => {}} 
       />
     );
-    cy.get('[data-testid="nested-like-button-1"]').click();
-    cy.get('@onLikeToggle').should('have.been.called');
+    cy.get('[data-testid="nested-like-button-1"]').click().then(() => {
+      expect(called).to.be.true;
+    });
   });
 
   it('returns null when no replies', () => {

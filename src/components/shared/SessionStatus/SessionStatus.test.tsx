@@ -1,9 +1,8 @@
-import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
-import { describe, test, expect, vi } from 'vitest';
+import { describe, test, expect, vi, beforeEach } from 'vitest';
 import '@testing-library/jest-dom/vitest';
 import SessionStatus from './SessionStatus';
-import { TestProviders } from '@/test-utils/TestProviders';
+import { TestProviders } from '../../../test-utils/TestProviders';
 
 // Mock the window.location.reload
 const mockReload = vi.fn();

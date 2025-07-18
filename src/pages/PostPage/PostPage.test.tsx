@@ -1,3 +1,4 @@
+import { describe, it } from "vitest";
 import { render } from "@testing-library/react";
 import PostPage from "./PostPage";
 import { BrowserRouter } from "react-router-dom";

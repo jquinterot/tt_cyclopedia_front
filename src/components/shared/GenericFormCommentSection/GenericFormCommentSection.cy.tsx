@@ -1,18 +1,19 @@
-import React from 'react';
 import GenericFormCommentSection from './GenericFormCommentSection';
+import { it, describe } from 'vitest';
+import React from 'react';
 
 describe('<GenericFormCommentSection />', () => {
   it('renders comment form container', () => {
-    const mockUseMainComments = cy.stub().returns({
+    const mockUseMainComments = () => ({
       mainComments: [],
       error: null,
       isLoading: false
     });
-    const mockUsePostComment = cy.stub().returns({
-      mutateAsync: cy.stub().resolves()
+    const mockUsePostComment = () => ({
+      mutateAsync: async () => {}
     });
-    const mockT = cy.stub().returns('translated text');
-    const mockCommentsSectionComponent = cy.stub().returns(<div>Comments Section</div>);
+    const mockT = () => 'translated text';
+    const mockCommentsSectionComponent = () => <div>Comments Section</div>;
 
     const mockProps = {
       id: 'test-id',
@@ -29,16 +30,16 @@ describe('<GenericFormCommentSection />', () => {
   });
 
   it('renders comment input', () => {
-    const mockUseMainComments = cy.stub().returns({
+    const mockUseMainComments = () => ({
       mainComments: [],
       error: null,
       isLoading: false
     });
-    const mockUsePostComment = cy.stub().returns({
-      mutateAsync: cy.stub().resolves()
+    const mockUsePostComment = () => ({
+      mutateAsync: async () => {}
     });
-    const mockT = cy.stub().returns('translated text');
-    const mockCommentsSectionComponent = cy.stub().returns(<div>Comments Section</div>);
+    const mockT = () => 'translated text';
+    const mockCommentsSectionComponent = () => <div>Comments Section</div>;
 
     const mockProps = {
       id: 'test-id',
@@ -55,16 +56,16 @@ describe('<GenericFormCommentSection />', () => {
   });
 
   it('renders submit button when authenticated', () => {
-    const mockUseMainComments = cy.stub().returns({
+    const mockUseMainComments = () => ({
       mainComments: [],
       error: null,
       isLoading: false
     });
-    const mockUsePostComment = cy.stub().returns({
-      mutateAsync: cy.stub().resolves()
+    const mockUsePostComment = () => ({
+      mutateAsync: async () => {}
     });
-    const mockT = cy.stub().returns('translated text');
-    const mockCommentsSectionComponent = cy.stub().returns(<div>Comments Section</div>);
+    const mockT = () => 'translated text';
+    const mockCommentsSectionComponent = () => <div>Comments Section</div>;
 
     const mockProps = {
       id: 'test-id',
@@ -81,16 +82,16 @@ describe('<GenericFormCommentSection />', () => {
   });
 
   it('renders sign in link when not authenticated', () => {
-    const mockUseMainComments = cy.stub().returns({
+    const mockUseMainComments = () => ({
       mainComments: [],
       error: null,
       isLoading: false
     });
-    const mockUsePostComment = cy.stub().returns({
-      mutateAsync: cy.stub().resolves()
+    const mockUsePostComment = () => ({
+      mutateAsync: async () => {}
     });
-    const mockT = cy.stub().returns('form.comment.signInButton');
-    const mockCommentsSectionComponent = cy.stub().returns(<div>Comments Section</div>);
+    const mockT = () => 'form.comment.signInButton';
+    const mockCommentsSectionComponent = () => <div>Comments Section</div>;
 
     const mockProps = {
       id: 'test-id',

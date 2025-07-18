@@ -1,5 +1,6 @@
-import React from 'react';
 import HeartIcon from './HeartIcon';
+import { describe, it } from "vitest";
+import React from 'react';
 
 describe('<HeartIcon />', () => {
   it('renders heart icon with correct test id', () => {

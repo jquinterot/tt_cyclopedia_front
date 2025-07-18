@@ -11,7 +11,7 @@ const mockPost = {
 
 describe('<PostCard />', () => {
   it('renders post card with correct data', () => {
-    const mockOnClick = cy.stub().as('onClick');
+    const mockOnClick = () => {};
     cy.mount(<PostCard post={mockPost} onClick={mockOnClick} />);
     
     cy.get('[data-testid="post-card-1"]').should('exist');
@@ -20,15 +20,17 @@ describe('<PostCard />', () => {
   });
 
   it('calls onClick when card is clicked', () => {
-    const mockOnClick = cy.stub().as('onClick');
+    let called = false;
+    const mockOnClick = () => { called = true; };
     cy.mount(<PostCard post={mockPost} onClick={mockOnClick} />);
     
-    cy.get('[data-testid="post-card-1"]').click();
-    cy.get('@onClick').should('have.been.called');
+    cy.get('[data-testid="post-card-1"]').click().then(() => {
+      expect(called).to.be.true;
+    });
   });
 
   it('displays likes count', () => {
-    const mockOnClick = cy.stub().as('onClick');
+    const mockOnClick = () => {};
     cy.mount(<PostCard post={mockPost} onClick={mockOnClick} />);
     
     cy.contains('5').should('exist');

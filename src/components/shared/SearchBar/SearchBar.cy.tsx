@@ -1,7 +1,6 @@
-
 import SearchBar from './SearchBar';
-import sinon from 'sinon';
-
+import React from 'react';
+import { describe, it, expect } from 'vitest';
 
 describe('<SearchBar />', () => {
   it('renders search input', () => {
@@ -11,31 +10,32 @@ describe('<SearchBar />', () => {
   });
 
   it('renders search button', () => {
-    const mockOnSearch = sinon.stub();
+    const mockOnSearch = () => {};
     cy.mount(<SearchBar onSearch={mockOnSearch} placeholder="Search..." />);
     cy.get('[data-testid="search-button"]').should('exist');
   });
 
   it('calls onSearch when input changes', () => {
-    const mockOnSearch = sinon.stub();
+    let called = false;
+    const mockOnSearch = () => { called = true; };
     cy.mount(<SearchBar onSearch={mockOnSearch} placeholder="Search..." />);
     cy.get('[data-testid="search-input"]').type('test');
     // Wait for debounce
     cy.wait(600);
     cy.then(() => {
-      expect(mockOnSearch.called).to.be.true;
+      expect(called).to.be.true;
     });
   });
 
   it('displays the current value', () => {
-    const mockOnSearch = sinon.stub();
+    const mockOnSearch = () => {};
     cy.mount(<SearchBar onSearch={mockOnSearch} placeholder="Search..." />);
     cy.get('[data-testid="search-input"]').type('current value');
     cy.get('[data-testid="search-input"]').should('have.value', 'current value');
   });
 
   it('applies custom className', () => {
-    const mockOnSearch = sinon.stub();
+    const mockOnSearch = () => {};
     cy.mount(<SearchBar onSearch={mockOnSearch} placeholder="Search..." className="custom-class" />);
     cy.get('[data-testid="search-form"]').should('have.class', 'custom-class');
   });
