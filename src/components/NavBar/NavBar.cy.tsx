@@ -1,5 +1,4 @@
 import NavBar from './NavBar';
-import React from 'react';
 import { interceptGetMe, setAuthenticatedUser, clearAuthenticatedUser } from '../../../cypress/mocks/userMocks';
 
 describe('<NavBar />', () => {

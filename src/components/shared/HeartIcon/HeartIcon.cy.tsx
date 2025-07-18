@@ -1,6 +1,5 @@
 import HeartIcon from './HeartIcon';
-import { describe, it } from "vitest";
-import React from 'react';
+/// <reference types="cypress" />
 
 describe('<HeartIcon />', () => {
   it('renders heart icon with correct test id', () => {

@@ -1,4 +1,3 @@
-import React from 'react';
 import FormForumComment from './FormCommentSection';
 
 describe('<FormForumComment />', () => {

@@ -1,5 +1,4 @@
 import PostList from "./PostList";
-import React from 'react';
 
 beforeEach(() => {
   cy.intercept('GET', '/posts', {

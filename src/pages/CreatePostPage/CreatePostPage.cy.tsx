@@ -1,6 +1,5 @@
 import CreatePostPage from "./CreatePostPage";
 import { setAuthenticatedUser } from '../../../cypress/mocks/userMocks';
-import React from 'react';
 
 describe("<CreatePostPage />", () => {
   it("renders the Create Post page", () => {

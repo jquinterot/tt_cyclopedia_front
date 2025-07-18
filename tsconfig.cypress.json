@@ -1,7 +1,7 @@
 {
   "extends": "./tsconfig.json",
   "compilerOptions": {
-    "types": ["cypress", "cypress/react18"]
+    "types": ["cypress", "cypress/react18", "node"]
   },
   "include": [
     "cypress/**/*.ts",

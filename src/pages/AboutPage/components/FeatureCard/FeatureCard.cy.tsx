@@ -1,5 +1,4 @@
 import FeatureCard from "./FeatureCard";
-import React from 'react';
 
 describe("<FeatureCard />", () => {
   it("renders with correct props", () => {

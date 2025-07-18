@@ -1,4 +1,3 @@
-import React from "react";
 import PostPage from "./PostPage";
 import { describe, it } from "vitest";
 

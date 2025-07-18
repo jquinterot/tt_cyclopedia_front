@@ -1,6 +1,5 @@
 import PostStats from './PostStats';
 import { STAT_CONFIG } from '@/config/statConfig';
-import React from 'react';
 
 describe('<PostStats />', () => {
   const mockStats = Object.fromEntries(STAT_CONFIG.map(cfg => [cfg.key, 7]));

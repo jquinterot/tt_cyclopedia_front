@@ -1,5 +1,4 @@
 /// <reference types="cypress" />
-import React from 'react';
 import LoadingSpinner from './LoadingSpinner';
 
 describe('<LoadingSpinner />', () => {

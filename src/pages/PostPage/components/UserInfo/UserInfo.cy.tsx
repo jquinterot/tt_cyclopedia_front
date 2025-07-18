@@ -1,4 +1,3 @@
-import React from 'react';
 import UserInfo from './UserInfo';
 import { interceptGetUser } from '../../../../../cypress/mocks/userMocks';
 

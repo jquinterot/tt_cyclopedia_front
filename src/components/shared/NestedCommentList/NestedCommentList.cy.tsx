@@ -1,6 +1,4 @@
 import { NestedCommentList } from './NestedCommentList';
-import React from 'react';
-import { describe, it, expect } from 'vitest';
 
 const mockReply = {
   id: '1',

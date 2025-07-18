@@ -1,5 +1,4 @@
 import StatBar from './StatBar';
-import React from 'react';
 
 describe('<StatBar />', () => {
   it('renders stat bar with correct values', () => {

@@ -1,6 +1,5 @@
 import SearchBar from './SearchBar';
-import React from 'react';
-import { describe, it, expect } from 'vitest';
+/// <reference types="cypress" />
 
 describe('<SearchBar />', () => {
   it('renders search input', () => {

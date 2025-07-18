@@ -1,5 +1,4 @@
 import LoginPage from "./LoginPage";
-import React from 'react';
 import { describe, it } from "vitest";
 
 

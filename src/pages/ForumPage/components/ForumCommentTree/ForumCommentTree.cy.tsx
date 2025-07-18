@@ -1,4 +1,3 @@
-import React from 'react';
 import { ForumCommentTree } from './ForumCommentTree';
 
 describe('<ForumCommentTree />', () => {

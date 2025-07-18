@@ -1,4 +1,3 @@
-import React from 'react';
 import { ForumReplyList } from './ForumReplyList';
 
 describe('<ForumReplyList />', () => {
