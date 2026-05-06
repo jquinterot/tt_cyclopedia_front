@@ -9,6 +9,7 @@ export const mockMainComments = [
     post_id: 'post1',
     username: 'admin',
     timestamp: '2023-10-01T12:00:00Z',
+    liked_by_current_user: false,
   },
 ];
 

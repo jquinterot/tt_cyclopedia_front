@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import CreatePostForm from './components/CreatePostForm/CreatePostForm';
+import SEOHead from '@/components/SEO/SEOHead';
 import { useAuth } from '@/contexts/AuthContext';
 
 function CreatePostPage() {
@@ -18,9 +19,16 @@ function CreatePostPage() {
   }
 
   return (
-    <div className="max-w-2xl mx-auto px-4 py-8" data-testid="create-post-page">
+    <>
+      <SEOHead
+        title="Create Post - TT Cyclopedia"
+        description="Share your table tennis knowledge. Create a new post about equipment, techniques, or experiences."
+        noindex
+      />
+      <div className="max-w-2xl mx-auto px-4 py-8" data-testid="create-post-page">
       <CreatePostForm/>
     </div>
+    </>
   );
 }
 

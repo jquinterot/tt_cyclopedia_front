@@ -23,7 +23,7 @@ interface NestedCommentListProps {
   isEditPending?: boolean;
 }
 
-export const NestedCommentList: React.FC<NestedCommentListProps> = ({
+export const NestedCommentList = ({
   replies,
   parentId,
   onDeleteReply,
@@ -32,7 +32,7 @@ export const NestedCommentList: React.FC<NestedCommentListProps> = ({
   renderUserInfo,
   isLikePending,
   isEditPending,
-}) => {
+}: NestedCommentListProps) => {
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editValue, setEditValue] = useState("");
   const [editLoading, setEditLoading] = useState(false);
@@ -69,10 +69,10 @@ export const NestedCommentList: React.FC<NestedCommentListProps> = ({
                   ) : (
                     <HeartIcon className="h-4 w-4 text-blue-400" data-testid={`nested-like-icon-outline-${reply.id}`} />
                   )}
-                  <span className="text-xs text-gray-300">{reply.likes || 0}</span>
+                  <span className="text-sm text-gray-300">{reply.likes || 0}</span>
                 </button>
                 <button
-                  className="p-1 text-xs text-yellow-400 hover:text-yellow-300 hover:bg-white/5 rounded transition-colors"
+                  className="p-1.5 text-sm text-yellow-400 hover:text-yellow-300 hover:bg-white/5 rounded transition-colors"
                   onClick={() => {
                     if (isEditing) {
                       setEditingId(null);
@@ -87,7 +87,7 @@ export const NestedCommentList: React.FC<NestedCommentListProps> = ({
                   {isEditing ? "Cancel" : "Edit"}
                 </button>
                 <button
-                  className="p-1 text-xs text-red-400 hover:text-red-300 hover:bg-white/5 rounded transition-colors"
+                  className="p-1.5 text-sm text-red-400 hover:text-red-300 hover:bg-white/5 rounded transition-colors"
                   onClick={() => onDeleteReply(reply.id, parentId)}
                   data-testid={`nested-delete-button-${reply.id}`}
                 >
@@ -100,7 +100,7 @@ export const NestedCommentList: React.FC<NestedCommentListProps> = ({
                 <div className="space-y-2">
                   <textarea
                     ref={editInputRef}
-                    className="w-full px-2 py-1 bg-white/5 border border-white/10 rounded-md text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors resize-none text-xs"
+                    className="w-full px-3 py-1.5 bg-white/5 border border-white/10 rounded-md text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors resize-none text-sm"
                     value={editValue}
                     onChange={(e) => setEditValue(e.target.value)}
                     rows={2}
@@ -109,7 +109,7 @@ export const NestedCommentList: React.FC<NestedCommentListProps> = ({
                   />
                   <div className="flex space-x-2 justify-end">
                     <button
-                      className="px-2 py-1 text-xs bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
+                      className="px-3 py-1.5 text-sm bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
                       onClick={async () => {
                         setEditLoading(true);
                         await onEdit(reply, editValue);
@@ -122,7 +122,7 @@ export const NestedCommentList: React.FC<NestedCommentListProps> = ({
                       Save
                     </button>
                     <button
-                      className="px-2 py-1 text-xs text-gray-300 hover:text-white hover:bg-white/5 rounded-md transition-colors"
+                      className="px-3 py-1.5 text-sm text-gray-300 hover:text-white hover:bg-white/5 rounded-md transition-colors"
                       onClick={() => {
                         setEditingId(null);
                         setEditValue("");

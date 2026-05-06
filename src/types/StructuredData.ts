@@ -13,6 +13,16 @@ export interface ArticleData {
   dateModified: string;
   image?: string;
   url: string;
+  articleBody?: string;
+  mainEntityOfPage?: string;
+  publisher?: {
+    name: string;
+    logo: string;
+  };
+}
+
+export interface DiscussionForumPostingData extends ArticleData {
+  commentCount?: number;
 }
 
 export interface BreadcrumbData {
@@ -70,7 +80,49 @@ export function generateArticleSchema(data: ArticleData) {
     datePublished: data.datePublished,
     dateModified: data.dateModified,
     ...(data.image && { image: data.image }),
-    url: data.url
+    url: data.url,
+    ...(data.mainEntityOfPage && { mainEntityOfPage: data.mainEntityOfPage }),
+    ...(data.articleBody && { articleBody: data.articleBody }),
+    ...(data.publisher && {
+      publisher: {
+        '@type': 'Organization',
+        name: data.publisher.name,
+        logo: {
+          '@type': 'ImageObject',
+          url: data.publisher.logo
+        }
+      }
+    })
+  };
+}
+
+export function generateDiscussionForumPostingSchema(data: DiscussionForumPostingData) {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'DiscussionForumPosting',
+    headline: data.title,
+    description: data.description,
+    author: {
+      '@type': 'Person',
+      name: data.author
+    },
+    datePublished: data.datePublished,
+    dateModified: data.dateModified,
+    ...(data.image && { image: data.image }),
+    url: data.url,
+    ...(data.mainEntityOfPage && { mainEntityOfPage: data.mainEntityOfPage }),
+    ...(data.articleBody && { articleBody: data.articleBody }),
+    ...(data.publisher && {
+      publisher: {
+        '@type': 'Organization',
+        name: data.publisher.name,
+        logo: {
+          '@type': 'ImageObject',
+          url: data.publisher.logo
+        }
+      }
+    }),
+    ...(data.commentCount && { commentCount: data.commentCount })
   };
 }
 

@@ -28,14 +28,14 @@ export default function SessionStatus() {
         <div className="flex gap-2 mt-3">
           <button
             onClick={handleSessionExpiration}
-            className="px-3 py-1 bg-red-600 text-white text-sm rounded hover:bg-red-700 transition-colors"
+            className="px-4 py-2 bg-red-600 text-white text-sm rounded-lg hover:bg-red-700 transition-colors"
             data-testid="expire-session-btn"
           >
             Simulate Session Expiration
           </button>
           <button
             onClick={reloadPage}
-            className="px-3 py-1 bg-blue-600 text-white text-sm rounded hover:bg-blue-700 transition-colors"
+            className="px-4 py-2 bg-blue-600 text-white text-sm rounded-lg hover:bg-blue-700 transition-colors"
             data-testid="reload-page-btn"
           >
             Reload Page

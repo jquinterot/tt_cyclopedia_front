@@ -1,6 +1,6 @@
 import ForumDetails from './components/ForumDetailsSection/ForumDetailsSection';
 import SEOHead from '@/components/SEO/SEOHead';
-import { generateArticleSchema, generateBreadcrumbSchema } from '@/types/StructuredData';
+import { generateDiscussionForumPostingSchema, generateBreadcrumbSchema } from '@/types/StructuredData';
 import { useParams } from 'react-router-dom';
 import { useForum } from '@/hooks/forums/useForum';
 import LoadingSpinner from '@/components/shared/LoadingSpinner/LoadingSpinner';
@@ -28,21 +28,29 @@ function ForumPage() {
     );
   }
 
-  const articleData = generateArticleSchema({
+  const BASE_URL = import.meta.env.VITE_BASE_URL;
+
+  const articleData = generateDiscussionForumPostingSchema({
     title: forum.title,
-    description: forum.content.substring(0, 160) + '...',
+    description: forum.content.substring(0, 160),
     author: forum.author || 'TT Cyclopedia User',
     datePublished: new Date(forum.timestamp).toISOString(),
     dateModified: new Date(forum.timestamp).toISOString(),
-    image: 'https://ttcyclopedia.space/og-image.png',
-    url: `https://ttcyclopedia.space/forums/${forum.id}`
+    image: `${BASE_URL}/og-image.png`,
+    url: `${BASE_URL}/forums/${forum.id}`,
+    mainEntityOfPage: `${BASE_URL}/forums/${forum.id}`,
+    articleBody: forum.content,
+    publisher: {
+      name: 'TT Cyclopedia',
+      logo: `${BASE_URL}/logo.png`
+    }
   });
 
   const breadcrumbData = generateBreadcrumbSchema({
     items: [
-      { name: 'Home', url: 'https://ttcyclopedia.space/' },
-      { name: 'Forums', url: 'https://ttcyclopedia.space/forums' },
-      { name: forum.title, url: `https://ttcyclopedia.space/forums/${forum.id}` }
+      { name: 'Home', url: `${BASE_URL}/` },
+      { name: 'Forums', url: `${BASE_URL}/forums` },
+      { name: forum.title, url: `${BASE_URL}/forums/${forum.id}` }
     ]
   });
 
@@ -57,10 +65,10 @@ function ForumPage() {
         ogDescription={forum.content.substring(0, 160) + '...'}
         ogUrl={`/forums/${forum.id}`}
         ogType="article"
-        ogImage="https://ttcyclopedia.space/og-image.png"
+        ogImage={`${BASE_URL}/og-image.png`}
         twitterTitle={forum.title}
         twitterDescription={forum.content.substring(0, 160) + '...'}
-        twitterImage="https://ttcyclopedia.space/twitter-image.png"
+        twitterImage={`${BASE_URL}/twitter-image.png`}
         structuredData={[articleData, breadcrumbData]}
       />
       <main className="flex-grow flex justify-center px-4 py-8" data-testid="forum-page">

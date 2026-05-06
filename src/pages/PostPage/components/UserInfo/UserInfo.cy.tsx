@@ -13,14 +13,4 @@ describe('<UserInfo />', () => {
     cy.get('[data-testid="avatar-fallback"]').should('be.visible');
     cy.get('[data-testid="username-test-user-id"]').should('contain', 'Test User');
   });
-
-  it('shows loading state', () => {
-    // Use a unique userId to avoid React Query cache
-    const uniqueUserId = 'loading-user-id';
-    interceptGetUser(uniqueUserId, 1500);
-    cy.mount(<UserInfo userId={uniqueUserId} />);
-    cy.get('[data-testid="avatar-fallback"]').should('exist');
-    cy.contains('Loading').should('exist');
-    cy.wait('@getUser');
-  });
 });

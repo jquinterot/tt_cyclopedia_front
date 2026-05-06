@@ -10,6 +10,7 @@ const mockPost = {
   content: "Test content",
   image_url: "/test.jpg",
   likes: 5,
+  likedByCurrentUser: false,
 };
 
 describe("PostCard Component", () => {

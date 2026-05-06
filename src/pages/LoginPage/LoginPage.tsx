@@ -3,7 +3,8 @@ import { useState } from "react";
 import { useLogin } from "@/hooks/users";
 import { useAuth } from "@/contexts/AuthContext";
 import { ErrorCode, ErrorMessages } from '@/enums/ErrorCode';
-import toast, { Toaster } from "react-hot-toast";
+import SEOHead from '@/components/SEO/SEOHead';
+import { toast } from "sonner";
 
 function LoginPage() {
     const navigate = useNavigate();
@@ -52,9 +53,15 @@ function LoginPage() {
         }
     };
 
-    return (
-        <div className="min-h-screen flex flex-col items-center justify-center font-sans text-white py-12 px-4 sm:px-6 lg:px-8" data-testid="login-page">
-            <div className="max-w-md w-full">
+return (
+    <>
+      <SEOHead
+        title="Sign In - TT Cyclopedia"
+        description="Sign in to your TT Cyclopedia account to join the table tennis community, share equipment reviews, and participate in discussions."
+        noindex
+      />
+      <div className="min-h-screen flex flex-col items-center justify-center font-sans text-white py-12 px-4" data-testid="login-page">
+            <div className="w-[480px]">
                 <div className="text-center mb-8" data-testid="login-header">
                     <h1 className="text-3xl font-bold">Welcome Back</h1>
                     <p className="mt-3 text-sm text-gray-300">
@@ -76,7 +83,7 @@ function LoginPage() {
                                         value={formData.username}
                                         onChange={handleChange}
                                         data-testid="username-input"
-                                        className="w-full w-[22rem] px-4 py-2 bg-white/5 border border-white/10 rounded-md text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
+                                        className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
                                         type="text"
                                         placeholder="Enter your username"
                                         autoComplete="username"
@@ -96,7 +103,7 @@ function LoginPage() {
                                         value={formData.password}
                                         onChange={handleChange}
                                         data-testid="password-input"
-                                        className="w-full w-[22rem] px-4 py-2 bg-white/5 border border-white/10 rounded-md text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
+                                        className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
                                         type="password"
                                         placeholder="Enter your password"
                                         autoComplete="current-password"
@@ -106,20 +113,22 @@ function LoginPage() {
                             </div>
                         </div>
 
-                        {error && (
-                            <div className="text-red-400 text-sm bg-red-400/10 p-3 rounded-md mt-4" data-testid="login-error">
-                                {error}
-                            </div>
-                        )}
-                        {loginMutation.status === 'pending' && (
-                            <div className="text-blue-400 text-sm mt-4">Signing in...</div>
-                        )}
+                        <div className="min-h-[72px] mt-4">
+                            {error && (
+                                <div className="text-red-400 text-sm bg-red-400/10 p-3 rounded-md break-words" data-testid="login-error">
+                                    {error}
+                                </div>
+                            )}
+                            {loginMutation.status === 'pending' && (
+                                <div className="text-blue-400 text-sm p-3">Signing in...</div>
+                            )}
+                        </div>
 
                         <div className="flex flex-col gap-4 pt-6">
                             <button
                                 type="submit"
                                 data-testid="login-submit"
-                                className="w-full px-4 py-2 bg-blue-600 border border-transparent rounded-md text-sm font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                                className="w-full px-4 py-3 bg-blue-600 border border-transparent rounded-lg text-sm font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                                 disabled={loginMutation.status === 'pending'}
                             >
                                 {loginMutation.status === 'pending' ? 'Signing in...' : 'Sign in'}
@@ -137,7 +146,7 @@ function LoginPage() {
                             <Link 
                                 to="/signup" 
                                 data-testid="signup-link"
-                                className="w-full px-4 py-2 border border-white/10 rounded-md text-sm font-medium text-white hover:bg-white/5 transition-colors text-center"
+                                className="w-full px-4 py-3 border border-white/10 rounded-lg text-sm font-medium text-white hover:bg-white/5 transition-colors text-center"
                             >
                                 Create new account
                             </Link>
@@ -145,17 +154,8 @@ function LoginPage() {
                     </form>
                 </div>
             </div>
-            <Toaster
-                position="top-center"
-                toastOptions={{
-                    duration: 3000,
-                    style: {
-                        background: '#363636',
-                        color: '#fff',
-                    },
-                }}
-            />
         </div>
+      </>
     );
 }
 

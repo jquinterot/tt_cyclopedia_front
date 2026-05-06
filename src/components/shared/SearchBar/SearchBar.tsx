@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useRef, useEffect } from 'react';
 import { useDDoSProtection } from '@/hooks/useDDoSProtection';
 import { useAuth } from '@/contexts/AuthContext';
 
@@ -11,12 +11,27 @@ interface SearchBarProps {
 export default function SearchBar({ onSearch, placeholder = "Search...", className = "" }: SearchBarProps) {
   const [query, setQuery] = useState('');
   const { user } = useAuth();
-  const { createDebouncedFunction, isActionAllowed, recordUserAction } = useDDoSProtection();
+  const { isActionAllowed, recordUserAction } = useDDoSProtection();
+  const debounceTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  // Cleanup timer on unmount
+  useEffect(() => {
+    return () => {
+      if (debounceTimerRef.current) {
+        clearTimeout(debounceTimerRef.current);
+      }
+    };
+  }, []);
 
   // Create a debounced search function to prevent rapid API calls
-  const debouncedSearch = useCallback(
-    createDebouncedFunction((...args: unknown[]) => {
-      const searchQuery = args[0] as string;
+  const debouncedSearch = useCallback((searchQuery: string) => {
+    // Clear existing timer
+    if (debounceTimerRef.current) {
+      clearTimeout(debounceTimerRef.current);
+    }
+
+    // Set new timer
+    debounceTimerRef.current = setTimeout(() => {
       // Check if search action is allowed
       if (!isActionAllowed('search', user?.id)) {
         console.warn('Search blocked due to rate limiting');
@@ -28,9 +43,8 @@ export default function SearchBar({ onSearch, placeholder = "Search...", classNa
       
       // Perform the search
       onSearch(searchQuery);
-    }, 500), // 500ms debounce delay
-    [createDebouncedFunction, isActionAllowed, recordUserAction, onSearch, user?.id]
-  );
+    }, 500);
+  }, [isActionAllowed, recordUserAction, onSearch, user?.id]);
 
   // Handle input changes
   const handleInputChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
@@ -70,13 +84,13 @@ export default function SearchBar({ onSearch, placeholder = "Search...", classNa
         value={query}
         onChange={handleInputChange}
         placeholder={placeholder}
-        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-black"
+        className="w-full px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
         aria-label="Search"
         data-testid="search-input"
       />
       <button
         type="submit"
-        className="absolute right-2 top-1/2 transform -translate-y-1/2 px-3 py-1 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+        className="absolute right-2 top-1/2 transform -translate-y-1/2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors"
         aria-label="Submit search"
         data-testid="search-button"
       >

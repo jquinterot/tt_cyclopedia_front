@@ -77,8 +77,8 @@ export default function PasswordStrength({ validation, showDetails = false }: Pa
       {/* Requirements Checklist */}
       {showDetails && (
         <div className="mt-3 space-y-1">
-          <p className="text-xs text-gray-400 mb-2">Password Requirements:</p>
-          <div className="grid grid-cols-1 gap-1 text-xs">
+          <p className="text-sm text-gray-400 mb-2">Password Requirements:</p>
+          <div className="grid grid-cols-1 gap-1 text-sm">
             <div className={`flex items-center ${validation.isValid ? 'text-green-400' : 'text-gray-400'}`}>
               <span className="mr-1">✓</span>
               At least 8 characters

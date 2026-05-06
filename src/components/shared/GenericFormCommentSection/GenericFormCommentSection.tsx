@@ -1,7 +1,7 @@
 import { useRef } from "react";
 import { Link } from "react-router-dom";
 import { useQueryClient } from "@tanstack/react-query";
-import toast from "react-hot-toast";
+import { toast } from "sonner";
 import type { Comment } from '@/types/Comment';
 import LoadingSpinner from '@/components/shared/LoadingSpinner/LoadingSpinner';
 import { ErrorCode, ErrorMessages } from '@/enums/ErrorCode';
@@ -24,7 +24,7 @@ function GenericCommentInput({
   handleAddComment,
   testIdPrefix = "",
 }: {
-  inputRef: React.RefObject<HTMLInputElement>;
+  inputRef: React.RefObject<HTMLInputElement | null>;
   isAuthenticated: boolean;
   t: (key: string) => string;
   handleAddComment: () => void;
@@ -42,7 +42,7 @@ function GenericCommentInput({
       <div className="space-y-2">
         <input
           ref={inputRef}
-          className="w-full px-4 py-2 bg-white/5 border border-white/10 rounded-md text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+          className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
           type="text"
           placeholder={
             isAuthenticated

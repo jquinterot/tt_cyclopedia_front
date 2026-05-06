@@ -8,9 +8,7 @@ export function useForumCommentCount(forumId: string) {
     queryKey: ['forumComments', forumId],
     queryFn: async () => {
       const res = await apiClient.get<Comment[]>(`/comments/forum/${forumId}/main`);
-      // Filter to ensure only main comments (no parent_id) are returned
-      const mainComments = res.data.filter(comment => !comment.parent_id);
-      return mainComments;
+      return res.data.filter(comment => !comment.parent_id);
     },
     enabled: !!forumId,
   });
@@ -18,21 +16,18 @@ export function useForumCommentCount(forumId: string) {
 
 export const useForumComments = (forumId: string) => {
   const fetchMainComments = async () => {
-    console.log('🔍 Fetching forum main comments for:', forumId);
     try {
       const response = await apiClient.get<Comment[]>(`/comments/forum/${forumId}/main`);
-      console.log('📥 Forum main comments response:', response.data);
-      // Sort by timestamp descending (newest first)
-      const sortedComments = response.data.sort(
+      const transformedData = response.data.map(comment => ({
+        ...comment,
+        liked_by_current_user: Boolean(comment.liked_by_current_user)
+      }));
+      return transformedData.sort(
         (a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()
       );
-      console.log('📋 Sorted forum main comments:', sortedComments);
-      return sortedComments;
     } catch (error) {
-      console.error('❌ Error fetching forum main comments:', error);
       const axiosError = error as AxiosError;
       if (axiosError.response && axiosError.response.status === 404) {
-        console.log('⚠️ 404 - No forum main comments found, returning empty array');
         return [];
       }
       throw error;
@@ -50,7 +45,5 @@ export const useForumComments = (forumId: string) => {
     refetchOnMount: false,
   });
 
-  console.log('🔄 Forum main comments hook result:', { mainComments, isLoading, error, forumId });
-
   return { mainComments: mainComments ?? [], isLoading, error };
-}; 
+};

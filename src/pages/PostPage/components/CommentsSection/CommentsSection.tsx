@@ -1,6 +1,6 @@
 import { useState, useRef, useCallback } from "react";
 import { useQueryClient } from "@tanstack/react-query";
-import toast from "react-hot-toast";
+import { toast } from "sonner";
 import { useDeleteComment } from '@/hooks/comments/useDeleteComment';
 import { usePostComment } from '@/hooks/comments/usePostComments';
 import { useMainComments } from '@/hooks/comments/useMainComments';
@@ -16,19 +16,6 @@ export default function Comments({ postId }: { postId: string }) {
   const [replyingTo, setReplyingTo] = useState<string | null>(null);
   const [replyText, setReplyText] = useState<Record<string, string>>({});
   const replyInputRefs = useRef<Record<string, HTMLTextAreaElement | null>>({});
-
-  const setReplyInputRef = useCallback(
-    (commentId: string) => (el: HTMLTextAreaElement | null) => {
-      replyInputRefs.current[commentId] = el;
-      if (replyingTo === commentId && el) {
-        el.focus();
-        const val = el.value;
-        el.value = "";
-        el.value = val;
-      }
-    },
-    [replyingTo]
-  );
 
   const handleDeleteComment = useCallback(async (commentId: string) => {
     queryClient.setQueryData(['mainComments', postId], (old: Comment[] | undefined) =>
@@ -90,10 +77,18 @@ export default function Comments({ postId }: { postId: string }) {
           key={mainComment.id}
           comment={mainComment}
           replyingTo={replyingTo}
-          replyText={replyText}
-          setReplyText={setReplyText}
+          replyText={replyText[mainComment.id] || ""}
+          setReplyText={(text) => setReplyText((prev) => ({ ...prev, [mainComment.id]: text }))}
           setReplyingTo={setReplyingTo}
-          setReplyInputRef={setReplyInputRef}
+          setReplyInputRef={(el) => {
+            replyInputRefs.current[mainComment.id] = el;
+            if (replyingTo === mainComment.id && el) {
+              el.focus();
+              const val = el.value;
+              el.value = "";
+              el.value = val;
+            }
+          }}
           handleReply={handleReply}
           handleDeleteComment={handleDeleteComment}
           postId={postId}

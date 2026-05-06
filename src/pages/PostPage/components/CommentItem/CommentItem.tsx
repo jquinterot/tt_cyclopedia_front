@@ -1,26 +1,24 @@
-import { memo, useState, useRef, useEffect } from "react";
-import UserInfo from "../UserInfo/UserInfo";
-import { ReplyList } from "../ReplyList/ReplyList";
-import type { Comment } from '@/types/Comment';
+import { memo, useState, useRef, useEffect } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
+import { useEditComment } from '@/hooks/comments/useEditComment';
+import { useLikeCommentModern } from '@/hooks/comments/useLikeCommentModern';
+import { toast } from 'sonner';
+import type { Comment } from '@/types/Comment';
 import HeartIcon from '@/components/shared/HeartIcon/HeartIcon';
 import HeartIconFilled from '@/components/shared/HeartIconFilled/HeartIconFilled';
-import { useLikeComment } from '@/hooks/comments/useLikeComment';
-import { useEditComment } from '@/hooks/comments/useEditComment';
-import toast from 'react-hot-toast';
 
-type CommentItemProps = {
+interface CommentItemProps {
   comment: Comment;
   replyingTo: string | null;
-  replyText: Record<string, string>;
-  setReplyText: React.Dispatch<React.SetStateAction<Record<string, string>>>;
-  setReplyingTo: React.Dispatch<React.SetStateAction<string | null>>;
-  setReplyInputRef: (commentId: string) => (el: HTMLTextAreaElement | null) => void;
-  handleReply: (parentId: string) => void;
+  replyText: string;
+  setReplyText: (text: string) => void;
+  setReplyingTo: (commentId: string | null) => void;
+  setReplyInputRef: (ref: HTMLTextAreaElement | null) => void;
+  handleReply: (commentId: string) => void;
   handleDeleteComment: (commentId: string) => void;
   postId: string;
-  handleDeleteReply: (replyId: string, parentId: string) => void;
-};
+  handleDeleteReply: (commentId: string, parentId: string) => void;
+}
 
 export const CommentItem = memo(function CommentItem({
   comment,
@@ -34,15 +32,22 @@ export const CommentItem = memo(function CommentItem({
   postId,
   handleDeleteReply,
 }: CommentItemProps) {
+
   const { user } = useAuth();
   const canEdit = user && comment.user_id === user.id;
   const canDelete = canEdit;
-  const { likeMutation, unlikeMutation } = useLikeComment(postId);
   const { mutateAsync: editCommentMutation } = useEditComment(postId);
   const [isEditing, setIsEditing] = useState(false);
   const [editValue, setEditValue] = useState(comment.comment);
   const [editLoading, setEditLoading] = useState(false);
   const editInputRef = useRef<HTMLTextAreaElement | null>(null);
+
+  const { likes, liked, handleLike, isProcessing } = useLikeCommentModern({
+    commentId: comment.id,
+    postId,
+    initialLikes: comment.likes || 0,
+    initialLiked: comment.liked_by_current_user || false
+  });
 
   useEffect(() => {
     if (isEditing && editInputRef.current) {
@@ -57,11 +62,8 @@ export const CommentItem = memo(function CommentItem({
       toast('Please login to like!', { icon: '⚠️', id: 'login-to-like' });
       return;
     }
-    if (comment.liked_by_current_user) {
-      unlikeMutation.mutate(comment.id);
-    } else {
-      likeMutation.mutate(comment.id);
-    }
+    
+    handleLike();
   };
 
   const handleEdit = async () => {
@@ -94,142 +96,129 @@ export const CommentItem = memo(function CommentItem({
     }
   };
 
+  const handleDelete = () => {
+    if (comment.parent_id) {
+      handleDeleteReply(comment.id, postId);
+    } else {
+      handleDeleteComment(comment.id);
+    }
+  };
+
   return (
-    <div className="mb-4 p-4 rounded-lg bg-white/5 border border-white/10" data-testid={`comment-${comment.id}`}>
-      {/* 1. User info at the top */}
-      <div className="flex flex-col items-start">
-        <UserInfo userId={comment.user_id} />
-        {/* 2. Options row below user info */}
-        <div className="flex items-center space-x-2 mt-2 mb-2">
-          <button
-            className="p-1.5 text-sm text-blue-400 hover:text-blue-300 hover:bg-white/5 rounded-md transition-colors"
-            onClick={handleReplyButton}
-            data-testid={`reply-button-${comment.id}`}
-          >
-            Reply
-          </button>
-          {canEdit && (
-            <button
-              className="p-1.5 text-sm text-yellow-400 hover:text-yellow-300 hover:bg-white/5 rounded-md transition-colors"
-              onClick={handleEditButton}
-              data-testid={`edit-button-${comment.id}`}
-            >
-              {isEditing ? 'Cancel' : 'Edit'}
-            </button>
-          )}
-          {canDelete && (
-            <button
-              className="p-1.5 text-sm text-red-400 hover:text-red-300 hover:bg-white/5 rounded-md transition-colors"
-              onClick={() => handleDeleteComment(comment.id)}
-              data-testid={`delete-button-${comment.id}`}
-            >
-              Delete
-            </button>
-          )}
-        </div>
-        {/* 3. Comment content below options */}
-        <div className="mt-2 w-full">
+    <div className="border-l-2 border-white/20 pl-4 mb-4">
+      <div className="flex items-start space-x-2">
+        <div className="flex-1 min-w-0">
+          <div className="flex items-center justify-between mb-2">
+            <div className="flex items-center space-x-2">
+              <span className="font-semibold text-white">{comment.username}</span>
+              <span className="text-sm text-gray-400">
+                {new Date(comment.timestamp).toLocaleDateString()}
+              </span>
+            </div>
+
+            <div className="flex items-center space-x-2">
+              <button
+                onClick={handleReplyButton}
+                className="text-sm text-blue-400 hover:text-blue-300 transition-colors"
+                disabled={isProcessing}
+              >
+                Reply
+              </button>
+              {canEdit && (
+                <button
+                  onClick={handleEditButton}
+                  className="text-sm text-green-400 hover:text-green-300 transition-colors"
+                  disabled={isProcessing}
+                >
+                  {isEditing ? 'Cancel' : 'Edit'}
+                </button>
+              )}
+              {canDelete && (
+                <button
+                  onClick={handleDelete}
+                  className="text-sm text-red-400 hover:text-red-300 transition-colors"
+                  disabled={isProcessing}
+                >
+                  Delete
+                </button>
+              )}
+            </div>
+          </div>
+
           {isEditing ? (
-            <div className="space-y-2">
+            <div className="mb-2">
               <textarea
                 ref={editInputRef}
-                className="w-full px-3 py-2 bg-white/5 border border-white/10 rounded-md text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors resize-none"
                 value={editValue}
-                onChange={e => setEditValue(e.target.value)}
-                rows={2}
-                disabled={editLoading}
-                data-testid={`edit-input-${comment.id}`}
+                onChange={(e) => setEditValue(e.target.value)}
+                className="w-full px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none transition-colors"
+                rows={3}
               />
-              <div className="flex space-x-2 justify-end">
+              <div className="flex space-x-2 mt-2">
                 <button
-                  className="px-3 py-1.5 text-sm bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
                   onClick={handleEdit}
                   disabled={editLoading}
-                  data-testid={`save-edit-${comment.id}`}
+                  className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 transition-colors"
                 >
-                  Save
+                  {editLoading ? 'Saving...' : 'Save'}
                 </button>
                 <button
-                  className="px-3 py-1.5 text-sm text-gray-300 hover:text-white hover:bg-white/5 rounded-md transition-colors"
-                  onClick={() => { setIsEditing(false); setEditValue(comment.comment); }}
-                  disabled={editLoading}
-                  data-testid={`cancel-edit-${comment.id}`}
+                  onClick={handleEditButton}
+                  className="px-4 py-2 bg-white/5 text-gray-300 rounded-lg hover:bg-white/10 transition-colors"
                 >
                   Cancel
                 </button>
               </div>
             </div>
           ) : (
-            <p className="text-gray-300" data-testid={`comment-text-${comment.id}`}>{comment.comment}</p>
+            <p className="text-gray-300 mb-2">{comment.comment}</p>
           )}
-        </div>
-        {/* 4. Likes at the bottom */}
-        <div className="flex items-center mt-2">
-          <button
-            className="relative flex items-center gap-1 p-1.5 text-blue-400 hover:text-blue-300 hover:bg-white/5 rounded-md transition-colors group"
-            onClick={handleLikeToggle}
-            disabled={likeMutation.isPending || unlikeMutation.isPending}
-            aria-pressed={!!comment.liked_by_current_user}
-            data-testid={`like-button-${comment.id}`}
-          >
-            {comment.liked_by_current_user ? (
-              <HeartIconFilled className="h-5 w-5 text-blue-600 transition-colors" data-testid={`like-icon-filled-${comment.id}`}/>
-            ) : (
-              <>
-                <HeartIcon className="h-5 w-5 text-blue-400 transition-colors group-hover:opacity-0" data-testid={`like-icon-outline-${comment.id}`}/>
-                <HeartIconFilled className="h-5 w-5 text-blue-600 absolute left-0 top-0 opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none" data-testid={`like-icon-filled-hover-${comment.id}`}/>
-              </>
-            )}
-            <span className="text-sm text-gray-300">{comment.likes || 0}</span>
-          </button>
+
+          <div className="flex items-center space-x-2">
+            <button
+              className="flex items-center space-x-1 focus:outline-none"
+              onClick={handleLikeToggle}
+              disabled={isProcessing}
+              aria-pressed={liked}
+              data-testid={`like-button-${comment.id}`}
+            >
+              {liked ? (
+                <HeartIconFilled className="h-5 w-5 text-blue-600 transition-colors" data-testid={`like-icon-filled-${comment.id}`}/>
+              ) : (
+                <HeartIcon className="h-5 w-5 text-blue-400 transition-colors" data-testid={`like-icon-outline-${comment.id}`}/>
+              )}
+              <span className="text-sm text-gray-300">{likes}</span>
+            </button>
+          </div>
         </div>
       </div>
-      {/* Reply form and replies remain unchanged */}
+
       {replyingTo === comment.id && (
-        <div className="mt-4 space-y-3" data-testid={`reply-form-${comment.id}`}>
+        <div className="mt-4 ml-4">
           <textarea
-            ref={setReplyInputRef(comment.id)}
-            value={replyText[comment.id] || ""}
-            onChange={(e) =>
-              setReplyText((prev) => ({ ...prev, [comment.id]: e.target.value }))
-            }
-            onKeyDown={(e) => {
-              if (e.key === 'Enter' && !e.shiftKey) {
-                e.preventDefault();
-                handleReply(comment.id);
-              }
-            }}
-            className="w-full px-3 py-2 bg-white/5 border border-white/10 rounded-md text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors resize-none"
-            placeholder="Write your reply..."
-            rows={2}
-            data-testid={`reply-input-${comment.id}`}
+            ref={(el) => setReplyInputRef(el)}
+            value={replyText}
+            onChange={(e) => setReplyText(e.target.value)}
+            placeholder="Write a reply..."
+            className="w-full px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none transition-colors"
+            rows={3}
           />
-          <div className="flex justify-end space-x-2">
+          <div className="flex space-x-2 mt-2">
             <button
-              className="px-3 py-1.5 text-sm text-gray-300 hover:text-white hover:bg-white/5 rounded-md transition-colors"
-              onClick={() => {
-                setReplyingTo(null);
-                setReplyText((prev) => ({ ...prev, [comment.id]: "" }));
-              }}
-              data-testid={`cancel-reply-${comment.id}`}
-            >
-              Cancel
-            </button>
-            <button
-              className="px-3 py-1.5 text-sm bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
               onClick={() => handleReply(comment.id)}
-              data-testid={`submit-reply-${comment.id}`}
+              className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
             >
               Reply
+            </button>
+            <button
+              onClick={() => setReplyingTo(null)}
+              className="px-4 py-2 bg-white/5 text-gray-300 rounded-lg hover:bg-white/10 transition-colors"
+            >
+              Cancel
             </button>
           </div>
         </div>
       )}
-      <ReplyList
-        parentId={comment.id}
-        postId={postId}
-        onDeleteReply={handleDeleteReply}
-      />
     </div>
   );
 }); 

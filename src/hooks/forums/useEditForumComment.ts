@@ -12,21 +12,16 @@ export function useEditForumComment(forumId: string) {
 
   return useMutation({
     mutationFn: async ({ commentId, commentText }: EditForumCommentData) => {
-      console.log('📝 Editing forum comment:', { commentId, commentText });
       const res = await apiClient.put<Comment>(`/comments/${commentId}`, {
         comment: commentText,
       });
-      console.log('✅ Forum comment edited successfully:', res.data);
       return res.data;
     },
-    onSuccess: (data, variables) => {
-      console.log('🎉 Forum comment edit mutation success:', { data, variables });
+    onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ['forumComments', forumId] });
-      // If it's a reply, also invalidate the replies for that parent
       if (data.parent_id) {
-        console.log('🔄 Invalidating forum replies for parent:', data.parent_id);
         queryClient.invalidateQueries({ queryKey: ['forumCommentReplies', forumId, data.parent_id] });
       }
     },
   });
-} 
+}

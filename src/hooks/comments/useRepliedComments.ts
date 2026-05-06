@@ -7,8 +7,13 @@ export const useReplyComments = (postId: string, commentId: string) => {
   const fetchComments = async () => {
     try {
       const response = await apiClient.get<Comment[]>(`/comments/post/${postId}/replies/${commentId}`);
+      // Transform the data to ensure liked_by_current_user is always a boolean
+      const transformedData = response.data.map(comment => ({
+        ...comment,
+        liked_by_current_user: Boolean(comment.liked_by_current_user)
+      }));
       // Always sort by timestamp ascending
-      return response.data.sort(
+      return transformedData.sort(
         (a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime()
       );
     } catch (error) {

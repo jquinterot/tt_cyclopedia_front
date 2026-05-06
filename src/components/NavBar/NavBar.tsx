@@ -94,7 +94,7 @@ function DesktopNav({
     <div className="hidden sm:flex items-center space-x-8" data-testid="desktop-nav">
       <Link
         to="/"
-        className="text-gray-300 hover:text-blue-400 transition-colors px-3 py-2 rounded-md text-sm font-medium"
+        className="text-gray-300 hover:text-blue-400 transition-colors px-3 py-2 rounded-md text-sm font-medium focus:outline-none focus:ring-2 focus:ring-blue-500 focus:text-blue-400"
         data-testid="nav-posts"
       >
         Posts
@@ -107,6 +107,13 @@ function DesktopNav({
         Forums
       </Link>
       <Link
+        to="/equipment"
+        className="text-gray-300 hover:text-blue-400 transition-colors px-3 py-2 rounded-md text-sm font-medium"
+        data-testid="nav-equipment"
+      >
+        Equipment
+      </Link>
+      <Link
         to="/about"
         className="text-gray-300 hover:text-blue-400 transition-colors px-3 py-2 rounded-md text-sm font-medium"
         data-testid="nav-about"
@@ -115,7 +122,7 @@ function DesktopNav({
       </Link>
       <button
         onClick={toggleLanguage}
-        className="text-gray-300 hover:text-blue-400 transition-colors px-3 py-2 rounded-md text-sm font-medium"
+        className="text-gray-300 hover:text-blue-400 transition-colors px-3 py-2 rounded-md text-sm font-medium focus:outline-none focus:ring-2 focus:ring-blue-500 focus:text-blue-400"
         data-testid="language-toggle"
       >
         {language.toUpperCase()}
@@ -125,7 +132,7 @@ function DesktopNav({
       ) : (
         <Link
           to="/login"
-          className="text-gray-300 hover:text-blue-400 transition-colors px-3 py-2 rounded-md text-sm font-medium"
+          className="text-gray-300 hover:text-blue-400 transition-colors px-3 py-2 rounded-md text-sm font-medium focus:outline-none focus:ring-2 focus:ring-blue-500 focus:text-blue-400"
           data-testid="nav-login"
         >
           {t('nav.signIn')}
@@ -206,6 +213,14 @@ function MobileDropdownMenu({
           data-testid="mobile-nav-forums"
         >
           Forums
+        </Link>
+        <Link
+          to="/equipment"
+          className="block px-3 py-2 rounded-md text-base font-medium text-gray-300 hover:text-blue-400 hover:bg-white/5 transition-colors"
+          onClick={() => setIsOpen(false)}
+          data-testid="mobile-nav-equipment"
+        >
+          Equipment
         </Link>
         <Link
           to="/about"

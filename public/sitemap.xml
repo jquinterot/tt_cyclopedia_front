@@ -1,33 +1,126 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <!-- Main Pages -->
   <url>
     <loc>https://ttcyclopedia.space/</loc>
-    <lastmod>2024-01-15</lastmod>
+    <lastmod>2026-04-28</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
     <loc>https://ttcyclopedia.space/about</loc>
-    <lastmod>2024-01-15</lastmod>
+    <lastmod>2026-04-28</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.9</priority>
   </url>
   <url>
+    <loc>https://ttcyclopedia.space/forums</loc>
+    <lastmod>2026-04-28</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://ttcyclopedia.space/donate</loc>
+    <lastmod>2026-04-28</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  
+  <!-- Auth Pages -->
+  <url>
     <loc>https://ttcyclopedia.space/login</loc>
-    <lastmod>2024-01-15</lastmod>
+    <lastmod>2026-04-28</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
   </url>
   <url>
     <loc>https://ttcyclopedia.space/signup</loc>
-    <lastmod>2024-01-15</lastmod>
+    <lastmod>2026-04-28</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
   </url>
+  
+  <!-- User Pages -->
   <url>
     <loc>https://ttcyclopedia.space/createPost</loc>
-    <lastmod>2024-01-15</lastmod>
+    <lastmod>2026-04-28</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://ttcyclopedia.space/create-forum</loc>
+    <lastmod>2026-04-28</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://ttcyclopedia.space/profile</loc>
+    <lastmod>2026-04-28</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
   </url>
-</urlset> 
+
+  <!-- Blog/Equipment Post Categories -->
+  <url>
+    <loc>https://ttcyclopedia.space/posts/blades</loc>
+    <lastmod>2026-04-28</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://ttcyclopedia.space/posts/rubbers</loc>
+    <lastmod>2026-04-28</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://ttcyclopedia.space/posts/shoes</loc>
+    <lastmod>2026-04-28</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://ttcyclopedia.space/posts/tables</loc>
+    <lastmod>2026-04-28</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://ttcyclopedia.space/posts/training</loc>
+    <lastmod>2026-04-28</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://ttcyclopedia.space/posts/tournaments</loc>
+    <lastmod>2026-04-28</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <!-- Forum Topics -->
+  <url>
+    <loc>https://ttcyclopedia.space/forums/equipment</loc>
+    <lastmod>2026-04-28</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://ttcyclopedia.space/forums/techniques</loc>
+    <lastmod>2026-04-28</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://ttcyclopedia.space/forums/training</loc>
+    <lastmod>2026-04-28</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://ttcyclopedia.space/forums/tournaments</loc>
+    <lastmod>2026-04-28</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.7</priority>
+  </url>
+</urlset>

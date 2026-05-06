@@ -13,13 +13,15 @@ const queryClient = new QueryClient({
 describe("SignupPage", () => {
   it("renders the Signup page", () => {
     render(
-      <QueryClientProvider client={queryClient}>
-        <BrowserRouter>
-          <LanguageProvider>
-            <SignupPage />
-          </LanguageProvider>
-        </BrowserRouter>
-      </QueryClientProvider>
+  
+        <QueryClientProvider client={queryClient}>
+          <BrowserRouter>
+            <LanguageProvider>
+              <SignupPage />
+            </LanguageProvider>
+          </BrowserRouter>
+        </QueryClientProvider>
+  
     );
   });
 }); 

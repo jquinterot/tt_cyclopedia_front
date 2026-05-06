@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useState, useMemo } from "react";
 import PostCard from "./PostCard/PostCard";
 import SearchBar from "@/components/shared/SearchBar/SearchBar";
+import LoadingSpinner from '@/components/shared/LoadingSpinner/LoadingSpinner';
 import { useAuth } from '@/contexts/AuthContext';
 
 // --- Main PostList Component ---
@@ -29,14 +30,14 @@ export default function PostList() {
   if (isLoading)
     return (
       <div className="flex justify-center items-center h-64" data-testid="post-list-loading">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+        <LoadingSpinner />
       </div>
     );
 
   if (error)
     return (
       <div className="flex justify-center items-center h-64">
-        <div className="text-gray-400">Error loading posts</div>
+        <div className="text-red-400">Error loading posts</div>
       </div>
     );
 

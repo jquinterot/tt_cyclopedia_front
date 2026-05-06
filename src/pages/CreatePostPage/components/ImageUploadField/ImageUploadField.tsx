@@ -1,6 +1,6 @@
 
 type ImageUploadFieldProps = {
-  inputRef: React.RefObject<HTMLInputElement>;
+  inputRef: React.RefObject<HTMLInputElement | null>;
 };
 
 export default function ImageUploadField({ inputRef }: ImageUploadFieldProps) {
@@ -42,7 +42,7 @@ export default function ImageUploadField({ inputRef }: ImageUploadFieldProps) {
             </label>
             <p className="pl-1">or drag and drop</p>
           </div>
-          <p className="text-xs text-gray-400">PNG, JPG, GIF up to 10MB</p>
+          <p className="text-sm text-gray-400">PNG, JPG, GIF up to 10MB</p>
         </div>
       </div>
     </div>

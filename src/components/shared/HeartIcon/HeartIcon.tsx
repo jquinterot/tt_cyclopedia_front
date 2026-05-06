@@ -2,7 +2,7 @@ import React from 'react';
 
 interface HeartIconProps extends React.SVGProps<SVGSVGElement> {}
 
-const HeartIcon: React.FC<HeartIconProps> = (props) => (
+const HeartIcon = (props: HeartIconProps) => (
   <svg
     fill="none"
     stroke="currentColor"

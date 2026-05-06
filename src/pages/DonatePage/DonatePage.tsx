@@ -1,11 +1,18 @@
 import { Link } from 'react-router-dom';
+import SEOHead from '@/components/SEO/SEOHead';
 
 export default function DonatePage() {
   return (
-    <div className="max-w-2xl mx-auto py-12 px-4 text-center">
-      <h1 className="text-3xl font-bold mb-6">Support TT Cyclopedia</h1>
+    <>
+      <SEOHead
+        title="Support TT Cyclopedia"
+        description="Support TT Cyclopedia and help us continue providing quality table tennis content, equipment reviews, and community forums."
+        canonical="/donate"
+      />
+      <div className="max-w-2xl mx-auto py-12 px-4 text-center" data-testid="donate-page">
+      <h1 className="text-3xl font-bold mb-6" data-testid="donate-heading">Support TT Cyclopedia</h1>
       
-      <div className="mb-8 text-gray-300 leading-relaxed">
+      <div className="mb-8 text-gray-300 leading-relaxed" data-testid="donate-content">
         <p className="mb-4">
           TT Cyclopedia is a community-driven platform dedicated to sharing the best table tennis content with players of all levels.
         </p>
@@ -53,10 +60,11 @@ export default function DonatePage() {
 
       <div className="text-gray-400 text-sm">
         <p className="mb-4">Thank you for your support! 🙏</p>
-        <Link to="/" className="text-blue-400 hover:underline">
+        <Link to="/" className="text-blue-400 hover:underline" data-testid="donate-back-link">
           ← Back to Home
         </Link>
       </div>
     </div>
+    </>
   );
 } 

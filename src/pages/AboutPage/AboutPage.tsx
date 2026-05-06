@@ -6,11 +6,13 @@ import SEOHead from '@/components/SEO/SEOHead';
 import { generateOrganizationSchema, generateFAQSchema } from '@/types/StructuredData';
 
 function AboutPage() {
+  const BASE_URL = import.meta.env.VITE_BASE_URL;
+
   const organizationData = generateOrganizationSchema({
     name: 'TT Cyclopedia',
-    url: 'https://ttcyclopedia.space',
+    url: BASE_URL,
     description: 'TT Cyclopedia is your comprehensive table tennis knowledge base, providing equipment reviews, training tips, and community discussions.',
-    logo: 'https://ttcyclopedia.space/favicon.png'
+    logo: `${BASE_URL}/favicon.png`
   });
 
   const faqData = generateFAQSchema({

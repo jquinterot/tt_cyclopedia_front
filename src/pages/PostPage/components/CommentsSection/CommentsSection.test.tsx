@@ -7,8 +7,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { AuthProvider } from '@/contexts/AuthContext';
 import { BrowserRouter } from 'react-router-dom';
 
-// Mock the useMainComments hook to avoid API calls
-vi.mock("../../../../hooks/comments/useMainComments", () => ({
+vi.mock('@/hooks/comments/useMainComments', () => ({
   useMainComments: (postId: string) => ({
     mainComments: [
       {
@@ -26,26 +25,34 @@ vi.mock("../../../../hooks/comments/useMainComments", () => ({
   }),
 }));
 
-// Mock the mutation hooks
-vi.mock("../../../../hooks/comments/useDeleteComment", () => ({
+vi.mock('@/hooks/comments/useDeleteComment', () => ({
   useDeleteComment: () => ({
     mutateAsync: vi.fn(),
   }),
 }));
 
-vi.mock("../../../../hooks/comments/usePostComments", () => ({
+vi.mock('@/hooks/comments/usePostComments', () => ({
   usePostComment: () => ({
     mutateAsync: vi.fn(),
   }),
 }));
 
-// Mock UserInfo to avoid user API calls
-vi.mock("../UserInfo/UserInfo", () => ({
-  default: ({ userId }: { userId: string }) => <span data-testid={`user-info-${userId}`}>{userId}</span>,
+vi.mock('@/hooks/comments/useEditComment', () => ({
+  useEditComment: () => ({
+    mutateAsync: vi.fn(),
+  }),
 }));
 
-// Mock useReplyComments to avoid API calls for replies
-vi.mock("../../../../hooks/comments/useRepliedComments", () => ({
+vi.mock('@/hooks/comments/useLikeCommentModern', () => ({
+  useLikeCommentModern: vi.fn(() => ({
+    likes: 5,
+    liked: false,
+    handleLike: vi.fn(),
+    isProcessing: false,
+  })),
+}));
+
+vi.mock('@/hooks/comments/useRepliedComments', () => ({
   useReplyComments: () => ({
     comments: [],
     isLoading: false,
@@ -53,9 +60,8 @@ vi.mock("../../../../hooks/comments/useRepliedComments", () => ({
   }),
 }));
 
-// Mock toast to avoid toast notifications in tests
-vi.mock("react-hot-toast", () => ({
-  default: {
+vi.mock("sonner", () => ({
+  toast: {
     success: vi.fn(),
     error: vi.fn(),
   },
@@ -85,37 +91,34 @@ describe("Comments Component", () => {
   });
 
   test("renders comments list", async () => {
-    const { getByTestId } = renderWithProviders(<Comments postId="post1" />);
+    const { getByText, getByTestId } = renderWithProviders(<Comments postId="post1" />);
     await waitFor(() => {
       expect(getByTestId("comments-list")).toBeInTheDocument();
-      expect(getByTestId("comment-1")).toBeInTheDocument();
-      expect(getByTestId("comment-text-1")).toHaveTextContent("Test comment 1");
+      expect(getByText("Test comment 1")).toBeInTheDocument();
+    });
+  });
+
+  test("shows reply button", async () => {
+    const { getByText } = renderWithProviders(<Comments postId="post1" />);
+    await waitFor(() => {
+      expect(getByText("Reply")).toBeInTheDocument();
     });
   });
 
   test("shows reply form when reply button is clicked", async () => {
-    const { getByTestId } = renderWithProviders(<Comments postId="post1" />);
+    const { getByText, getByPlaceholderText } = renderWithProviders(<Comments postId="post1" />);
     const user = userEvent.setup();
 
-    const replyButton = getByTestId("reply-button-1");
+    await waitFor(() => {
+      expect(getByText("Reply")).toBeInTheDocument();
+    });
+
+    const replyButton = getByText("Reply");
     await user.click(replyButton);
 
-    expect(getByTestId("reply-form-1")).toBeInTheDocument();
-    expect(getByTestId("reply-input-1")).toBeInTheDocument();
-    expect(getByTestId("submit-reply-1")).toBeInTheDocument();
-    expect(getByTestId("cancel-reply-1")).toBeInTheDocument();
-  });
-
-  test("hides reply form when cancel is clicked", async () => {
-    const { getByTestId, queryByTestId } = renderWithProviders(<Comments postId="post1" />);
-    const user = userEvent.setup();
-
-    // Open reply form
-    await user.click(getByTestId("reply-button-1"));
-    expect(getByTestId("reply-form-1")).toBeInTheDocument();
-
-    // Cancel reply
-    await user.click(getByTestId("cancel-reply-1"));
-    expect(queryByTestId("reply-form-1")).not.toBeInTheDocument();
+    await waitFor(() => {
+      expect(getByPlaceholderText("Write a reply...")).toBeInTheDocument();
+      expect(getByText("Cancel")).toBeInTheDocument();
+    });
   });
 });

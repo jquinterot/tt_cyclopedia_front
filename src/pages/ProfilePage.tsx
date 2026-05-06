@@ -1,15 +1,27 @@
 import { useAuth } from '@/contexts/AuthContext';
 import SessionStatus from '@/components/shared/SessionStatus/SessionStatus';
+import SEOHead from '@/components/SEO/SEOHead';
 
 export default function ProfilePage() {
   const { user } = useAuth();
 
   if (!user) {
-    return <div className="text-red-400" data-testid="profile-login-required">You must be logged in to view your profile.</div>;
+    return (
+      <>
+        <SEOHead title="Profile - TT Cyclopedia" noindex />
+        <div className="text-red-400" data-testid="profile-login-required">You must be logged in to view your profile.</div>
+      </>
+    );
   }
 
   return (
-    <div className="max-w-md mx-auto mt-10 p-6 bg-white/10 rounded-lg shadow" data-testid="profile-page">
+    <>
+      <SEOHead
+        title="My Profile - TT Cyclopedia"
+        description={`${user.username}'s TT Cyclopedia profile page.`}
+        noindex
+      />
+      <div className="max-w-md mx-auto mt-10 p-6 bg-white/10 rounded-lg shadow" data-testid="profile-page">
       <h1 className="text-2xl font-bold mb-4 text-white" data-testid="profile-title">My Profile</h1>
       <div className="flex flex-col items-center mb-6">
         <div className="h-16 w-16 rounded-full bg-blue-600 flex items-center justify-center mb-2" data-testid="profile-avatar">
@@ -34,5 +46,6 @@ export default function ProfilePage() {
         <SessionStatus />
       </div>
     </div>
+    </>
   );
 } 

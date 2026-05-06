@@ -1,17 +1,14 @@
 /* eslint-disable react-refresh/only-export-components */
 /* eslint-disable @typescript-eslint/no-namespace */
 import './commands';
-import { mount } from 'cypress/react18';
+import { mount } from 'cypress/react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactNode } from 'react';
-import type { MountOptions } from 'cypress/react18';
 import React from 'react';
 import { AuthProvider } from '@/contexts/AuthContext';
 import { LanguageProvider } from '@/contexts/LanguageContext';
 import { BrowserRouter } from 'react-router-dom';
-import { HelmetProvider } from 'react-helmet-async';
 
-// Create a new query client instance for tests
 const testQueryClient = new QueryClient({
   defaultOptions: {
     queries: {
@@ -22,17 +19,15 @@ const testQueryClient = new QueryClient({
 
 // Custom wrapper component
 const WithProviders = ({ children }: { children: ReactNode }) => (
-  <HelmetProvider>
-    <BrowserRouter>
-      <QueryClientProvider client={testQueryClient}>
-        <LanguageProvider>
-          <AuthProvider>
-            {children}
-          </AuthProvider>
-        </LanguageProvider>
-      </QueryClientProvider>
-    </BrowserRouter>
-  </HelmetProvider>
+  <BrowserRouter>
+    <QueryClientProvider client={testQueryClient}>
+      <LanguageProvider>
+        <AuthProvider>
+          {children}
+        </AuthProvider>
+      </LanguageProvider>
+    </QueryClientProvider>
+  </BrowserRouter>
 );
 
 declare global {
@@ -46,8 +41,8 @@ declare global {
 // Custom mount command with provider wrapping
 
 
-const customMount = (component: React.ReactNode, options?: MountOptions) => {
-  return mount(<WithProviders>{component}</WithProviders>, options);
+const customMount = (component: React.ReactNode) => {
+  return mount(<WithProviders>{component}</WithProviders>);
 };
 
 Cypress.Commands.add('mount', customMount); // Register the custom mount command

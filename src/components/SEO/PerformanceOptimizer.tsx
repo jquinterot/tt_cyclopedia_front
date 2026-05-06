@@ -5,10 +5,10 @@ interface PerformanceOptimizerProps {
   prefetchRoutes?: string[];
 }
 
-const PerformanceOptimizer: React.FC<PerformanceOptimizerProps> = ({
+const PerformanceOptimizer = ({
   preloadImages = [],
   prefetchRoutes = []
-}) => {
+}: PerformanceOptimizerProps) => {
   useEffect(() => {
     // Preload critical images
     preloadImages.forEach(imageSrc => {

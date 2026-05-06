@@ -6,6 +6,7 @@ const mockPost = {
   content: "Test content",
   image_url: "/test.jpg",
   likes: 5,
+  likedByCurrentUser: false,
 };
 
 describe('<PostCard />', () => {
@@ -23,7 +24,7 @@ describe('<PostCard />', () => {
     const mockOnClick = () => { called = true; };
     cy.mount(<PostCard post={mockPost} onClick={mockOnClick} />);
     
-    cy.get('[data-testid="post-card-1"]').click().then(() => {
+    cy.get('[data-testid="post-card-1"]').scrollIntoView().click({ force: true }).then(() => {
       expect(called).to.be.true;
     });
   });

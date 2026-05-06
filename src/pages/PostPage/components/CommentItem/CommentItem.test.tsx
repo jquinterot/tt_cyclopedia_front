@@ -27,7 +27,7 @@ describe("CommentItem", () => {
             <CommentItem
               comment={mockComment}
               replyingTo={null}
-              replyText={{}}
+              replyText=""
               setReplyText={() => {}}
               setReplyingTo={() => {}}
               setReplyInputRef={() => () => {}}

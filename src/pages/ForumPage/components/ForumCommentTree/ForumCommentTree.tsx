@@ -12,7 +12,7 @@ import HeartIconFilled from '@/components/shared/HeartIconFilled/HeartIconFilled
 import type { Comment } from '@/types/Comment';
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { useQueryClient } from "@tanstack/react-query";
-import toast from "react-hot-toast";
+import { toast } from "sonner";
 
 type ForumCommentTreeProps = {
   forumId: string;
@@ -73,11 +73,11 @@ const ForumReply = memo(function ForumReply({
             ) : (
               <HeartIcon className="h-4 w-4 text-blue-400" />
             )}
-            <span className="text-xs text-gray-300">{reply.likes || 0}</span>
+            <span className="text-sm text-gray-300">{reply.likes || 0}</span>
           </button>
           {canEdit && (
             <button
-              className="p-1 text-xs text-yellow-400 hover:text-yellow-300 hover:bg-white/5 rounded transition-colors"
+              className="p-1.5 text-sm text-yellow-400 hover:text-yellow-300 hover:bg-white/5 rounded transition-colors"
               onClick={() => setIsEditing(!isEditing)}
             >
               {isEditing ? 'Cancel' : 'Edit'}
@@ -85,7 +85,7 @@ const ForumReply = memo(function ForumReply({
           )}
           {canDelete && (
             <button
-              className="p-1 text-xs text-red-400 hover:text-red-300 hover:bg-white/5 rounded transition-colors"
+              className="p-1.5 text-sm text-red-400 hover:text-red-300 hover:bg-white/5 rounded transition-colors"
               onClick={() => onDeleteReply(reply.id, reply.parent_id || '')}
             >
               Delete
@@ -98,7 +98,7 @@ const ForumReply = memo(function ForumReply({
           <div className="space-y-2">
             <textarea
               ref={editInputRef}
-              className="w-full px-2 py-1 bg-white/5 border border-white/10 rounded-md text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors resize-none text-xs"
+              className="w-full px-3 py-1.5 bg-white/5 border border-white/10 rounded-md text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors resize-none text-sm"
               value={editValue}
               onChange={(e) => setEditValue(e.target.value)}
               rows={2}
@@ -106,14 +106,14 @@ const ForumReply = memo(function ForumReply({
             />
             <div className="flex space-x-2 justify-end">
               <button
-                className="px-2 py-1 text-xs bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
+                className="px-3 py-1.5 text-sm bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
                 onClick={handleEdit}
                 disabled={editLoading}
               >
                 Save
               </button>
               <button
-                className="px-2 py-1 text-xs text-gray-300 hover:text-white hover:bg-white/5 rounded-md transition-colors"
+                className="px-3 py-1.5 text-sm text-gray-300 hover:text-white hover:bg-white/5 rounded-md transition-colors"
                 onClick={() => { setIsEditing(false); setEditValue(reply.comment); }}
                 disabled={editLoading}
               >
@@ -156,15 +156,13 @@ const ForumCommentWithReplies = memo(function ForumCommentWithReplies({
   const { user } = useAuth();
   const canEdit = user && comment.user_id === user.id;
   const canDelete = canEdit;
-  const { replies = [], isLoading: repliesLoading, error: repliesError } = useForumCommentReplies(forumId, comment.id);
+  const { replies = [] } = useForumCommentReplies(forumId, comment.id);
   const { likeMutation, unlikeMutation } = useLikeForumComment(forumId);
   const { mutateAsync: editCommentMutation } = useEditForumComment(forumId);
   const [isEditing, setIsEditing] = useState(false);
   const [editValue, setEditValue] = useState(comment.comment);
   const [editLoading, setEditLoading] = useState(false);
   const editInputRef = useRef<HTMLTextAreaElement | null>(null);
-
-  console.log('📋 ForumCommentWithReplies for comment:', comment.id, 'replies:', replies, 'loading:', repliesLoading, 'error:', repliesError);
 
   useEffect(() => {
     if (isEditing && editInputRef.current) {
@@ -423,29 +421,23 @@ export const ForumCommentTree = memo(function ForumCommentTree({
   }, [deleteCommentMutation, forumId, queryClient]);
 
   const handleReply = useCallback(async (parentId: string) => {
-    console.log('🚀 handleReply called with parentId:', parentId);
     const text = replyText[parentId]?.trim() || "";
-    console.log('📝 Reply text:', text);
     if (!text) {
       toast.error("Please enter a reply");
       return;
     }
     try {
-      console.log('📤 Calling postComment with:', { comment: text, parentId });
       await postComment({
         comment: text,
         parentId,
       });
 
-      console.log('✅ postComment successful, invalidating queries');
       queryClient.invalidateQueries({ queryKey: ["forumComments", forumId] });
       toast.success("Reply added successfully");
       setReplyText((prev) => ({ ...prev, [parentId]: "" }));
       setReplyingTo(null);
-      console.log('🔄 Invalidating forum replies for parent:', parentId);
       queryClient.invalidateQueries({ queryKey: ["forumCommentReplies", forumId, parentId] });
     } catch (error) {
-      console.error('❌ Error in handleReply:', error);
       toast.error("Failed to add reply");
     }
   }, [postComment, forumId, replyText, queryClient]);

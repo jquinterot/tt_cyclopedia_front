@@ -1,81 +1,18 @@
-import { useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { useParams, useNavigate, Link } from "react-router-dom";
 import { usePostById } from '@/hooks/posts/usePostById';
 import { usePostId } from '@/hooks/posts/usePostId';
+import { useUpdatePost } from '@/hooks/posts/useUpdatePost';
+import { useDeletePost } from '@/hooks/posts/useDeletePost';
+import { useAuth } from '@/contexts/AuthContext';
 import FormComment from "../FormCommentSection/FormCommentSection";
-import { STAT_CONFIG } from '@/config/statConfig';
 import PostInfoSection from '../PostInfoSection/PostInfoSection';
 import LoadingSpinner from '@/components/shared/LoadingSpinner/LoadingSpinner';
-
-function getStatConfig(key: string) {
-  return STAT_CONFIG.find((item) => item.key === key);
-}
-
-function StatBar({ label, value, color }: { label: string; value: number; color: string }) {
-  return (
-    <div className="flex items-center gap-3 group py-1">
-      <span className="text-xs font-medium text-gray-400 w-16 group-hover:text-white transition-colors">
-        {label}
-      </span>
-      <div className="flex-1 h-3 bg-white/10 rounded-lg overflow-hidden backdrop-blur-sm border border-white/5 group-hover:border-white group-hover:shadow-md transition-colors transition-shadow duration-200">
-        <div 
-          className={`h-full ${color} transition-all duration-500 ease-out`}
-          style={{ 
-            width: `${(value / 10) * 100}%`,
-            boxShadow: `0 0 20px ${color.replace('bg-', '').replace('-500', '-400')}` 
-          }}
-        />
-      </div>
-      <span className="text-xs font-medium text-gray-300 w-10 text-right group-hover:text-white transition-colors">
-        {value.toFixed(1)}
-      </span>
-    </div>
-  );
-}
-
-function PostImage({ src, alt, defaultImageUrl }: { src: string; alt: string; defaultImageUrl: string }) {
-  const handleError = (e: React.SyntheticEvent<HTMLImageElement, Event>) => {
-    e.currentTarget.onerror = null;
-    e.currentTarget.src = defaultImageUrl;
-  };
-  return (
-    <div className="aspect-square w-full group relative overflow-hidden rounded-lg" data-testid="post-image-container">
-      <img
-        className="w-full h-full object-cover transition-transform duration-500 ease-in-out group-hover:scale-110"
-        src={src}
-        alt={alt}
-        data-testid="post-image"
-        onError={handleError}
-      />
-      <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-    </div>
-  );
-}
-
-function PostStatsWrapper({ stats }: { stats?: Record<string, number> }) {
-  if (!stats) return null;
-  const statKeys = Object.keys(stats);
-  return (
-    <div className="flex flex-col justify-center space-y-6 px-4 sm:px-0" data-testid="post-stats-container">
-      <div className="p-4 space-y-4">
-        <h3 className="text-base font-semibold text-white text-center" data-testid="stats-heading">
-          Stats
-        </h3>
-        {statKeys.map((key) => {
-          const config = getStatConfig(key);
-          return (
-            <StatBar
-              key={key}
-              label={config?.label || key.charAt(0).toUpperCase() + key.slice(1)}
-              value={stats[key]}
-              color={config?.color || 'bg-gray-500'}
-            />
-          );
-        })}
-      </div>
-    </div>
-  );
-}
+import { PostImage } from '@/components/shared/PostImage/PostImage';
+import { PostStatsWrapper } from '@/components/shared/PostStats/PostStats';
+import ActivityMap from '@/components/shared/ActivityMap/ActivityMap';
+import { ActivityBadge } from '@/components/ui';
+import { ACTIVITY_TYPE_CONFIG } from '@/config/constants';
 
 function ErrorMessage() {
   return (
@@ -85,32 +22,139 @@ function ErrorMessage() {
   );
 }
 
-const DEFAULT_IMAGE_URL = import.meta.env.VITE_DEFAULT_IMAGE_URL;
-
 export default function PostDetails() {
   const { id } = useParams();
   const { postId, updatePostId } = usePostId();
+  const { user } = useAuth();
+  const navigate = useNavigate();
+  const updatePost = useUpdatePost();
+  const deletePost = useDeletePost();
+  const [isEditing, setIsEditing] = useState(false);
+  const [editTitle, setEditTitle] = useState('');
+  const [editContent, setEditContent] = useState('');
 
   useEffect(() => {
-    if (id) {
-      updatePostId(id);
-    }
+    if (id) updatePostId(id);
   }, [id, updatePostId]);
 
-  const { post, error, isLoading, refetch } = usePostById(postId);
+  const { post, error, isLoading } = usePostById(postId);
 
   if (error) return <ErrorMessage />;
   if (isLoading || !post) return <LoadingSpinner />;
 
+  const isOwner = user && post && user.username === post.author;
+
+  const handleEdit = () => {
+    setEditTitle(post.title);
+    setEditContent(post.content);
+    setIsEditing(true);
+  };
+
+  const handleSaveEdit = async () => {
+    const formData = new FormData();
+    formData.append('title', editTitle);
+    formData.append('content', editContent);
+    await updatePost.mutateAsync({ postId, data: formData });
+    setIsEditing(false);
+  };
+
+  const handleDelete = async () => {
+    if (confirm('Are you sure you want to delete this post?')) {
+      await deletePost.mutateAsync(postId);
+      navigate('/');
+    }
+  };
+
+  const formatActivityDate = (dateString?: string) => {
+    if (!dateString) return '';
+    return new Date(dateString).toLocaleDateString('en-US', {
+      weekday: 'long', year: 'numeric', month: 'long', day: 'numeric',
+      hour: '2-digit', minute: '2-digit'
+    });
+  };
+
+  const activityInfo = post.activityType && ACTIVITY_TYPE_CONFIG[post.activityType];
+
   return (
     <div className="w-full max-w-4xl mx-auto px-4 py-6" data-testid="post-details-container">
       <div className="space-y-8">
-        <h1 className="text-center text-5xl">{post.title}</h1>
+        {isEditing ? (
+          <div className="space-y-4">
+            <input
+              value={editTitle}
+              onChange={(e) => setEditTitle(e.target.value)}
+              className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white text-3xl font-bold focus:outline-none focus:ring-2 focus:ring-blue-500"
+              data-testid="edit-post-title-input"
+            />
+            <textarea
+              value={editContent}
+              onChange={(e) => setEditContent(e.target.value)}
+              className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500 min-h-[200px]"
+              data-testid="edit-post-content-input"
+            />
+            <div className="flex gap-3">
+              <button onClick={handleSaveEdit} disabled={updatePost.isPending}
+                className="px-4 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50"
+                data-testid="save-post-edit">
+                {updatePost.isPending ? 'Saving...' : 'Save Changes'}
+              </button>
+              <button onClick={() => setIsEditing(false)}
+                className="px-4 py-3 bg-white/5 text-gray-300 rounded-lg hover:bg-white/10 border border-white/10 transition-colors"
+                data-testid="cancel-post-edit">
+                Cancel
+              </button>
+            </div>
+          </div>
+        ) : (
+          <div>
+            <div className="flex items-center justify-between">
+              <h1 className="text-3xl sm:text-4xl lg:text-5xl text-center flex-1">{post.title}</h1>
+              {isOwner && (
+                <div className="flex gap-2 flex-shrink-0">
+                  <button onClick={handleEdit}
+                    className="px-4 py-2 text-sm bg-white/5 text-yellow-400 rounded-lg hover:bg-white/10 border border-white/10 transition-colors"
+                    data-testid="edit-post-button">Edit</button>
+                  <button onClick={handleDelete} disabled={deletePost.isPending}
+                    className="px-4 py-2 text-sm bg-white/5 text-red-400 rounded-lg hover:bg-white/10 border border-white/10 transition-colors disabled:opacity-50"
+                    data-testid="delete-post-button">
+                    {deletePost.isPending ? 'Deleting...' : 'Delete'}
+                  </button>
+                </div>
+              )}
+            </div>
+
+            {post.equipment && (
+              <div className="flex justify-center mt-3">
+                <Link
+                  to={`/equipment/${post.equipment.id}`}
+                  className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-blue-600/20 text-blue-400 border border-blue-500/30 hover:bg-blue-600/30 transition-colors"
+                >
+                  {post.equipment.brand} {post.equipment.name}
+                </Link>
+              </div>
+            )}
+
+            {activityInfo && post.activityDate && (
+              <div className="flex items-center justify-center gap-4 mt-4">
+                <ActivityBadge type={post.activityType!} />
+                <span className="text-gray-300 flex items-center gap-2">
+                  <svg className="w-5 h-5 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                  </svg>
+                  {formatActivityDate(post.activityDate)}
+                </span>
+              </div>
+            )}
+          </div>
+        )}
+
         <div className="rounded-xl bg-white/10 backdrop-blur-sm border border-white/10 grid grid-cols-1 sm:grid-cols-2 gap-8 mb-6">
-          <PostImage src={post.image_url} alt={post.title} defaultImageUrl={DEFAULT_IMAGE_URL} />
+          <PostImage src={post.image_url} alt={post.title} />
           <PostStatsWrapper stats={post.stats} />
         </div>
-        <PostInfoSection post={post} refetch={refetch} />
+
+        {post.location && <ActivityMap location={post.location} showFullMap />}
+        <PostInfoSection post={post} />
       </div>
       <div className="mt-8 rounded-xl bg-white/10 backdrop-blur-sm border border-white/10 p-5" data-testid="comments-section">
         {id && <FormComment postId={id} />}

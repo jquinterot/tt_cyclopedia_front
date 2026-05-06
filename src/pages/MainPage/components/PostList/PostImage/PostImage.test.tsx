@@ -3,12 +3,15 @@ import { render, screen } from "@testing-library/react";
 import "@testing-library/jest-dom/vitest";
 import PostImage from "./PostImage";
 
+const API_BASE = import.meta.env.VITE_API_BASE_URL || '';
+
 describe("PostImage Component", () => {
   test("renders image with correct attributes", () => {
     render(<PostImage src="/test.jpg" alt="Test Post" postId="1" defaultImageUrl="/default.jpg" />);
     
     const image = screen.getByTestId("post-image-1");
-    expect(image).toHaveAttribute("src", "/test.jpg");
+    const expectedSrc = API_BASE ? `${API_BASE}/test.jpg` : "/test.jpg";
+    expect(image).toHaveAttribute("src", expectedSrc);
     expect(image).toHaveAttribute("alt", "Test Post");
   });
 

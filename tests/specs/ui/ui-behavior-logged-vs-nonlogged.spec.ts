@@ -1,6 +1,5 @@
-import { signupAndLoginStep } from '../../steps/authSteps';
 import { createTestDataTracker } from '../../helpers/testDataTracker';
-import { test, expect } from '@playwright/test';
+import { test } from '@playwright/test';
 
 test.describe('UI Behavior: Logged vs Non-Logged Users', () => {
   let tracker: ReturnType<typeof createTestDataTracker>;

@@ -28,21 +28,29 @@ function PostPage() {
     );
   }
 
+  const BASE_URL = import.meta.env.VITE_BASE_URL;
+
   const articleData = generateArticleSchema({
     title: post.title,
-    description: post.content.substring(0, 160) + '...',
+    description: post.content.substring(0, 160),
     author: post.author || 'TT Cyclopedia User',
-    datePublished: new Date().toISOString(),
-    dateModified: new Date().toISOString(),
-    image: post.image_url || 'https://ttcyclopedia.space/og-image.png',
-    url: `https://ttcyclopedia.space/posts/${post.id}`
+    datePublished: new Date(post.timestamp || Date.now()).toISOString(),
+    dateModified: new Date(post.timestamp || Date.now()).toISOString(),
+    image: post.image_url || `${BASE_URL}/og-image.png`,
+    url: `${BASE_URL}/posts/${post.id}`,
+    mainEntityOfPage: `${BASE_URL}/posts/${post.id}`,
+    articleBody: post.content,
+    publisher: {
+      name: 'TT Cyclopedia',
+      logo: `${BASE_URL}/logo.png`
+    }
   });
 
   const breadcrumbData = generateBreadcrumbSchema({
     items: [
-      { name: 'Home', url: 'https://ttcyclopedia.space/' },
-      { name: 'Posts', url: 'https://ttcyclopedia.space/' },
-      { name: post.title, url: `https://ttcyclopedia.space/posts/${post.id}` }
+      { name: 'Home', url: `${BASE_URL}/` },
+      { name: 'Posts', url: `${BASE_URL}/` },
+      { name: post.title, url: `${BASE_URL}/posts/${post.id}` }
     ]
   });
 
@@ -57,10 +65,10 @@ function PostPage() {
         ogDescription={post.content.substring(0, 160) + '...'}
         ogUrl={`/posts/${post.id}`}
         ogType="article"
-        ogImage={post.image_url || 'https://ttcyclopedia.space/og-image.png'}
+        ogImage={post.image_url || `${BASE_URL}/og-image.png`}
         twitterTitle={post.title}
         twitterDescription={post.content.substring(0, 160) + '...'}
-        twitterImage={post.image_url || 'https://ttcyclopedia.space/twitter-image.png'}
+        twitterImage={post.image_url || `${BASE_URL}/twitter-image.png`}
         structuredData={[articleData, breadcrumbData]}
       />
       <main className="flex-grow flex justify-center px-4 py-8" data-testid="post-page">

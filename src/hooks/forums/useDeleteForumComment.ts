@@ -6,15 +6,11 @@ export function useDeleteForumComment(forumId: string) {
 
   return useMutation({
     mutationFn: async (commentId: string) => {
-      console.log('🗑️ Deleting forum comment:', commentId);
       await apiClient.delete(`/comments/${commentId}`);
-      console.log('✅ Forum comment deleted successfully');
     },
-    onSuccess: (_, commentId) => {
-      console.log('🎉 Forum comment delete mutation success:', commentId);
+    onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['forumComments', forumId] });
-      // Also invalidate all forum comment replies queries since we don't know which parent this was
       queryClient.invalidateQueries({ queryKey: ['forumCommentReplies', forumId] });
     },
   });
-} 
+}

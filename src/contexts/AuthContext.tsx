@@ -1,6 +1,6 @@
-import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import { createContext, useContext, useState, useEffect, useCallback, ReactNode } from 'react';
 import { useNavigate } from 'react-router-dom';
-import toast from 'react-hot-toast';
+import { toast } from 'sonner';
 import type { User } from '@/types/User';
 import { SESSION_EXPIRED_EVENT, apiClient } from '@/config/apiClient';
 
@@ -17,6 +17,7 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const useAuth = () => {
   const context = useContext(AuthContext);
   if (context === undefined) {
@@ -29,11 +30,43 @@ interface AuthProviderProps {
   children: ReactNode;
 }
 
-export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
+const clearAuthData = () => {
+  localStorage.removeItem('authToken');
+  localStorage.removeItem('user');
+  localStorage.removeItem('isAuthenticated');
+};
+
+const setAuthData = (token: string, user: User) => {
+  localStorage.setItem('authToken', token);
+  localStorage.setItem('user', JSON.stringify(user));
+  localStorage.setItem('isAuthenticated', 'true');
+};
+
+export const AuthProvider = ({ children }: AuthProviderProps) => {
   const [user, setUser] = useState<User | null>(null);
   const [token, setToken] = useState<string | null>(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const navigate = useNavigate();
+
+  const handleLogout = useCallback(() => {
+    setToken(null);
+    setUser(null);
+    setIsAuthenticated(false);
+    clearAuthData();
+    toast.success('Successfully logged out');
+    navigate('/');
+  }, [navigate]);
+
+  const handleSessionExpired = useCallback(() => {
+    setToken(null);
+    setUser(null);
+    setIsAuthenticated(false);
+    clearAuthData();
+    toast.error('Session expired. Please log in again.');
+    if (window.location.pathname !== '/login') {
+      navigate('/login');
+    }
+  }, [navigate]);
 
   // Initialize auth state from localStorage on mount
   useEffect(() => {
@@ -47,42 +80,18 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         setUser(userData);
         setIsAuthenticated(true);
       } catch (error) {
-        // Invalid stored data, clear it
-        localStorage.removeItem('authToken');
-        localStorage.removeItem('user');
-        localStorage.removeItem('isAuthenticated');
+        clearAuthData();
       }
     }
   }, []);
 
   // Listen for session expiration events from API client
   useEffect(() => {
-    const handleSessionExpired = () => {
-      // Clear state immediately
-      setToken(null);
-      setUser(null);
-      setIsAuthenticated(false);
-      
-      // Clear localStorage
-      localStorage.removeItem('authToken');
-      localStorage.removeItem('user');
-      localStorage.removeItem('isAuthenticated');
-      
-      // Show notification to user
-      toast.error('Session expired. Please log in again.');
-      
-      // Redirect to login if not already there
-      if (window.location.pathname !== '/login') {
-        navigate('/login');
-      }
-    };
-
     window.addEventListener(SESSION_EXPIRED_EVENT, handleSessionExpired);
-
     return () => {
       window.removeEventListener(SESSION_EXPIRED_EVENT, handleSessionExpired);
     };
-  }, [navigate]);
+  }, [handleSessionExpired]);
 
   // Periodic token validation (every 5 minutes)
   useEffect(() => {
@@ -90,16 +99,13 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
     const validateToken = async () => {
       try {
-        // Make a lightweight API call to validate the token
         await apiClient.get('/auth/validate', { timeout: 5000 });
       } catch (error) {
-        // If validation fails, trigger session expiration
         window.dispatchEvent(new CustomEvent(SESSION_EXPIRED_EVENT));
       }
     };
 
-    const interval = setInterval(validateToken, 5 * 60 * 1000); // 5 minutes
-
+    const interval = setInterval(validateToken, 5 * 60 * 1000);
     return () => clearInterval(interval);
   }, [isAuthenticated, token]);
 
@@ -107,54 +113,24 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     setToken(newToken);
     setUser(userData);
     setIsAuthenticated(true);
-    
-    // Store in localStorage
-    localStorage.setItem('authToken', newToken);
-    localStorage.setItem('user', JSON.stringify(userData));
-    localStorage.setItem('isAuthenticated', 'true');
+    setAuthData(newToken, userData);
   };
 
   const logout = () => {
-    setToken(null);
-    setUser(null);
-    setIsAuthenticated(false);
-    
-    // Clear localStorage
-    localStorage.removeItem('authToken');
-    localStorage.removeItem('user');
-    localStorage.removeItem('isAuthenticated');
-    
-    toast.success('Successfully logged out');
-    navigate('/');
+    handleLogout();
   };
 
   const handleSessionExpiration = () => {
-    // Clear state immediately
-    setToken(null);
-    setUser(null);
-    setIsAuthenticated(false);
-    
-    // Clear localStorage
-    localStorage.removeItem('authToken');
-    localStorage.removeItem('user');
-    localStorage.removeItem('isAuthenticated');
-    
-    // Show notification to user
-    toast.error('Session expired. Please log in again.');
-    
-    // Redirect to login if not already there
-    if (window.location.pathname !== '/login') {
-      navigate('/login');
-    }
-  };
-
-  const reloadPage = () => {
-    window.location.reload();
+    handleSessionExpired();
   };
 
   const updateToken = (newToken: string) => {
     setToken(newToken);
     localStorage.setItem('authToken', newToken);
+  };
+
+  const reloadPage = () => {
+    window.location.reload();
   };
 
   const value: AuthContextType = {
@@ -175,4 +151,4 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   );
 };
 
-export { AuthContext }; 
+export { AuthContext };

@@ -19,7 +19,6 @@ import "@testing-library/jest-dom/vitest";
 import MainPage from "./MainPage";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter } from "react-router-dom";
-import { HelmetProvider } from "react-helmet-async";
 import { LanguageProvider } from "@/contexts/LanguageContext";
 import { AuthProvider } from '@/contexts/AuthContext';
 
@@ -31,7 +30,7 @@ const queryClient = new QueryClient({
 
 const renderWithProviders = (ui: React.ReactElement) => {
   return render(
-    <HelmetProvider>
+
       <QueryClientProvider client={queryClient}>
         <BrowserRouter>
           <LanguageProvider>
@@ -41,7 +40,7 @@ const renderWithProviders = (ui: React.ReactElement) => {
           </LanguageProvider>
         </BrowserRouter>
       </QueryClientProvider>
-    </HelmetProvider>
+
   );
 };
 

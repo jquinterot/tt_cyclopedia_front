@@ -14,10 +14,27 @@ const requestThrottler = new RequestThrottler(1000); // 1 second between calls
 const apiCallLimiter = new APICallLimiter(60, 1000); // 60 calls per minute, 1000 per hour
 const behaviorDetector = new BehaviorDetector(30, 500); // 30 actions per minute, 500 per hour
 
-// Clean up old data periodically
-setInterval(() => {
-  apiCallLimiter.cleanup();
-}, 60000); // Every minute
+// Clean up old data periodically - stored in variable for cleanup on module unload
+let cleanupInterval: ReturnType<typeof setInterval> | null = null;
+
+const startCleanupInterval = () => {
+  cleanupInterval = setInterval(() => {
+    apiCallLimiter.cleanup();
+  }, 60000); // Every minute
+};
+
+// Start cleanup only in browser environment
+if (typeof window !== 'undefined') {
+  startCleanupInterval();
+}
+
+// Cleanup function for testing/module unloading
+export const stopCleanupInterval = () => {
+  if (cleanupInterval) {
+    clearInterval(cleanupInterval);
+    cleanupInterval = null;
+  }
+};
 
 // Custom event for session expiration
 export const SESSION_EXPIRED_EVENT = 'session-expired';
@@ -30,12 +47,24 @@ export const apiClient = axios.create({
   timeout: 10000, // 10 second timeout
 });
 
+// Custom config type with metadata
+interface CustomAxiosRequestConfig extends InternalAxiosRequestConfig {
+  metadata?: {
+    startTime: number;
+  };
+}
+
 // Enhanced request interceptor with DDoS protection
 apiClient.interceptors.request.use(
-  (config: InternalAxiosRequestConfig) => {
+  (config: CustomAxiosRequestConfig) => {
     const token = localStorage.getItem('authToken');
     const user = localStorage.getItem('user');
-    const userId = user ? JSON.parse(user).id : undefined;
+    let userId: string | undefined;
+    try {
+      userId = user ? JSON.parse(user).id : undefined;
+    } catch {
+      userId = undefined;
+    }
     
     // Add JWT token
     if (token) {
@@ -63,7 +92,7 @@ apiClient.interceptors.request.use(
     }
 
     // Add request timestamp for tracking
-    (config as any).metadata = { startTime: Date.now() };
+    config.metadata = { startTime: Date.now() };
     
     return config;
   },
@@ -74,15 +103,15 @@ apiClient.interceptors.request.use(
 
 // Enhanced response interceptor with error handling
 apiClient.interceptors.response.use(
-  (response: AxiosResponse) => {
+  (response: AxiosResponse<unknown>) => {
     // Log successful requests for monitoring
-    const startTime = (response.config as any).metadata?.startTime || Date.now();
+    const startTime = (response.config as CustomAxiosRequestConfig).metadata?.startTime || Date.now();
     const duration = Date.now() - startTime;
     console.debug(`API call to ${response.config.url} completed in ${duration}ms`);
     
     return response;
   },
-  (error: AxiosError) => {
+  (error: AxiosError<unknown>) => {
     // Handle rate limiting responses from server
     if (error.response?.status === 429) {
       const retryAfter = error.response.headers['retry-after'];
@@ -105,7 +134,7 @@ apiClient.interceptors.response.use(
     }
 
     // Log errors for monitoring
-    const startTime = (error.config as any).metadata?.startTime || Date.now();
+    const startTime = (error.config as CustomAxiosRequestConfig)?.metadata?.startTime || Date.now();
     console.error('API Error:', {
       url: error.config?.url,
       status: error.response?.status,

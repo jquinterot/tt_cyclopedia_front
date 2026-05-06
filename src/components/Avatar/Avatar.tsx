@@ -1,5 +1,3 @@
-import React from 'react';
-
 interface AvatarProps extends React.HTMLAttributes<HTMLDivElement> {
   src?: string;
   alt?: string;
@@ -8,14 +6,14 @@ interface AvatarProps extends React.HTMLAttributes<HTMLDivElement> {
   fallbackIcon?: React.ReactNode;
 }
 
-const Avatar: React.FC<AvatarProps> = ({
+const Avatar = ({
   src,
   alt = 'User avatar',
   size = 'md',
   className = '',
   fallbackIcon,
   ...rest
-}) => {
+}: AvatarProps) => {
   const sizeClasses = {
     sm: 'h-6 w-6',
     md: 'h-8 w-8',

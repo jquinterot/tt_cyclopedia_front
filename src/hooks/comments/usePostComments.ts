@@ -24,8 +24,11 @@ export const usePostComment = (postId: string) => {
       });
     },
       onSettled: () => {
-        queryClient.invalidateQueries({ 
+        queryClient.invalidateQueries({
           queryKey: ['comments', postId]
+        });
+        queryClient.invalidateQueries({
+          queryKey: ['mainComments', postId]
         });
       },
     });

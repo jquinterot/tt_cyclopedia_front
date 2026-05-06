@@ -1,4 +1,4 @@
-import { describe, test, expect, vi, beforeEach } from "vitest";
+import { describe, test, expect, vi } from "vitest";
 import { render, screen, fireEvent } from "@testing-library/react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter } from "react-router-dom";
@@ -15,9 +15,9 @@ vi.mock("@/config/apiClient", () => ({
   SESSION_EXPIRED_EVENT: 'session-expired',
 }));
 
-// Mock react-hot-toast
-vi.mock("react-hot-toast", () => ({
-  default: vi.fn(),
+// Mock sonner
+vi.mock("sonner", () => ({
+  toast: vi.fn(),
 }));
 
 const mockPostData = {
@@ -25,8 +25,6 @@ const mockPostData = {
   likes: 42,
   likedByCurrentUser: false,
 };
-
-const mockRefetch = vi.fn();
 
 const renderWithProviders = (component: React.ReactElement) => {
   const queryClient = new QueryClient({
@@ -55,26 +53,26 @@ describe("PostInfoSection", () => {
   });
 
   test("renders like count", () => {
-    renderWithProviders(<PostInfoSection post={mockPostData} refetch={mockRefetch} />);
+    renderWithProviders(<PostInfoSection post={mockPostData} />);
     expect(screen.getByText("42")).toBeInTheDocument();
   });
 
   test("renders outline heart icon when not liked", () => {
-    renderWithProviders(<PostInfoSection post={mockPostData} refetch={mockRefetch} />);
-    expect(screen.getByTestId("like-icon-outline")).toBeInTheDocument();
-    expect(screen.queryByTestId("like-icon-filled")).not.toBeInTheDocument();
+    renderWithProviders(<PostInfoSection post={mockPostData} />);
+    expect(screen.getByTestId("post-like-icon-outline")).toBeInTheDocument();
+    expect(screen.queryByTestId("post-like-icon-filled")).not.toBeInTheDocument();
   });
 
   test("renders filled heart icon when liked", () => {
     const likedPost = { ...mockPostData, likedByCurrentUser: true };
-    renderWithProviders(<PostInfoSection post={likedPost} refetch={mockRefetch} />);
-    expect(screen.getByTestId("like-icon-filled")).toBeInTheDocument();
-    expect(screen.queryByTestId("like-icon-outline")).not.toBeInTheDocument();
+    renderWithProviders(<PostInfoSection post={likedPost} />);
+    expect(screen.getByTestId("post-like-icon-filled")).toBeInTheDocument();
+    expect(screen.queryByTestId("post-like-icon-outline")).not.toBeInTheDocument();
   });
 
   test("shows login toast when unauthenticated user tries to like", async () => {
-    const toast = vi.mocked(await import("react-hot-toast")).default;
-    renderWithProviders(<PostInfoSection post={mockPostData} refetch={mockRefetch} />);
+    const { toast } = vi.mocked(await import("sonner"));
+    renderWithProviders(<PostInfoSection post={mockPostData} />);
     
     const likeButton = screen.getByRole("button");
     fireEvent.click(likeButton);
@@ -86,35 +84,35 @@ describe("PostInfoSection", () => {
   });
 
   test("has correct aria-pressed attribute", () => {
-    renderWithProviders(<PostInfoSection post={mockPostData} refetch={mockRefetch} />);
+    renderWithProviders(<PostInfoSection post={mockPostData} />);
     const likeButton = screen.getByRole("button");
     expect(likeButton).toHaveAttribute("aria-pressed", "false");
   });
 
   test("has correct aria-pressed attribute when liked", () => {
     const likedPost = { ...mockPostData, likedByCurrentUser: true };
-    renderWithProviders(<PostInfoSection post={likedPost} refetch={mockRefetch} />);
+    renderWithProviders(<PostInfoSection post={likedPost} />);
     const likeButton = screen.getByRole("button");
     expect(likeButton).toHaveAttribute("aria-pressed", "true");
   });
 
   test("renders with zero likes", () => {
     const zeroLikesPost = { ...mockPostData, likes: 0 };
-    renderWithProviders(<PostInfoSection post={zeroLikesPost} refetch={mockRefetch} />);
+    renderWithProviders(<PostInfoSection post={zeroLikesPost} />);
     expect(screen.getByText("0")).toBeInTheDocument();
   });
 
   test("renders with large number of likes", () => {
     const largeLikesPost = { ...mockPostData, likes: 999999 };
-    renderWithProviders(<PostInfoSection post={largeLikesPost} refetch={mockRefetch} />);
+    renderWithProviders(<PostInfoSection post={largeLikesPost} />);
     expect(screen.getByText("999999")).toBeInTheDocument();
   });
 
   test("button has correct styling and attributes", () => {
-    renderWithProviders(<PostInfoSection post={mockPostData} refetch={mockRefetch} />);
+    renderWithProviders(<PostInfoSection post={mockPostData} />);
     const likeButton = screen.getByRole("button");
     
-    expect(likeButton).toHaveClass("relative", "flex", "items-center", "gap-2", "focus:outline-none", "group");
+    expect(likeButton).toHaveClass("flex", "items-center", "gap-2", "focus:outline-none");
     expect(likeButton).toHaveStyle("cursor: pointer");
     expect(likeButton).toHaveStyle("background: none");
     expect(likeButton).toHaveStyle("padding: 0");
@@ -142,15 +140,15 @@ describe("PostInfoSection", () => {
       );
     });
 
-    renderWithProviders(<MockPostInfoSection post={mockPostData} refetch={mockRefetch} />);
+    renderWithProviders(<MockPostInfoSection post={mockPostData} />);
     const likeButton = screen.getByRole("button");
     expect(likeButton).toBeDisabled();
     expect(likeButton).toHaveStyle("cursor: not-allowed");
   });
 
   test("prevents default behavior when unauthenticated user clicks", async () => {
-    const toast = vi.mocked(await import("react-hot-toast")).default;
-    renderWithProviders(<PostInfoSection post={mockPostData} refetch={mockRefetch} />);
+    const { toast } = vi.mocked(await import("sonner"));
+    renderWithProviders(<PostInfoSection post={mockPostData} />);
     
     const likeButton = screen.getByRole("button");
     const mockPreventDefault = vi.fn();
@@ -168,24 +166,22 @@ describe("PostInfoSection", () => {
   });
 
   test("renders LikeCount component with correct styling", () => {
-    renderWithProviders(<PostInfoSection post={mockPostData} refetch={mockRefetch} />);
+    renderWithProviders(<PostInfoSection post={mockPostData} />);
     const likeCount = screen.getByText("42");
     expect(likeCount).toHaveClass("text-base", "font-medium");
   });
 
   test("renders heart icons with correct styling", () => {
-    renderWithProviders(<PostInfoSection post={mockPostData} refetch={mockRefetch} />);
-    const outlineIcon = screen.getByTestId("like-icon-outline");
-    const filledIconHover = screen.getByTestId("like-icon-filled-hover");
+    renderWithProviders(<PostInfoSection post={mockPostData} />);
+    const outlineIcon = screen.getByTestId("post-like-icon-outline");
     
-    expect(outlineIcon).toHaveClass("w-7", "h-7", "text-blue-400", "transition-colors", "group-hover:opacity-0");
-    expect(filledIconHover).toHaveClass("w-7", "h-7", "text-blue-600", "absolute", "left-0", "top-0", "opacity-0", "group-hover:opacity-100", "transition-opacity", "duration-200", "pointer-events-none");
+    expect(outlineIcon).toHaveClass("w-7", "h-7", "text-blue-400", "transition-colors");
   });
 
   test("renders filled heart icon with correct styling when liked", () => {
     const likedPost = { ...mockPostData, likedByCurrentUser: true };
-    renderWithProviders(<PostInfoSection post={likedPost} refetch={mockRefetch} />);
-    const filledIcon = screen.getByTestId("like-icon-filled");
+    renderWithProviders(<PostInfoSection post={likedPost} />);
+    const filledIcon = screen.getByTestId("post-like-icon-filled");
     
     expect(filledIcon).toHaveClass("w-7", "h-7", "text-blue-600", "transition-colors");
   });

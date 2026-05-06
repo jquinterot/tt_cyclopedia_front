@@ -12,13 +12,51 @@ export const useLikeComment = (postId: string) => {
   };
 
   const likeMutation = useMutation({
-    mutationFn: (commentId: string) => apiClient.post(`/comments/${commentId}/like`).then(res => res.data),
+    mutationFn: async (commentId: string) => {
+      const response = await apiClient.post(`/comments/${commentId}/like`);
+      return response.data;
+    },
+    onMutate: async (commentId) => {
+      // Cancel any outgoing refetches
+      await queryClient.cancelQueries({ queryKey: ["mainComments", postId] });
+      await queryClient.cancelQueries({ queryKey: ["repliedComments", postId] });
+      
+      // Snapshot the previous values
+      const previousMainComments = queryClient.getQueryData(["mainComments", postId]);
+      const previousRepliedComments = queryClient.getQueryCache().findAll({ queryKey: ["repliedComments", postId] });
+      
+      // Optimistically update mainComments
+      queryClient.setQueryData<Comment[]>(["mainComments", postId], old => {
+        if (!old) return old;
+        return old.map(c => c.id === commentId ? { ...c, likes: c.likes + 1, liked_by_current_user: true } : c);
+      });
+      
+      // Optimistically update all repliedComments
+      previousRepliedComments.forEach(({ queryKey }) => {
+        queryClient.setQueryData<Comment[]>(queryKey, old => {
+          if (!old) return old;
+          return old.map(c => c.id === commentId ? { ...c, likes: c.likes + 1, liked_by_current_user: true } : c);
+        });
+      });
+      
+      return { previousMainComments, previousRepliedComments };
+    },
+    onError: (_error, _commentId, context) => {
+      // Rollback optimistic updates
+      if (context?.previousMainComments) {
+        queryClient.setQueryData(["mainComments", postId], context.previousMainComments);
+      }
+      if (context?.previousRepliedComments) {
+        context.previousRepliedComments.forEach(({ queryKey }) => {
+          queryClient.setQueryData(queryKey, queryClient.getQueryData(queryKey));
+        });
+      }
+    },
     onSuccess: (updatedComment, commentId) => {
-      // Update mainComments
+      // Update with server response
       queryClient.setQueryData<Comment[]>(["mainComments", postId], old =>
         updateCommentInList(old, commentId, updatedComment)
       );
-      // Update all repliedComments
       const keys = queryClient.getQueryCache().findAll({ queryKey: ["repliedComments", postId] });
       keys.forEach(({ queryKey }) => {
         queryClient.setQueryData<Comment[]>(queryKey, old =>
@@ -29,8 +67,48 @@ export const useLikeComment = (postId: string) => {
   });
 
   const unlikeMutation = useMutation({
-    mutationFn: (commentId: string) => apiClient.delete(`/comments/${commentId}/like`).then(res => res.data),
+    mutationFn: async (commentId: string) => {
+      const response = await apiClient.delete(`/comments/${commentId}/like`);
+      return response.data;
+    },
+    onMutate: async (commentId) => {
+      // Cancel any outgoing refetches
+      await queryClient.cancelQueries({ queryKey: ["mainComments", postId] });
+      await queryClient.cancelQueries({ queryKey: ["repliedComments", postId] });
+      
+      // Snapshot the previous values
+      const previousMainComments = queryClient.getQueryData(["mainComments", postId]);
+      const previousRepliedComments = queryClient.getQueryCache().findAll({ queryKey: ["repliedComments", postId] });
+      
+      // Optimistically update mainComments
+      queryClient.setQueryData<Comment[]>(["mainComments", postId], old => {
+        if (!old) return old;
+        return old.map(c => c.id === commentId ? { ...c, likes: Math.max(0, c.likes - 1), liked_by_current_user: false } : c);
+      });
+      
+      // Optimistically update all repliedComments
+      previousRepliedComments.forEach(({ queryKey }) => {
+        queryClient.setQueryData<Comment[]>(queryKey, old => {
+          if (!old) return old;
+          return old.map(c => c.id === commentId ? { ...c, likes: Math.max(0, c.likes - 1), liked_by_current_user: false } : c);
+        });
+      });
+      
+      return { previousMainComments, previousRepliedComments };
+    },
+    onError: (_error, _commentId, context) => {
+      // Rollback optimistic updates
+      if (context?.previousMainComments) {
+        queryClient.setQueryData(["mainComments", postId], context.previousMainComments);
+      }
+      if (context?.previousRepliedComments) {
+        context.previousRepliedComments.forEach(({ queryKey }) => {
+          queryClient.setQueryData(queryKey, queryClient.getQueryData(queryKey));
+        });
+      }
+    },
     onSuccess: (updatedComment, commentId) => {
+      // Update with server response
       queryClient.setQueryData<Comment[]>(["mainComments", postId], old =>
         updateCommentInList(old, commentId, updatedComment)
       );

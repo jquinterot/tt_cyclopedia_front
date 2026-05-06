@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useCreateUser } from "@/hooks/users";
 import { CreateUser } from "@/types/User";
+import SEOHead from '@/components/SEO/SEOHead';
 import { 
   validatePassword, 
   validateUsername, 
@@ -15,7 +16,7 @@ import {
   InputValidationResult
 } from "@/utils/security";
 import PasswordStrength from "@/components/PasswordStrength/PasswordStrength";
-import toast, { Toaster } from "react-hot-toast";
+import { toast } from "sonner";
 import { ErrorCode, ErrorMessages } from '@/enums/ErrorCode';
 
 // Initialize rate limiter
@@ -102,26 +103,23 @@ export default function SignupPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log('Signup form submitted', formData);
+    
     // Validate CSRF token
     const storedToken = sessionStorage.getItem('csrfToken');
     if (!validateCSRFToken(csrfToken, storedToken || '')) {
-      console.log('CSRF validation failed', { csrfToken, storedToken });
       toast.error(ErrorMessages[ErrorCode.CSRF]);
       return;
     }
 
     // Check rate limiting
-    const clientId = 'signup-form'; // In a real app, you might use IP or user agent
+    const clientId = 'signup-form';
     if (!rateLimiter.isAllowed(clientId)) {
-      console.log('Rate limiter blocked signup');
       toast.error(ErrorMessages[ErrorCode.RATE_LIMIT]);
       return;
     }
 
     // Validate form
     if (!validateForm()) {
-      console.log('Form validation failed', validation);
       toast.error(ErrorMessages[ErrorCode.VALIDATION]);
       return;
     }
@@ -134,7 +132,6 @@ export default function SignupPage() {
         email: formData.email,
         password: formData.password,
       };
-      console.log('Calling createUserMutation.mutateAsync', userData);
       await createUserMutation.mutateAsync(userData);
       // Reset rate limiter on successful signup
       rateLimiter.reset(clientId);
@@ -144,8 +141,6 @@ export default function SignupPage() {
         navigate('/login');
       }, 1500);
     } catch (error: unknown) {
-      console.error('Signup error:', error);
-      
       // Enhanced error handling for user already exists
       if (error && typeof error === 'object' && 'response' in error) {
         const errorResponse = error as { 
@@ -266,8 +261,14 @@ export default function SignupPage() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center font-sans text-white py-12 px-4 sm:px-6 lg:px-8" data-testid="signup-page">
-      <div className="max-w-md w-full">
+    <>
+      <SEOHead
+        title="Create Account - TT Cyclopedia"
+        description="Join the TT Cyclopedia community. Create your account to share table tennis equipment reviews, posts, and participate in forum discussions."
+        noindex
+      />
+      <div className="min-h-screen flex flex-col items-center justify-center font-sans text-white py-12 px-4" data-testid="signup-page">
+      <div className="w-[480px]">
         <div className="text-center mb-8" data-testid="signup-header">
           <h1 className="text-3xl font-bold">Create Account</h1>
           <p className="mt-3 text-sm text-gray-300">
@@ -293,7 +294,7 @@ export default function SignupPage() {
                     value={formData.username}
                     onChange={handleChange}
                     data-testid="signup-username-input"
-                    className={`w-full px-4 py-2 bg-white/5 border border-white/10 rounded-md text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:border-transparent transition-colors ${getInputErrorClass('username')} ${getInputSuccessClass('username')}`}
+                    className={`w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:border-transparent transition-colors ${getInputErrorClass('username')} ${getInputSuccessClass('username')}`}
                     type="text"
                     placeholder="Enter username"
                     required
@@ -322,7 +323,7 @@ export default function SignupPage() {
                     value={formData.email}
                     onChange={handleChange}
                     data-testid="signup-email-input"
-                    className={`w-full px-4 py-2 bg-white/5 border border-white/10 rounded-md text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:border-transparent transition-colors ${getInputErrorClass('email')} ${getInputSuccessClass('email')}`}
+                    className={`w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:border-transparent transition-colors ${getInputErrorClass('email')} ${getInputSuccessClass('email')}`}
                     type="email"
                     placeholder="Enter email"
                     required
@@ -352,7 +353,7 @@ export default function SignupPage() {
                     onFocus={() => setShowPasswordDetails(true)}
                     onBlur={() => setShowPasswordDetails(false)}
                     data-testid="signup-password-input"
-                    className={`w-full px-4 py-2 bg-white/5 border border-white/10 rounded-md text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:border-transparent transition-colors ${getInputErrorClass('password')} ${getInputSuccessClass('password')}`}
+                    className={`w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:border-transparent transition-colors ${getInputErrorClass('password')} ${getInputSuccessClass('password')}`}
                     type="password"
                     placeholder="Enter password"
                     required
@@ -387,7 +388,7 @@ export default function SignupPage() {
                     value={formData.confirmPassword}
                     onChange={handleChange}
                     data-testid="signup-confirm-password-input"
-                    className={`w-full px-4 py-2 bg-white/5 border border-white/10 rounded-md text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:border-transparent transition-colors ${getInputErrorClass('confirmPassword')} ${getInputSuccessClass('confirmPassword')}`}
+                    className={`w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:border-transparent transition-colors ${getInputErrorClass('confirmPassword')} ${getInputSuccessClass('confirmPassword')}`}
                     type="password"
                     placeholder="Confirm password"
                     required
@@ -431,27 +432,7 @@ export default function SignupPage() {
           </form>
         </div>
       </div>
-      <Toaster
-        position="top-center"
-        toastOptions={{
-          duration: 4000,
-          style: {
-            background: "#1f2937",
-            color: "#fff",
-            border: "1px solid #ef4444",
-            borderRadius: "8px",
-            padding: "12px 16px",
-            fontSize: "14px",
-            fontWeight: "500",
-          },
-          error: {
-            iconTheme: {
-              primary: "#ef4444",
-              secondary: "#fff",
-            },
-          },
-        }}
-      />
     </div>
+    </>
   );
 } 

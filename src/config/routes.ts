@@ -12,6 +12,10 @@ const CreateForumPage = lazy(() => import('@pages/CreateForumPage/CreateForumPag
 const ForumsPage = lazy(() => import('@pages/ForumsPage/ForumsPage'));
 const ForumPage = lazy(() => import('@pages/ForumPage/ForumPage'));
 const DonatePage = lazy(() => import('@pages/DonatePage/DonatePage'));
+const EquipmentPage = lazy(() => import('@pages/EquipmentPage/EquipmentPage'));
+const EquipmentDetailPage = lazy(() => import('@pages/EquipmentDetailPage/EquipmentDetailPage'));
+const SetupRecommenderPage = lazy(() => import('@pages/SetupRecommenderPage/SetupRecommenderPage'));
+const NotFoundPage = lazy(() => import('@pages/NotFoundPage/NotFoundPage'));
 
 export interface RouteConfig {
   path: string;
@@ -30,9 +34,13 @@ export const ROUTES = {
   CREATE_FORUM: '/create-forum',
   FORUMS: '/forums',
   FORUM: '/forums/:id',
+  EQUIPMENT: '/equipment',
+  EQUIPMENT_DETAIL: '/equipment/:id',
+  SETUP_RECOMMENDER: '/setup-recommender',
   ABOUT: '/about',
   PROFILE: '/profile',
   DONATE: '/donate',
+  NOT_FOUND: '*',
 } as const;
 
 export const routes: RouteConfig[] = [
@@ -87,6 +95,24 @@ export const routes: RouteConfig[] = [
     layout: 'default',
   },
   {
+    path: ROUTES.EQUIPMENT,
+    component: EquipmentPage,
+    title: 'Equipment Catalog',
+    layout: 'default',
+  },
+  {
+    path: ROUTES.EQUIPMENT_DETAIL,
+    component: EquipmentDetailPage,
+    title: 'Equipment Details',
+    layout: 'default',
+  },
+  {
+    path: ROUTES.SETUP_RECOMMENDER,
+    component: SetupRecommenderPage,
+    title: 'Find My Setup',
+    layout: 'default',
+  },
+  {
     path: ROUTES.ABOUT,
     component: AboutPage,
     title: 'About',
@@ -104,6 +130,12 @@ export const routes: RouteConfig[] = [
     component: DonatePage,
     title: 'Support Us',
     layout: 'default',
+  },
+  {
+    path: ROUTES.NOT_FOUND,
+    component: NotFoundPage,
+    title: 'Page Not Found',
+    layout: 'none',
   },
 ];
 
