@@ -1,38 +1,36 @@
-import { ForumCommentTree } from './ForumCommentTree';
+import { ForumCommentTree } from "./ForumCommentTree";
 
-describe('<ForumCommentTree />', () => {
-  it('mounts and displays comment tree', () => {
-    cy.intercept('GET', '/comments/forum/test-id/main', {
+describe("<ForumCommentTree />", () => {
+  it("mounts and displays comment tree", () => {
+    cy.intercept("GET", "/comments/forum/test-id/main", {
       statusCode: 200,
       body: [
         {
-          id: 'comment-1',
-          comment: 'Test comment',
-          user_id: 'user1',
-          username: 'User One',
+          id: "comment-1",
+          comment: "Test comment",
+          user_id: "user1",
+          username: "User One",
           likes: 0,
           liked_by_current_user: false,
-          timestamp: '2023-01-01T00:00:00Z',
+          timestamp: "2023-01-01T00:00:00Z",
         },
       ],
-    }).as('getForumComments');
-    cy.intercept('GET', '/comments/forum/test-id/replies/comment-1', {
+    }).as("getForumComments");
+    cy.intercept("GET", "/comments/forum/test-id/replies/comment-1", {
       statusCode: 200,
       body: [
         {
-          id: 'reply-1',
-          comment: 'Test reply',
-          user_id: 'user1',
-          username: 'User One',
+          id: "reply-1",
+          comment: "Test reply",
+          user_id: "user1",
+          username: "User One",
           likes: 0,
           liked_by_current_user: false,
-          timestamp: '2023-01-01T00:00:00Z',
+          timestamp: "2023-01-01T00:00:00Z",
         },
       ],
-    }).as('getForumCommentReplies');
-    cy.mount(
-      <ForumCommentTree forumId="test-id" />
-    );
-    cy.get('[data-testid="forum-comment-tree"]').should('exist');
+    }).as("getForumCommentReplies");
+    cy.mount(<ForumCommentTree forumId="test-id" />);
+    cy.get('[data-testid="forum-comment-tree"]').should("exist");
   });
-}); 
+});

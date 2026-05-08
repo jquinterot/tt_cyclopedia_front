@@ -15,4 +15,4 @@ export const useCreateUser = () => {
       queryClient.invalidateQueries({ queryKey: ["users"] });
     },
   });
-}; 
+};

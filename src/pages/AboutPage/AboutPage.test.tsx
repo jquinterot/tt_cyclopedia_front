@@ -7,13 +7,11 @@ import { LanguageProvider } from "@/contexts/LanguageContext";
 describe("AboutPage", () => {
   it("renders the About page", () => {
     render(
-  
-        <BrowserRouter>
-          <LanguageProvider>
-            <AboutPage />
-          </LanguageProvider>
-        </BrowserRouter>
-  
+      <BrowserRouter>
+        <LanguageProvider>
+          <AboutPage />
+        </LanguageProvider>
+      </BrowserRouter>,
     );
   });
-}); 
+});

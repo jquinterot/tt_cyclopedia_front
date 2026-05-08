@@ -3,9 +3,9 @@
 @tailwind utilities;
 
 html {
-    @apply h-full;
+  @apply h-full;
 }
 
 body {
-    @apply h-full;
-  }
+  @apply h-full;
+}

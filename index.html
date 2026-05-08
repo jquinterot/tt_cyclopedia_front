@@ -98,7 +98,54 @@
     </script>
   </head>
   <body>
-    <div id="root"></div>
+    <style>
+      .initial-skeleton {
+        background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%);
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .initial-skeleton-inner {
+        width: 100%;
+        max-width: 28rem;
+        padding: 2rem;
+      }
+      .initial-skeleton-card {
+        background: rgba(255,255,255,0.05);
+        border: 1px solid rgba(255,255,255,0.1);
+        border-radius: 0.75rem;
+        padding: 2rem;
+      }
+      .initial-skeleton-line {
+        height: 1rem;
+        background: rgba(255,255,255,0.05);
+        border-radius: 0.5rem;
+        margin-bottom: 1rem;
+        animation: shimmer 1.5s infinite;
+      }
+      .initial-skeleton-line.short { width: 60%; margin: 2rem auto 1.5rem; }
+      .initial-skeleton-line.large { height: 3rem; margin-bottom: 1.5rem; }
+      .initial-skeleton-button { height: 3rem; }
+      @keyframes shimmer {
+        0% { opacity: 0.3; }
+        50% { opacity: 0.6; }
+        100% { opacity: 0.3; }
+      }
+    </style>
+    <div id="root">
+      <div class="initial-skeleton">
+        <div class="initial-skeleton-inner">
+          <div class="initial-skeleton-card">
+            <div class="initial-skeleton-line short"></div>
+            <div class="initial-skeleton-line" style="width:80%"></div>
+            <div class="initial-skeleton-line large"></div>
+            <div class="initial-skeleton-line large"></div>
+            <div class="initial-skeleton-line button"></div>
+          </div>
+        </div>
+      </div>
+    </div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

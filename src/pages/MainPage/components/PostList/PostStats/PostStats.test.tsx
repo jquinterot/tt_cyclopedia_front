@@ -19,4 +19,4 @@ describe("PostStats Component", () => {
     expect(screen.getByText("Control"));
     expect(screen.getByText("Overall"));
   });
-}); 
+});

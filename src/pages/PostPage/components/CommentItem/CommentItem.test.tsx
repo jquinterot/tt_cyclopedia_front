@@ -2,7 +2,7 @@ import { render } from "@testing-library/react";
 import { CommentItem } from "./CommentItem";
 import { BrowserRouter } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { AuthProvider } from '@/contexts/AuthContext';
+import { AuthProvider } from "@/contexts/AuthContext";
 
 describe("CommentItem", () => {
   it("renders without crashing", () => {
@@ -17,7 +17,7 @@ describe("CommentItem", () => {
       username: "testuser",
       timestamp: "2023-01-01T00:00:00Z",
       liked_by_current_user: false,
-      likes: 0
+      likes: 0,
     };
 
     render(
@@ -38,7 +38,7 @@ describe("CommentItem", () => {
             />
           </AuthProvider>
         </BrowserRouter>
-      </QueryClientProvider>
+      </QueryClientProvider>,
     );
   });
-}); 
+});

@@ -6,11 +6,9 @@ import DonatePage from "./DonatePage";
 
 const renderDonatePage = () => {
   return render(
-
-      <BrowserRouter>
-        <DonatePage />
-      </BrowserRouter>
-
+    <BrowserRouter>
+      <DonatePage />
+    </BrowserRouter>,
   );
 };
 
@@ -22,7 +20,9 @@ describe("DonatePage", () => {
 
   test("shows heading", () => {
     renderDonatePage();
-    expect(screen.getByTestId("donate-heading")).toHaveTextContent("Support TT Cyclopedia");
+    expect(screen.getByTestId("donate-heading")).toHaveTextContent(
+      "Support TT Cyclopedia",
+    );
   });
 
   test("shows donate button", () => {

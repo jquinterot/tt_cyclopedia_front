@@ -6,7 +6,7 @@ describe("<FeaturesSection />", () => {
     cy.mount(
       <LanguageProvider>
         <FeaturesSection />
-      </LanguageProvider>
+      </LanguageProvider>,
     );
 
     cy.get('[data-testid="features-title"]').should("exist");
@@ -14,4 +14,4 @@ describe("<FeaturesSection />", () => {
     cy.get('[data-testid="feature-reviews"]').should("exist");
     cy.get('[data-testid="feature-community"]').should("exist");
   });
-}); 
+});

@@ -22,4 +22,4 @@ export default function StatBar({ label, value, color }: StatBarProps) {
       </span>
     </div>
   );
-} 
+}

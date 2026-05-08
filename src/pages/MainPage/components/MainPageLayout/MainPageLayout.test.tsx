@@ -19,4 +19,4 @@ describe("MainPageLayout Component", () => {
     renderWithProviders(<MainPageLayout>{customContent}</MainPageLayout>);
     expect(screen.getByTestId("custom-content")).toBeInTheDocument();
   });
-}); 
+});

@@ -1,7 +1,7 @@
-import { createTestDataTracker } from '../../helpers/testDataTracker';
-import { test } from '@playwright/test';
+import { createTestDataTracker } from "../../helpers/testDataTracker";
+import { test } from "@playwright/test";
 
-test.describe('UI Behavior: Logged vs Non-Logged Users', () => {
+test.describe("UI Behavior: Logged vs Non-Logged Users", () => {
   let tracker: ReturnType<typeof createTestDataTracker>;
 
   test.beforeEach(() => {
@@ -13,5 +13,4 @@ test.describe('UI Behavior: Logged vs Non-Logged Users', () => {
   });
 
   // ... rest of the file remains unchanged ...
-
-}); 
+});

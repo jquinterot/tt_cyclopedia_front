@@ -20,17 +20,15 @@ const queryClient = new QueryClient({
 
 const renderCreateForumPage = () => {
   return render(
-
-      <QueryClientProvider client={queryClient}>
-        <BrowserRouter>
-          <LanguageProvider>
-            <AuthProvider>
-              <CreateForumPage />
-            </AuthProvider>
-          </LanguageProvider>
-        </BrowserRouter>
-      </QueryClientProvider>
-
+    <QueryClientProvider client={queryClient}>
+      <BrowserRouter>
+        <LanguageProvider>
+          <AuthProvider>
+            <CreateForumPage />
+          </AuthProvider>
+        </LanguageProvider>
+      </BrowserRouter>
+    </QueryClientProvider>,
   );
 };
 
@@ -42,7 +40,9 @@ describe("CreateForumPage", () => {
 
   test("shows create forum title", () => {
     renderCreateForumPage();
-    expect(screen.getByTestId("create-forum-title")).toHaveTextContent("Create New Forum");
+    expect(screen.getByTestId("create-forum-title")).toHaveTextContent(
+      "Create New Forum",
+    );
   });
 
   test("has title input field", () => {

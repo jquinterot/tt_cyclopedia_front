@@ -17,7 +17,9 @@ function FooterDescription() {
       className="text-sm text-gray-300 leading-relaxed max-w-2xl"
       data-testid="footer-description"
     >
-      Your premier destination for comprehensive blade equipment reviews. Share experiences, read detailed analyses, and connect with table tennis enthusiasts worldwide. Support us through Buy Me a Coffee!
+      Your premier destination for comprehensive blade equipment reviews. Share
+      experiences, read detailed analyses, and connect with table tennis
+      enthusiasts worldwide. Support us through Buy Me a Coffee!
     </p>
   );
 }
@@ -39,9 +41,15 @@ function FooterSocialLinks() {
 
 function FooterCopyright() {
   return (
-    <div className="border-t border-white/5 bg-slate-900/80" data-testid="footer-content">
+    <div
+      className="border-t border-white/5 bg-slate-900/80"
+      data-testid="footer-content"
+    >
       <div className="mx-auto max-w-7xl px-4 sm:px-6 py-4">
-        <p className="text-center text-sm text-gray-400" data-testid="footer-copyright">
+        <p
+          className="text-center text-sm text-gray-400"
+          data-testid="footer-copyright"
+        >
           © {new Date().getFullYear()} TT Cyclopedia. All rights reserved.
         </p>
       </div>

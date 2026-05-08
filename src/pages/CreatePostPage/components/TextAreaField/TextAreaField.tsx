@@ -1,4 +1,3 @@
-
 type TextAreaFieldProps = {
   label: string;
   id: string;
@@ -6,10 +5,18 @@ type TextAreaFieldProps = {
   placeholder: string;
 };
 
-export default function TextAreaField({ label, id, inputRef, placeholder }: TextAreaFieldProps) {
+export default function TextAreaField({
+  label,
+  id,
+  inputRef,
+  placeholder,
+}: TextAreaFieldProps) {
   return (
     <div>
-      <label className="block text-sm font-medium text-gray-300 mb-1" htmlFor={id}>
+      <label
+        className="block text-sm font-medium text-gray-300 mb-1"
+        htmlFor={id}
+      >
         {label}
       </label>
       <textarea
@@ -22,4 +29,4 @@ export default function TextAreaField({ label, id, inputRef, placeholder }: Text
       />
     </div>
   );
-} 
+}

@@ -4,7 +4,9 @@ import { useQuery } from "@tanstack/react-query";
 
 export const useEquipmentDetail = (equipmentId: string) => {
   const fetchEquipment = async () => {
-    const response = await apiClient.get<EquipmentDetail>(`/equipment/${equipmentId}`);
+    const response = await apiClient.get<EquipmentDetail>(
+      `/equipment/${equipmentId}`,
+    );
     return response.data;
   };
 

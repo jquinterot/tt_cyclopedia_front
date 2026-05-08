@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect } from "react";
 
 interface PerformanceOptimizerProps {
   preloadImages?: string[];
@@ -7,22 +7,22 @@ interface PerformanceOptimizerProps {
 
 const PerformanceOptimizer = ({
   preloadImages = [],
-  prefetchRoutes = []
+  prefetchRoutes = [],
 }: PerformanceOptimizerProps) => {
   useEffect(() => {
     // Preload critical images
-    preloadImages.forEach(imageSrc => {
-      const link = document.createElement('link');
-      link.rel = 'preload';
-      link.as = 'image';
+    preloadImages.forEach((imageSrc) => {
+      const link = document.createElement("link");
+      link.rel = "preload";
+      link.as = "image";
       link.href = imageSrc;
       document.head.appendChild(link);
     });
 
     // Prefetch routes
-    prefetchRoutes.forEach(route => {
-      const link = document.createElement('link');
-      link.rel = 'prefetch';
+    prefetchRoutes.forEach((route) => {
+      const link = document.createElement("link");
+      link.rel = "prefetch";
       link.href = route;
       document.head.appendChild(link);
     });
@@ -30,8 +30,8 @@ const PerformanceOptimizer = ({
     // Cleanup function
     return () => {
       // Remove preload links on unmount
-      document.querySelectorAll('link[rel="preload"]').forEach(link => {
-        if (preloadImages.includes(link.getAttribute('href') || '')) {
+      document.querySelectorAll('link[rel="preload"]').forEach((link) => {
+        if (preloadImages.includes(link.getAttribute("href") || "")) {
           link.remove();
         }
       });
@@ -41,4 +41,4 @@ const PerformanceOptimizer = ({
   return null;
 };
 
-export default PerformanceOptimizer; 
+export default PerformanceOptimizer;

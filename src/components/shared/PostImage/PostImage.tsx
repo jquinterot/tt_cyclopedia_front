@@ -1,9 +1,9 @@
 const DEFAULT_IMAGE_URL = import.meta.env.VITE_DEFAULT_IMAGE_URL;
-const API_BASE = import.meta.env.VITE_API_BASE_URL || '';
+const API_BASE = import.meta.env.VITE_API_BASE_URL || "";
 
 function getFullImageUrl(src: string): string {
   if (!src) return DEFAULT_IMAGE_URL;
-  if (src.startsWith('http')) return src;
+  if (src.startsWith("http")) return src;
   return `${API_BASE}${src}`;
 }
 
@@ -16,7 +16,10 @@ export function PostImage({ src, alt }: { src: string; alt: string }) {
   const imageUrl = getFullImageUrl(src);
 
   return (
-    <div className="aspect-square w-full group relative overflow-hidden rounded-lg" data-testid="post-image-container">
+    <div
+      className="aspect-square w-full group relative overflow-hidden rounded-lg"
+      data-testid="post-image-container"
+    >
       <img
         className="w-full h-full object-cover transition-transform duration-500 ease-in-out group-hover:scale-110"
         src={imageUrl}

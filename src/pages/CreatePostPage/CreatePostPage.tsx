@@ -1,8 +1,8 @@
-import { useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import CreatePostForm from './components/CreatePostForm/CreatePostForm';
-import SEOHead from '@/components/SEO/SEOHead';
-import { useAuth } from '@/contexts/AuthContext';
+import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import CreatePostForm from "./components/CreatePostForm/CreatePostForm";
+import SEOHead from "@/components/SEO/SEOHead";
+import { useAuth } from "@/contexts/AuthContext";
 
 function CreatePostPage() {
   const navigate = useNavigate();
@@ -10,7 +10,7 @@ function CreatePostPage() {
 
   useEffect(() => {
     if (!isAuthenticated) {
-      navigate('/login');
+      navigate("/login");
     }
   }, [isAuthenticated, navigate]);
 
@@ -25,9 +25,12 @@ function CreatePostPage() {
         description="Share your table tennis knowledge. Create a new post about equipment, techniques, or experiences."
         noindex
       />
-      <div className="max-w-2xl mx-auto px-4 py-8" data-testid="create-post-page">
-      <CreatePostForm/>
-    </div>
+      <div
+        className="max-w-2xl mx-auto px-4 py-8"
+        data-testid="create-post-page"
+      >
+        <CreatePostForm />
+      </div>
     </>
   );
 }

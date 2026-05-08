@@ -10,4 +10,4 @@ describe("<ImageUploadField />", () => {
     cy.get('[data-testid="image-input"]').should("exist");
     cy.get("span").should("contain", "Upload a file");
   });
-}); 
+});

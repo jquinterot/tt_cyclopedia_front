@@ -1,9 +1,12 @@
 import { memo } from "react";
-import { useReplyComments } from '@/hooks/comments/useRepliedComments';
+import { useReplyComments } from "@/hooks/comments/useRepliedComments";
 import UserInfo from "../UserInfo/UserInfo";
-import { useLikeComment } from '@/hooks/comments/useLikeComment';
-import { useEditComment } from '@/hooks/comments/useEditComment';
-import { NestedCommentList, NestedComment } from '@/components/shared/NestedCommentList/NestedCommentList';
+import { useLikeComment } from "@/hooks/comments/useLikeComment";
+import { useEditComment } from "@/hooks/comments/useEditComment";
+import {
+  NestedCommentList,
+  NestedComment,
+} from "@/components/shared/NestedCommentList/NestedCommentList";
 
 type ReplyListProps = {
   parentId: string;
@@ -44,4 +47,4 @@ export const ReplyList = memo(function ReplyList({
       isEditPending={false}
     />
   );
-}); 
+});

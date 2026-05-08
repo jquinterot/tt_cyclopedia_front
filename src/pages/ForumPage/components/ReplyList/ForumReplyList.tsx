@@ -1,9 +1,9 @@
 import { memo } from "react";
-import { useForumCommentReplies } from '@/hooks/forums/useForumCommentReplies';
-import { useLikeForumComment } from '@/hooks/forums/useLikeForumComment';
-import { useEditForumComment } from '@/hooks/forums/useEditForumComment';
-import { NestedCommentList } from '@/components/shared/NestedCommentList/NestedCommentList';
-import type { NestedComment } from '@/components/shared/NestedCommentList/NestedCommentList';
+import { useForumCommentReplies } from "@/hooks/forums/useForumCommentReplies";
+import { useLikeForumComment } from "@/hooks/forums/useLikeForumComment";
+import { useEditForumComment } from "@/hooks/forums/useEditForumComment";
+import { NestedCommentList } from "@/components/shared/NestedCommentList/NestedCommentList";
+import type { NestedComment } from "@/components/shared/NestedCommentList/NestedCommentList";
 
 type ForumReplyListProps = {
   parentId: string;
@@ -16,7 +16,10 @@ export const ForumReplyList = memo(function ForumReplyList({
   forumId,
   onDeleteReply,
 }: ForumReplyListProps) {
-  const { replies: rawReplies = [] } = useForumCommentReplies(forumId, parentId);
+  const { replies: rawReplies = [] } = useForumCommentReplies(
+    forumId,
+    parentId,
+  );
   const replies: NestedComment[] = rawReplies.map((reply) => ({
     id: reply.id,
     comment: reply.comment,
@@ -53,4 +56,4 @@ export const ForumReplyList = memo(function ForumReplyList({
       isEditPending={false}
     />
   );
-}); 
+});

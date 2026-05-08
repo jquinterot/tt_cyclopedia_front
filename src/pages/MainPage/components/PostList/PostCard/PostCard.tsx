@@ -1,13 +1,13 @@
-import PostImage from '../PostImage/PostImage';
-import PostStats from '../PostStats/PostStats';
-import HeartIcon from '@/components/shared/HeartIcon/HeartIcon';
-import HeartIconFilled from '@/components/shared/HeartIconFilled/HeartIconFilled';
-import ActivityMap from '@/components/shared/ActivityMap/ActivityMap';
-import { ActivityBadge } from '@/components/ui';
-import { useAuth } from '@/contexts/AuthContext';
-import { toast } from 'sonner';
-import type { Post } from '@/types/Post';
-import { useLikePost } from '@/hooks/posts/useLikePost';
+import PostImage from "../PostImage/PostImage";
+import PostStats from "../PostStats/PostStats";
+import HeartIcon from "@/components/shared/HeartIcon/HeartIcon";
+import HeartIconFilled from "@/components/shared/HeartIconFilled/HeartIconFilled";
+import ActivityMap from "@/components/shared/ActivityMap/ActivityMap";
+import { ActivityBadge } from "@/components/ui";
+import { useAuth } from "@/contexts/AuthContext";
+import { toast } from "sonner";
+import type { Post } from "@/types/Post";
+import { useLikePost } from "@/hooks/posts/useLikePost";
 
 interface PostCardProps {
   post: Post;
@@ -18,47 +18,47 @@ const DEFAULT_IMAGE_URL = import.meta.env.VITE_DEFAULT_IMAGE_URL;
 
 export default function PostCard({ post, onClick }: PostCardProps) {
   const { user } = useAuth();
-  
+
   // Ensure proper boolean conversion
   const initialLiked = Boolean(post.likedByCurrentUser);
-  
+
   const { likes, liked, handleLike, isProcessing } = useLikePost({
     postId: post.id,
     initialLikes: post.likes || 0,
     initialLiked: initialLiked,
-    queryKey: ['posts']
+    queryKey: ["posts"],
   });
 
   const handleLikeToggle = (e: React.MouseEvent) => {
     e.stopPropagation();
-    
+
     if (!user) {
-      toast('Please login to like!', { icon: '⚠️', id: 'login-to-like' });
+      toast("Please login to like!", { icon: "⚠️", id: "login-to-like" });
       e.preventDefault();
       (e.currentTarget as HTMLButtonElement).blur();
       return;
     }
-    
+
     handleLike();
   };
 
   const formatDate = (dateString?: string) => {
-    if (!dateString) return '';
-    return new Date(dateString).toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric'
+    if (!dateString) return "";
+    return new Date(dateString).toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "short",
+      day: "numeric",
     });
   };
 
   const formatActivityDate = (dateString?: string) => {
     if (!dateString) return null;
-    return new Date(dateString).toLocaleDateString('en-US', {
-      weekday: 'short',
-      month: 'short',
-      day: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit'
+    return new Date(dateString).toLocaleDateString("en-US", {
+      weekday: "short",
+      month: "short",
+      day: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
     });
   };
 
@@ -87,8 +87,18 @@ export default function PostCard({ post, onClick }: PostCardProps) {
             <ActivityBadge type={post.activityType!} />
           </div>
           <div className="flex items-center gap-2 text-sm text-gray-300">
-            <svg className="w-4 h-4 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+            <svg
+              className="w-4 h-4 text-blue-400"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+              />
             </svg>
             <span>{formatActivityDate(post.activityDate)}</span>
           </div>
@@ -101,7 +111,10 @@ export default function PostCard({ post, onClick }: PostCardProps) {
         </div>
       )}
 
-      <div className="w-full mb-3" data-testid={`post-stats-section-${post.id}`}>
+      <div
+        className="w-full mb-3"
+        data-testid={`post-stats-section-${post.id}`}
+      >
         <PostStats stats={post.stats} />
       </div>
       <div className="mt-3" data-testid={`post-details-${post.id}`}>
@@ -112,29 +125,49 @@ export default function PostCard({ post, onClick }: PostCardProps) {
             </span>
           </div>
         )}
-        <h2 className="text-lg font-semibold text-white mb-2" data-testid={`post-title-${post.id}`}>
+        <h2
+          className="text-lg font-semibold text-white mb-2"
+          data-testid={`post-title-${post.id}`}
+        >
           {post.title}
         </h2>
-        <p className="text-gray-300 mb-3 line-clamp-2" data-testid={`post-excerpt-${post.id}`}>
+        <p
+          className="text-gray-300 mb-3 line-clamp-2"
+          data-testid={`post-excerpt-${post.id}`}
+        >
           {post.content}
         </p>
         <div className="flex items-center justify-between text-sm text-gray-400">
-          <span>{post.author ? `By ${post.author}` : 'Anonymous'}</span>
+          <span>{post.author ? `By ${post.author}` : "Anonymous"}</span>
           <div className="flex items-center gap-4">
-            <div className="flex items-center space-x-2" data-testid={`likes-container-${post.id}`}> 
+            <div
+              className="flex items-center space-x-2"
+              data-testid={`likes-container-${post.id}`}
+            >
               <button
                 className="flex items-center gap-1 focus:outline-none"
                 onClick={handleLikeToggle}
                 disabled={isProcessing}
                 aria-pressed={liked}
-                aria-label={liked ? 'Unlike post' : 'Like post'}
-                style={{ cursor: isProcessing ? 'not-allowed' : 'pointer', background: 'none', border: 'none', padding: 0 }}
+                aria-label={liked ? "Unlike post" : "Like post"}
+                style={{
+                  cursor: isProcessing ? "not-allowed" : "pointer",
+                  background: "none",
+                  border: "none",
+                  padding: 0,
+                }}
                 data-testid={`post-card-like-button-${post.id}`}
               >
                 {liked ? (
-                  <HeartIconFilled className="h-5 w-5 text-blue-600 transition-colors" data-testid={`like-icon-filled-${post.id}`}/>
+                  <HeartIconFilled
+                    className="h-5 w-5 text-blue-600 transition-colors"
+                    data-testid={`like-icon-filled-${post.id}`}
+                  />
                 ) : (
-                  <HeartIcon className="h-5 w-5 text-blue-400 transition-colors" data-testid={`like-icon-${post.id}`}/>
+                  <HeartIcon
+                    className="h-5 w-5 text-blue-400 transition-colors"
+                    data-testid={`like-icon-${post.id}`}
+                  />
                 )}
                 <span className="text-sm text-gray-300">{likes}</span>
               </button>
@@ -145,4 +178,4 @@ export default function PostCard({ post, onClick }: PostCardProps) {
       </div>
     </article>
   );
-} 
+}

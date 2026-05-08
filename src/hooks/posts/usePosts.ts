@@ -7,10 +7,10 @@ export const usePosts = () => {
   const { isAuthenticated } = useAuth();
 
   const fetchPosts = async () => {
-    const response = await apiClient.get<Post[]>('/posts');
-    return response.data.map(post => ({
+    const response = await apiClient.get<Post[]>("/posts");
+    return response.data.map((post) => ({
       ...post,
-      likedByCurrentUser: Boolean(post.likedByCurrentUser)
+      likedByCurrentUser: Boolean(post.likedByCurrentUser),
     }));
   };
 

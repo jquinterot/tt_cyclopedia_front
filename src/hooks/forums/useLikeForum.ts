@@ -1,5 +1,5 @@
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { apiClient } from '@/config/apiClient';
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { apiClient } from "@/config/apiClient";
 
 export function useLikeForum(forumId: string) {
   const queryClient = useQueryClient();
@@ -9,8 +9,8 @@ export function useLikeForum(forumId: string) {
       await apiClient.post(`/forums/${forumId}/like`);
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['forums'] });
-      queryClient.invalidateQueries({ queryKey: ['forums', forumId] });
+      queryClient.invalidateQueries({ queryKey: ["forums"] });
+      queryClient.invalidateQueries({ queryKey: ["forums", forumId] });
     },
   });
 
@@ -19,10 +19,10 @@ export function useLikeForum(forumId: string) {
       await apiClient.delete(`/forums/${forumId}/like`);
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['forums'] });
-      queryClient.invalidateQueries({ queryKey: ['forums', forumId] });
+      queryClient.invalidateQueries({ queryKey: ["forums"] });
+      queryClient.invalidateQueries({ queryKey: ["forums", forumId] });
     },
   });
 
   return { likeMutation, unlikeMutation };
-} 
+}

@@ -1,147 +1,155 @@
-import { lazy } from 'react';
+import { lazy } from "react";
 
 // Lazy load components for better performance
-const MainPage = lazy(() => import('@pages/MainPage/MainPage'));
-const PostPage = lazy(() => import('@pages/PostPage/PostPage'));
-const AboutPage = lazy(() => import('@pages/AboutPage/AboutPage'));
-const LoginPage = lazy(() => import('@pages/LoginPage/LoginPage'));
-const CreatePostPage = lazy(() => import('@pages/CreatePostPage/CreatePostPage'));
-const SignupPage = lazy(() => import('@pages/SignupPage/SignupPage'));
-const ProfilePage = lazy(() => import('@pages/ProfilePage'));
-const CreateForumPage = lazy(() => import('@pages/CreateForumPage/CreateForumPage'));
-const ForumsPage = lazy(() => import('@pages/ForumsPage/ForumsPage'));
-const ForumPage = lazy(() => import('@pages/ForumPage/ForumPage'));
-const DonatePage = lazy(() => import('@pages/DonatePage/DonatePage'));
-const EquipmentPage = lazy(() => import('@pages/EquipmentPage/EquipmentPage'));
-const EquipmentDetailPage = lazy(() => import('@pages/EquipmentDetailPage/EquipmentDetailPage'));
-const SetupRecommenderPage = lazy(() => import('@pages/SetupRecommenderPage/SetupRecommenderPage'));
-const NotFoundPage = lazy(() => import('@pages/NotFoundPage/NotFoundPage'));
+const MainPage = lazy(() => import("@pages/MainPage/MainPage"));
+const PostPage = lazy(() => import("@pages/PostPage/PostPage"));
+const AboutPage = lazy(() => import("@pages/AboutPage/AboutPage"));
+const LoginPage = lazy(() => import("@pages/LoginPage/LoginPage"));
+const CreatePostPage = lazy(
+  () => import("@pages/CreatePostPage/CreatePostPage"),
+);
+const SignupPage = lazy(() => import("@pages/SignupPage/SignupPage"));
+const ProfilePage = lazy(() => import("@pages/ProfilePage"));
+const CreateForumPage = lazy(
+  () => import("@pages/CreateForumPage/CreateForumPage"),
+);
+const ForumsPage = lazy(() => import("@pages/ForumsPage/ForumsPage"));
+const ForumPage = lazy(() => import("@pages/ForumPage/ForumPage"));
+const DonatePage = lazy(() => import("@pages/DonatePage/DonatePage"));
+const EquipmentPage = lazy(() => import("@pages/EquipmentPage/EquipmentPage"));
+const EquipmentDetailPage = lazy(
+  () => import("@pages/EquipmentDetailPage/EquipmentDetailPage"),
+);
+const SetupRecommenderPage = lazy(
+  () => import("@pages/SetupRecommenderPage/SetupRecommenderPage"),
+);
+const NotFoundPage = lazy(() => import("@pages/NotFoundPage/NotFoundPage"));
 
 export interface RouteConfig {
   path: string;
   component: React.ComponentType;
   title?: string;
   requiresAuth?: boolean;
-  layout?: 'default' | 'auth' | 'none';
+  layout?: "default" | "auth" | "none";
 }
 
 export const ROUTES = {
-  HOME: '/',
-  LOGIN: '/login',
-  SIGNUP: '/signup',
-  POST: '/posts/:id',
-  CREATE_POST: '/createPost',
-  CREATE_FORUM: '/create-forum',
-  FORUMS: '/forums',
-  FORUM: '/forums/:id',
-  EQUIPMENT: '/equipment',
-  EQUIPMENT_DETAIL: '/equipment/:id',
-  SETUP_RECOMMENDER: '/setup-recommender',
-  ABOUT: '/about',
-  PROFILE: '/profile',
-  DONATE: '/donate',
-  NOT_FOUND: '*',
+  HOME: "/",
+  LOGIN: "/login",
+  SIGNUP: "/signup",
+  POST: "/posts/:id",
+  CREATE_POST: "/createPost",
+  CREATE_FORUM: "/create-forum",
+  FORUMS: "/forums",
+  FORUM: "/forums/:id",
+  EQUIPMENT: "/equipment",
+  EQUIPMENT_DETAIL: "/equipment/:id",
+  SETUP_RECOMMENDER: "/setup-recommender",
+  ABOUT: "/about",
+  PROFILE: "/profile",
+  DONATE: "/donate",
+  NOT_FOUND: "*",
 } as const;
 
 export const routes: RouteConfig[] = [
   {
     path: ROUTES.HOME,
     component: MainPage,
-    title: 'Home',
-    layout: 'default',
+    title: "Home",
+    layout: "default",
   },
   {
     path: ROUTES.LOGIN,
     component: LoginPage,
-    title: 'Login',
-    layout: 'auth',
+    title: "Login",
+    layout: "auth",
   },
   {
     path: ROUTES.SIGNUP,
     component: SignupPage,
-    title: 'Sign Up',
-    layout: 'auth',
+    title: "Sign Up",
+    layout: "auth",
   },
   {
     path: ROUTES.POST,
     component: PostPage,
-    title: 'Post Details',
-    layout: 'default',
+    title: "Post Details",
+    layout: "default",
   },
   {
     path: ROUTES.CREATE_POST,
     component: CreatePostPage,
-    title: 'Create Post',
-    layout: 'default',
+    title: "Create Post",
+    layout: "default",
     requiresAuth: true,
   },
   {
     path: ROUTES.CREATE_FORUM,
     component: CreateForumPage,
-    title: 'Create Forum',
-    layout: 'default',
+    title: "Create Forum",
+    layout: "default",
     requiresAuth: true,
   },
   {
     path: ROUTES.FORUMS,
     component: ForumsPage,
-    title: 'Forums',
-    layout: 'default',
+    title: "Forums",
+    layout: "default",
   },
   {
     path: ROUTES.FORUM,
     component: ForumPage,
-    title: 'Forum Details',
-    layout: 'default',
+    title: "Forum Details",
+    layout: "default",
   },
   {
     path: ROUTES.EQUIPMENT,
     component: EquipmentPage,
-    title: 'Equipment Catalog',
-    layout: 'default',
+    title: "Equipment Catalog",
+    layout: "default",
   },
   {
     path: ROUTES.EQUIPMENT_DETAIL,
     component: EquipmentDetailPage,
-    title: 'Equipment Details',
-    layout: 'default',
+    title: "Equipment Details",
+    layout: "default",
   },
   {
     path: ROUTES.SETUP_RECOMMENDER,
     component: SetupRecommenderPage,
-    title: 'Find My Setup',
-    layout: 'default',
+    title: "Find My Setup",
+    layout: "default",
   },
   {
     path: ROUTES.ABOUT,
     component: AboutPage,
-    title: 'About',
-    layout: 'default',
+    title: "About",
+    layout: "default",
   },
   {
     path: ROUTES.PROFILE,
     component: ProfilePage,
-    title: 'Profile',
-    layout: 'default',
+    title: "Profile",
+    layout: "default",
     requiresAuth: true,
   },
   {
     path: ROUTES.DONATE,
     component: DonatePage,
-    title: 'Support Us',
-    layout: 'default',
+    title: "Support Us",
+    layout: "default",
   },
   {
     path: ROUTES.NOT_FOUND,
     component: NotFoundPage,
-    title: 'Page Not Found',
-    layout: 'none',
+    title: "Page Not Found",
+    layout: "none",
   },
 ];
 
 // Helper functions
 export const getRouteByPath = (path: string): RouteConfig | undefined => {
-  return routes.find(route => route.path === path);
+  return routes.find((route) => route.path === path);
 };
 
 export const isProtectedRoute = (path: string): boolean => {
@@ -150,9 +158,9 @@ export const isProtectedRoute = (path: string): boolean => {
 };
 
 export const generatePostPath = (postId: string): string => {
-  return ROUTES.POST.replace(':id', postId);
+  return ROUTES.POST.replace(":id", postId);
 };
 
 export const generateForumPath = (forumId: string): string => {
-  return ROUTES.FORUM.replace(':id', forumId);
-}; 
+  return ROUTES.FORUM.replace(":id", forumId);
+};

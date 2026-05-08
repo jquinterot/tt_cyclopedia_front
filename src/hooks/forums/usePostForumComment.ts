@@ -1,7 +1,7 @@
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { apiClient } from '@/config/apiClient';
-import { useAuth } from '@/contexts/AuthContext';
-import type { Comment } from '@/types/Comment';
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { apiClient } from "@/config/apiClient";
+import { useAuth } from "@/contexts/AuthContext";
+import type { Comment } from "@/types/Comment";
 
 interface PostForumCommentData {
   comment: string;
@@ -16,9 +16,11 @@ export function usePostForumComment(forumId: string) {
   const { user } = useAuth();
 
   return useMutation({
-    mutationFn: async (data: Omit<PostForumCommentData, 'forum_id' | 'user_id' | 'username'>) => {
+    mutationFn: async (
+      data: Omit<PostForumCommentData, "forum_id" | "user_id" | "username">,
+    ) => {
       if (!user) {
-        throw new Error('User must be authenticated to post comments');
+        throw new Error("User must be authenticated to post comments");
       }
 
       const requestData = {
@@ -29,13 +31,18 @@ export function usePostForumComment(forumId: string) {
         parent_id: data.parentId,
       };
 
-      const res = await apiClient.post<Comment>(`/comments/forum/${forumId}`, requestData);
+      const res = await apiClient.post<Comment>(
+        `/comments/forum/${forumId}`,
+        requestData,
+      );
       return res.data;
     },
     onSettled: (_data, _error, variables) => {
-      queryClient.invalidateQueries({ queryKey: ['forumComments', forumId] });
+      queryClient.invalidateQueries({ queryKey: ["forumComments", forumId] });
       if (variables.parentId) {
-        queryClient.invalidateQueries({ queryKey: ['forumCommentReplies', forumId, variables.parentId] });
+        queryClient.invalidateQueries({
+          queryKey: ["forumCommentReplies", forumId, variables.parentId],
+        });
       }
     },
   });

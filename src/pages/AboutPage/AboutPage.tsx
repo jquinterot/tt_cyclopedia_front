@@ -2,34 +2,41 @@ import AboutTitle from "./components/AboutTitle/AboutTitle";
 import AboutDescription from "./components/AboutDescription/AboutDescription";
 import MissionSection from "./components/MissionSection/MissionSection";
 import FeaturesSection from "./components/FeaturesSection/FeaturesSection";
-import SEOHead from '@/components/SEO/SEOHead';
-import { generateOrganizationSchema, generateFAQSchema } from '@/types/StructuredData';
+import SEOHead from "@/components/SEO/SEOHead";
+import {
+  generateOrganizationSchema,
+  generateFAQSchema,
+} from "@/types/StructuredData";
 
 function AboutPage() {
   const BASE_URL = import.meta.env.VITE_BASE_URL;
 
   const organizationData = generateOrganizationSchema({
-    name: 'TT Cyclopedia',
+    name: "TT Cyclopedia",
     url: BASE_URL,
-    description: 'TT Cyclopedia is your comprehensive table tennis knowledge base, providing equipment reviews, training tips, and community discussions.',
-    logo: `${BASE_URL}/favicon.png`
+    description:
+      "TT Cyclopedia is your comprehensive table tennis knowledge base, providing equipment reviews, training tips, and community discussions.",
+    logo: `${BASE_URL}/favicon.png`,
   });
 
   const faqData = generateFAQSchema({
     questions: [
-    {
-      question: 'What is TT Cyclopedia?',
-      answer: 'TT Cyclopedia is a comprehensive platform dedicated to table tennis knowledge, equipment reviews, player tips, and community discussions.'
-    },
-    {
-      question: 'How can I contribute to TT Cyclopedia?',
-      answer: 'You can contribute by creating posts, sharing equipment reviews, providing tips, and participating in community discussions.'
-    },
-    {
-      question: 'Is TT Cyclopedia free to use?',
-      answer: 'Yes, TT Cyclopedia is completely free to use and join our community.'
-    }
-  ]
+      {
+        question: "What is TT Cyclopedia?",
+        answer:
+          "TT Cyclopedia is a comprehensive platform dedicated to table tennis knowledge, equipment reviews, player tips, and community discussions.",
+      },
+      {
+        question: "How can I contribute to TT Cyclopedia?",
+        answer:
+          "You can contribute by creating posts, sharing equipment reviews, providing tips, and participating in community discussions.",
+      },
+      {
+        question: "Is TT Cyclopedia free to use?",
+        answer:
+          "Yes, TT Cyclopedia is completely free to use and join our community.",
+      },
+    ],
   });
 
   return (
@@ -45,7 +52,10 @@ function AboutPage() {
         ogType="website"
         structuredData={[organizationData, faqData]}
       />
-      <div className="min-h-screen flex flex-col font-sans text-white" data-testid="about-page">
+      <div
+        className="min-h-screen flex flex-col font-sans text-white"
+        data-testid="about-page"
+      >
         <main className="flex-grow flex justify-center px-4 py-8">
           <div className="max-w-4xl w-full space-y-12">
             <AboutTitle />
@@ -59,4 +69,4 @@ function AboutPage() {
   );
 }
 
-export default AboutPage; 
+export default AboutPage;

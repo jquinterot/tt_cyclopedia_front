@@ -1,4 +1,3 @@
-
 type ImageUploadFieldProps = {
   inputRef: React.RefObject<HTMLInputElement | null>;
 };
@@ -6,10 +5,16 @@ type ImageUploadFieldProps = {
 export default function ImageUploadField({ inputRef }: ImageUploadFieldProps) {
   return (
     <div>
-      <label className="block text-sm font-medium text-gray-300 mb-1" htmlFor="image">
+      <label
+        className="block text-sm font-medium text-gray-300 mb-1"
+        htmlFor="image"
+      >
         Cover Image
       </label>
-      <div className="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-white/10 border-dashed rounded-md hover:border-blue-500/50 transition-colors" data-testid="image-upload-area">
+      <div
+        className="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-white/10 border-dashed rounded-md hover:border-blue-500/50 transition-colors"
+        data-testid="image-upload-area"
+      >
         <div className="space-y-1 text-center">
           <svg
             className="mx-auto h-12 w-12 text-gray-400"
@@ -47,4 +52,4 @@ export default function ImageUploadField({ inputRef }: ImageUploadFieldProps) {
       </div>
     </div>
   );
-} 
+}

@@ -5,4 +5,4 @@ describe("<SignupPage />", () => {
     cy.mount(<SignupPage />);
     cy.get("[data-testid='signup-page']").should("exist");
   });
-}); 
+});

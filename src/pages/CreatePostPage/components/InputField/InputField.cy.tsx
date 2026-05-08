@@ -9,7 +9,7 @@ describe("<InputField />", () => {
         id="test-id"
         inputRef={inputRef}
         placeholder="Test placeholder"
-      />
+      />,
     );
 
     cy.get("label").should("contain", "Test Label");
@@ -17,4 +17,4 @@ describe("<InputField />", () => {
     cy.get("input").should("have.attr", "placeholder", "Test placeholder");
     cy.get("input").should("have.attr", "data-testid", "post-test-id-input");
   });
-}); 
+});

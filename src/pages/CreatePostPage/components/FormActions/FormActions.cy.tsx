@@ -17,4 +17,4 @@ describe("<FormActions />", () => {
     cy.get('[data-testid="submit-button"]').should("contain", "Creating...");
     cy.get('[data-testid="submit-button"]').should("be.disabled");
   });
-}); 
+});

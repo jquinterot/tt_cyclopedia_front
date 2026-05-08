@@ -1,10 +1,10 @@
 import { BrowserRouter as Router } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { LanguageProvider } from "@/contexts/LanguageContext";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { AppRouter } from "@/components/Router/AppRouter";
-import { Toaster } from 'sonner';
+import { Toaster } from "sonner";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -21,7 +21,10 @@ const queryClient = new QueryClient({
 
 function App() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-blue-950" data-testid="app-root">
+    <div
+      className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-blue-950"
+      data-testid="app-root"
+    >
       <Toaster position="top-center" theme="dark" richColors />
       <QueryClientProvider client={queryClient}>
         <LanguageProvider>

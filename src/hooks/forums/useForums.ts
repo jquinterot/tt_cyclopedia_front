@@ -1,1 +1,1 @@
-// Forum hooks have been split into individual files. 
+// Forum hooks have been split into individual files.

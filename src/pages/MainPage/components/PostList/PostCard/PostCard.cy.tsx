@@ -1,4 +1,4 @@
-import PostCard from './PostCard';
+import PostCard from "./PostCard";
 
 const mockPost = {
   id: "1",
@@ -9,30 +9,35 @@ const mockPost = {
   likedByCurrentUser: false,
 };
 
-describe('<PostCard />', () => {
-  it('renders post card with correct data', () => {
+describe("<PostCard />", () => {
+  it("renders post card with correct data", () => {
     const mockOnClick = () => {};
     cy.mount(<PostCard post={mockPost} onClick={mockOnClick} />);
-    
-    cy.get('[data-testid="post-card-1"]').should('exist');
-    cy.get('[data-testid="post-title-1"]').should('contain', 'Test Post');
-    cy.get('[data-testid="post-excerpt-1"]').should('contain', 'Test content');
+
+    cy.get('[data-testid="post-card-1"]').should("exist");
+    cy.get('[data-testid="post-title-1"]').should("contain", "Test Post");
+    cy.get('[data-testid="post-excerpt-1"]').should("contain", "Test content");
   });
 
-  it('calls onClick when card is clicked', () => {
+  it("calls onClick when card is clicked", () => {
     let called = false;
-    const mockOnClick = () => { called = true; };
+    const mockOnClick = () => {
+      called = true;
+    };
     cy.mount(<PostCard post={mockPost} onClick={mockOnClick} />);
-    
-    cy.get('[data-testid="post-card-1"]').scrollIntoView().click({ force: true }).then(() => {
-      expect(called).to.be.true;
-    });
+
+    cy.get('[data-testid="post-card-1"]')
+      .scrollIntoView()
+      .click({ force: true })
+      .then(() => {
+        expect(called).to.be.true;
+      });
   });
 
-  it('displays likes count', () => {
+  it("displays likes count", () => {
     const mockOnClick = () => {};
     cy.mount(<PostCard post={mockPost} onClick={mockOnClick} />);
-    
-    cy.contains('5').should('exist');
+
+    cy.contains("5").should("exist");
   });
-}); 
+});

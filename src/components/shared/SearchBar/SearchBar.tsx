@@ -1,6 +1,6 @@
-import React, { useState, useCallback, useRef, useEffect } from 'react';
-import { useDDoSProtection } from '@/hooks/useDDoSProtection';
-import { useAuth } from '@/contexts/AuthContext';
+import React, { useState, useCallback, useRef, useEffect } from "react";
+import { useDDoSProtection } from "@/hooks/useDDoSProtection";
+import { useAuth } from "@/contexts/AuthContext";
 
 interface SearchBarProps {
   onSearch: (query: string) => void;
@@ -8,8 +8,12 @@ interface SearchBarProps {
   className?: string;
 }
 
-export default function SearchBar({ onSearch, placeholder = "Search...", className = "" }: SearchBarProps) {
-  const [query, setQuery] = useState('');
+export default function SearchBar({
+  onSearch,
+  placeholder = "Search...",
+  className = "",
+}: SearchBarProps) {
+  const [query, setQuery] = useState("");
   const { user } = useAuth();
   const { isActionAllowed, recordUserAction } = useDDoSProtection();
   const debounceTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -24,61 +28,74 @@ export default function SearchBar({ onSearch, placeholder = "Search...", classNa
   }, []);
 
   // Create a debounced search function to prevent rapid API calls
-  const debouncedSearch = useCallback((searchQuery: string) => {
-    // Clear existing timer
-    if (debounceTimerRef.current) {
-      clearTimeout(debounceTimerRef.current);
-    }
-
-    // Set new timer
-    debounceTimerRef.current = setTimeout(() => {
-      // Check if search action is allowed
-      if (!isActionAllowed('search', user?.id)) {
-        console.warn('Search blocked due to rate limiting');
-        return;
+  const debouncedSearch = useCallback(
+    (searchQuery: string) => {
+      // Clear existing timer
+      if (debounceTimerRef.current) {
+        clearTimeout(debounceTimerRef.current);
       }
-      
-      // Record the search action
-      recordUserAction('search', user?.id);
-      
-      // Perform the search
-      onSearch(searchQuery);
-    }, 500);
-  }, [isActionAllowed, recordUserAction, onSearch, user?.id]);
+
+      // Set new timer
+      debounceTimerRef.current = setTimeout(() => {
+        // Check if search action is allowed
+        if (!isActionAllowed("search", user?.id)) {
+          console.warn("Search blocked due to rate limiting");
+          return;
+        }
+
+        // Record the search action
+        recordUserAction("search", user?.id);
+
+        // Perform the search
+        onSearch(searchQuery);
+      }, 500);
+    },
+    [isActionAllowed, recordUserAction, onSearch, user?.id],
+  );
 
   // Handle input changes
-  const handleInputChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-    const newQuery = e.target.value;
-    setQuery(newQuery);
-    
-    // Only search if query has content
-    if (newQuery.trim()) {
-      debouncedSearch(newQuery);
-    } else {
-      // Clear search immediately if query is empty
-      onSearch('');
-    }
-  }, [debouncedSearch, onSearch]);
+  const handleInputChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      const newQuery = e.target.value;
+      setQuery(newQuery);
+
+      // Only search if query has content
+      if (newQuery.trim()) {
+        debouncedSearch(newQuery);
+      } else {
+        // Clear search immediately if query is empty
+        onSearch("");
+      }
+    },
+    [debouncedSearch, onSearch],
+  );
 
   // Handle form submission
-  const handleSubmit = useCallback((e: React.FormEvent) => {
-    e.preventDefault();
-    
-    // Check if search action is allowed
-    if (!isActionAllowed('search_submit', user?.id)) {
-      console.warn('Search submission blocked due to rate limiting');
-      return;
-    }
-    
-    // Record the search submission action
-    recordUserAction('search_submit', user?.id);
-    
-    // Perform immediate search
-    onSearch(query);
-  }, [isActionAllowed, recordUserAction, onSearch, query, user?.id]);
+  const handleSubmit = useCallback(
+    (e: React.FormEvent) => {
+      e.preventDefault();
+
+      // Check if search action is allowed
+      if (!isActionAllowed("search_submit", user?.id)) {
+        console.warn("Search submission blocked due to rate limiting");
+        return;
+      }
+
+      // Record the search submission action
+      recordUserAction("search_submit", user?.id);
+
+      // Perform immediate search
+      onSearch(query);
+    },
+    [isActionAllowed, recordUserAction, onSearch, query, user?.id],
+  );
 
   return (
-    <form onSubmit={handleSubmit} className={`relative ${className} py-2`} data-testid="search-form">
+    <form
+      onSubmit={handleSubmit}
+      className={`relative ${className} py-2`}
+      data-testid="search-form"
+    >
       <input
         type="text"
         value={query}
@@ -98,4 +115,4 @@ export default function SearchBar({ onSearch, placeholder = "Search...", classNa
       </button>
     </form>
   );
-} 
+}

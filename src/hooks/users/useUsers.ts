@@ -18,4 +18,4 @@ export const useUsers = () => {
   });
 
   return { users, isLoading, error };
-}; 
+};

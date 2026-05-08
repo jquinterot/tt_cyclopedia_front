@@ -2,15 +2,24 @@ import { useRef } from "react";
 import { Link } from "react-router-dom";
 import { useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
-import type { Comment } from '@/types/Comment';
-import LoadingSpinner from '@/components/shared/LoadingSpinner/LoadingSpinner';
-import { ErrorCode, ErrorMessages } from '@/enums/ErrorCode';
+import type { Comment } from "@/types/Comment";
+import LoadingSpinner from "@/components/shared/LoadingSpinner/LoadingSpinner";
+import { ErrorCode, ErrorMessages } from "@/enums/ErrorCode";
 
 // Types for hooks and props
 export interface GenericFormCommentSectionProps {
   id: string; // postId or forumId
-  useMainComments: (id: string) => { mainComments: Comment[]; error: unknown; isLoading: boolean };
-  usePostComment: (id: string) => { mutateAsync: (data: { comment: string; parentId?: string }) => Promise<unknown> };
+  useMainComments: (id: string) => {
+    mainComments: Comment[];
+    error: unknown;
+    isLoading: boolean;
+  };
+  usePostComment: (id: string) => {
+    mutateAsync: (data: {
+      comment: string;
+      parentId?: string;
+    }) => Promise<unknown>;
+  };
   isAuthenticated: boolean;
   t: (key: string) => string;
   testIdPrefix?: string;
@@ -73,7 +82,13 @@ function GenericCommentInput({
   );
 }
 
-function GenericCommentsList({ id, comments, t, testIdPrefix = "", CommentsSectionComponent }: {
+function GenericCommentsList({
+  id,
+  comments,
+  t,
+  testIdPrefix = "",
+  CommentsSectionComponent,
+}: {
   id: string;
   comments: Comment[];
   t: (key: string) => string;
@@ -81,8 +96,14 @@ function GenericCommentsList({ id, comments, t, testIdPrefix = "", CommentsSecti
   CommentsSectionComponent: React.ComponentType<{ id: string }>;
 }) {
   return (
-    <div className="space-y-4" data-testid={`${testIdPrefix}comments-list-container`}>
-      <h2 className="text-xl font-semibold" data-testid={`${testIdPrefix}comments-count`}>
+    <div
+      className="space-y-4"
+      data-testid={`${testIdPrefix}comments-list-container`}
+    >
+      <h2
+        className="text-xl font-semibold"
+        data-testid={`${testIdPrefix}comments-count`}
+      >
         {t("comments.title")} ({comments.length})
       </h2>
       <CommentsSectionComponent id={id} />
@@ -91,7 +112,11 @@ function GenericCommentsList({ id, comments, t, testIdPrefix = "", CommentsSecti
 }
 
 function ErrorMessage() {
-  return <div className="text-red-400 text-sm">{ErrorMessages[ErrorCode.SERVER]}</div>;
+  return (
+    <div className="text-red-400 text-sm">
+      {ErrorMessages[ErrorCode.SERVER]}
+    </div>
+  );
 }
 
 export default function GenericFormCommentSection({
@@ -104,7 +129,11 @@ export default function GenericFormCommentSection({
   CommentsSectionComponent,
 }: GenericFormCommentSectionProps) {
   const { mutateAsync: postComment } = usePostComment(id);
-  const { mainComments, error: getCommentError, isLoading: isLoadingComment } = useMainComments(id);
+  const {
+    mainComments,
+    error: getCommentError,
+    isLoading: isLoadingComment,
+  } = useMainComments(id);
   const inputRef = useRef<HTMLInputElement>(null);
   const queryClient = useQueryClient();
 
@@ -140,7 +169,10 @@ export default function GenericFormCommentSection({
   const hasComments = mainComments && mainComments.length > 0;
 
   return (
-    <div className="space-y-6" data-testid={`${testIdPrefix}comment-form-container`}>
+    <div
+      className="space-y-6"
+      data-testid={`${testIdPrefix}comment-form-container`}
+    >
       <GenericCommentInput
         inputRef={inputRef}
         isAuthenticated={isAuthenticated}
@@ -160,4 +192,4 @@ export default function GenericFormCommentSection({
       )}
     </div>
   );
-} 
+}

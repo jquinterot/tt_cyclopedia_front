@@ -14,7 +14,7 @@ describe("StatBar", () => {
             <StatBar label="Speed" value={7.5} color="bg-red-500" />
           </LanguageProvider>
         </BrowserRouter>
-      </QueryClientProvider>
+      </QueryClientProvider>,
     );
     expect(screen.getByText("Speed"));
     expect(screen.getByText("7.5"));
@@ -29,9 +29,9 @@ describe("StatBar", () => {
             <StatBar label="Control" value={8.8} color="bg-blue-500" />
           </LanguageProvider>
         </BrowserRouter>
-      </QueryClientProvider>
+      </QueryClientProvider>,
     );
     const progressBar = screen.getByTestId("statbar-progress");
     expect(progressBar);
   });
-}); 
+});

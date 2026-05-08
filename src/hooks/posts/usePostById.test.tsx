@@ -59,7 +59,9 @@ describe("usePostById", () => {
   });
 
   test("converts likedByCurrentUser to boolean", async () => {
-    mockGet.mockResolvedValueOnce({ data: { ...mockPost, likedByCurrentUser: 1 } });
+    mockGet.mockResolvedValueOnce({
+      data: { ...mockPost, likedByCurrentUser: 1 },
+    });
 
     const { result } = renderHook(() => usePostById("post-1"), { wrapper });
 

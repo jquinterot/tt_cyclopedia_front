@@ -22,7 +22,7 @@ describe("useAuth", () => {
 
   test("throws error when used outside AuthProvider", () => {
     vi.spyOn(console, "error").mockImplementation(() => {});
-    
+
     expect(() => {
       renderHook(() => useAuth());
     }).toThrow("useAuth must be used within an AuthProvider");
@@ -40,7 +40,11 @@ describe("useAuth", () => {
 
   test("login sets authenticated state", () => {
     const { result } = renderHook(() => useAuth(), { wrapper });
-    const mockUser = { id: "1", username: "testuser", email: "test@example.com" };
+    const mockUser = {
+      id: "1",
+      username: "testuser",
+      email: "test@example.com",
+    };
 
     act(() => {
       result.current.login("mock-token", mockUser);
@@ -55,7 +59,11 @@ describe("useAuth", () => {
 
   test("logout clears authenticated state", () => {
     const { result } = renderHook(() => useAuth(), { wrapper });
-    const mockUser = { id: "1", username: "testuser", email: "test@example.com" };
+    const mockUser = {
+      id: "1",
+      username: "testuser",
+      email: "test@example.com",
+    };
 
     act(() => {
       result.current.login("mock-token", mockUser);
@@ -109,7 +117,11 @@ describe("useAuth", () => {
 
   test("handleSessionExpiration clears auth and navigates", () => {
     const { result } = renderHook(() => useAuth(), { wrapper });
-    const mockUser = { id: "1", username: "testuser", email: "test@example.com" };
+    const mockUser = {
+      id: "1",
+      username: "testuser",
+      email: "test@example.com",
+    };
 
     act(() => {
       result.current.login("mock-token", mockUser);

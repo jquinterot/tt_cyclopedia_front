@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
-import HeartIcon from '@/components/shared/HeartIcon/HeartIcon';
-import HeartIconFilled from '@/components/shared/HeartIconFilled/HeartIconFilled';
+import HeartIcon from "@/components/shared/HeartIcon/HeartIcon";
+import HeartIconFilled from "@/components/shared/HeartIconFilled/HeartIconFilled";
 
 export interface NestedComment {
   id: string;
@@ -49,11 +49,18 @@ export const NestedCommentList = ({
   if (!replies.length) return null;
 
   return (
-    <div data-testid="nested-comment-list" className="ml-4 mt-2 space-y-2 border-l-2 border-white/10 pl-4">
+    <div
+      data-testid="nested-comment-list"
+      className="ml-4 mt-2 space-y-2 border-l-2 border-white/10 pl-4"
+    >
       {replies.map((reply) => {
         const isEditing = editingId === reply.id;
         return (
-          <div key={reply.id} className="p-3 rounded bg-white/10 border border-white/10" data-testid={`nested-comment-${reply.id}`}>
+          <div
+            key={reply.id}
+            className="p-3 rounded bg-white/10 border border-white/10"
+            data-testid={`nested-comment-${reply.id}`}
+          >
             <div className="flex items-center justify-between">
               {renderUserInfo(reply.user_id)}
               <div className="flex items-center space-x-2">
@@ -65,11 +72,19 @@ export const NestedCommentList = ({
                   data-testid={`nested-like-button-${reply.id}`}
                 >
                   {reply.liked_by_current_user ? (
-                    <HeartIconFilled className="h-4 w-4 text-blue-600" data-testid={`nested-like-icon-filled-${reply.id}`} />
+                    <HeartIconFilled
+                      className="h-4 w-4 text-blue-600"
+                      data-testid={`nested-like-icon-filled-${reply.id}`}
+                    />
                   ) : (
-                    <HeartIcon className="h-4 w-4 text-blue-400" data-testid={`nested-like-icon-outline-${reply.id}`} />
+                    <HeartIcon
+                      className="h-4 w-4 text-blue-400"
+                      data-testid={`nested-like-icon-outline-${reply.id}`}
+                    />
                   )}
-                  <span className="text-sm text-gray-300">{reply.likes || 0}</span>
+                  <span className="text-sm text-gray-300">
+                    {reply.likes || 0}
+                  </span>
                 </button>
                 <button
                   className="p-1.5 text-sm text-yellow-400 hover:text-yellow-300 hover:bg-white/5 rounded transition-colors"
@@ -135,7 +150,9 @@ export const NestedCommentList = ({
                   </div>
                 </div>
               ) : (
-                <span data-testid={`nested-comment-text-${reply.id}`}>{reply.comment}</span>
+                <span data-testid={`nested-comment-text-${reply.id}`}>
+                  {reply.comment}
+                </span>
               )}
             </div>
           </div>
@@ -143,4 +160,4 @@ export const NestedCommentList = ({
       })}
     </div>
   );
-}; 
+};

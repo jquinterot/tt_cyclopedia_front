@@ -1,12 +1,15 @@
-import { useAuth } from '@/contexts/AuthContext';
+import { useAuth } from "@/contexts/AuthContext";
 
 export default function SessionStatus() {
-  const { user, isAuthenticated, handleSessionExpiration, reloadPage } = useAuth();
+  const { user, isAuthenticated, handleSessionExpiration, reloadPage } =
+    useAuth();
 
   if (!isAuthenticated) {
     return (
       <div className="p-4 bg-red-900/20 border border-red-500/30 rounded-lg">
-        <h3 className="text-lg font-semibold text-red-400 mb-2">Session Status</h3>
+        <h3 className="text-lg font-semibold text-red-400 mb-2">
+          Session Status
+        </h3>
         <p className="text-red-300">Not authenticated</p>
       </div>
     );
@@ -14,7 +17,9 @@ export default function SessionStatus() {
 
   return (
     <div className="p-4 bg-green-900/20 border border-green-500/30 rounded-lg">
-      <h3 className="text-lg font-semibold text-green-400 mb-2">Session Status</h3>
+      <h3 className="text-lg font-semibold text-green-400 mb-2">
+        Session Status
+      </h3>
       <div className="space-y-2">
         <p className="text-green-300">
           <span className="font-medium">User:</span> {user?.username}
@@ -44,4 +49,4 @@ export default function SessionStatus() {
       </div>
     </div>
   );
-} 
+}

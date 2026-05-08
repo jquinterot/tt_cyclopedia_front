@@ -1,66 +1,70 @@
 import { describe, test, expect, vi } from "vitest";
 import { render, screen, fireEvent } from "@testing-library/react";
 import "@testing-library/jest-dom/vitest";
-import SearchBar from './SearchBar';
-import { TestProviders } from '../../../test-utils/TestProviders';
+import SearchBar from "./SearchBar";
+import { TestProviders } from "../../../test-utils/TestProviders";
 
-describe('SearchBar', () => {
+describe("SearchBar", () => {
   const mockOnSearch = vi.fn();
 
   beforeEach(() => {
     mockOnSearch.mockClear();
   });
 
-  test('renders search input with correct placeholder', () => {
+  test("renders search input with correct placeholder", () => {
     render(
       <TestProviders>
         <SearchBar onSearch={mockOnSearch} placeholder="Search..." />
-      </TestProviders>
+      </TestProviders>,
     );
-    expect(screen.getByPlaceholderText('Search...')).toBeInTheDocument();
+    expect(screen.getByPlaceholderText("Search...")).toBeInTheDocument();
   });
 
-  test('renders search button', () => {
+  test("renders search button", () => {
     render(
       <TestProviders>
         <SearchBar onSearch={mockOnSearch} placeholder="Search..." />
-      </TestProviders>
+      </TestProviders>,
     );
-    expect(screen.getByTestId('search-button')).toBeInTheDocument();
+    expect(screen.getByTestId("search-button")).toBeInTheDocument();
   });
 
-  test('calls onSearch when input changes', () => {
+  test("calls onSearch when input changes", () => {
     render(
       <TestProviders>
         <SearchBar onSearch={mockOnSearch} placeholder="Search..." />
-      </TestProviders>
+      </TestProviders>,
     );
-    const input = screen.getByTestId('search-input');
-    fireEvent.change(input, { target: { value: 'test' } });
+    const input = screen.getByTestId("search-input");
+    fireEvent.change(input, { target: { value: "test" } });
     // Wait for debounce
     setTimeout(() => {
-      expect(mockOnSearch).toHaveBeenCalledWith('test');
+      expect(mockOnSearch).toHaveBeenCalledWith("test");
     }, 600);
   });
 
-  test('displays the current value', () => {
+  test("displays the current value", () => {
     render(
       <TestProviders>
         <SearchBar onSearch={mockOnSearch} placeholder="Search..." />
-      </TestProviders>
+      </TestProviders>,
     );
-    const input = screen.getByTestId('search-input');
-    fireEvent.change(input, { target: { value: 'current value' } });
-    expect(input).toHaveValue('current value');
+    const input = screen.getByTestId("search-input");
+    fireEvent.change(input, { target: { value: "current value" } });
+    expect(input).toHaveValue("current value");
   });
 
-  test('applies custom className', () => {
+  test("applies custom className", () => {
     render(
       <TestProviders>
-        <SearchBar onSearch={mockOnSearch} placeholder="Search..." className="custom-class" />
-      </TestProviders>
+        <SearchBar
+          onSearch={mockOnSearch}
+          placeholder="Search..."
+          className="custom-class"
+        />
+      </TestProviders>,
     );
-    const form = screen.getByTestId('search-form');
-    expect(form).toHaveClass('custom-class');
+    const form = screen.getByTestId("search-form");
+    expect(form).toHaveClass("custom-class");
   });
-}); 
+});

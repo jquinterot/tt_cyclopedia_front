@@ -1,4 +1,3 @@
-
 type InputFieldProps = {
   label: string;
   id: string;
@@ -8,10 +7,20 @@ type InputFieldProps = {
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
 };
 
-export default function InputField({ label, id, inputRef, placeholder, value, onChange }: InputFieldProps) {
+export default function InputField({
+  label,
+  id,
+  inputRef,
+  placeholder,
+  value,
+  onChange,
+}: InputFieldProps) {
   return (
     <div>
-      <label className="block text-sm font-medium text-gray-300 mb-1" htmlFor={id}>
+      <label
+        className="block text-sm font-medium text-gray-300 mb-1"
+        htmlFor={id}
+      >
         {label}
       </label>
       <input
@@ -26,4 +35,4 @@ export default function InputField({ label, id, inputRef, placeholder, value, on
       />
     </div>
   );
-} 
+}

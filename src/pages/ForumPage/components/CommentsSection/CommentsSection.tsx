@@ -6,4 +6,4 @@ export default function ForumCommentsSection({ forumId }: { forumId: string }) {
       <ForumCommentTree forumId={forumId} />
     </div>
   );
-} 
+}

@@ -1,23 +1,23 @@
 interface AvatarProps extends React.HTMLAttributes<HTMLDivElement> {
   src?: string;
   alt?: string;
-  size?: 'sm' | 'md' | 'lg';
+  size?: "sm" | "md" | "lg";
   className?: string;
   fallbackIcon?: React.ReactNode;
 }
 
 const Avatar = ({
   src,
-  alt = 'User avatar',
-  size = 'md',
-  className = '',
+  alt = "User avatar",
+  size = "md",
+  className = "",
   fallbackIcon,
   ...rest
 }: AvatarProps) => {
   const sizeClasses = {
-    sm: 'h-6 w-6',
-    md: 'h-8 w-8',
-    lg: 'h-12 w-12'
+    sm: "h-6 w-6",
+    md: "h-8 w-8",
+    lg: "h-12 w-12",
   };
 
   const defaultIcon = (
@@ -58,4 +58,4 @@ const Avatar = ({
   );
 };
 
-export default Avatar; 
+export default Avatar;

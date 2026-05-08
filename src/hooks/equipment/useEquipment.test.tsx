@@ -75,7 +75,9 @@ describe("useEquipment", () => {
   test("fetches equipment with brand filter", async () => {
     mockGet.mockResolvedValueOnce({ data: mockEquipment });
 
-    const { result } = renderHook(() => useEquipment(undefined, "Butterfly"), { wrapper });
+    const { result } = renderHook(() => useEquipment(undefined, "Butterfly"), {
+      wrapper,
+    });
 
     await waitFor(() => expect(result.current.isLoading).toBe(false));
 
@@ -85,7 +87,10 @@ describe("useEquipment", () => {
   test("fetches equipment with search query", async () => {
     mockGet.mockResolvedValueOnce({ data: [mockEquipment[0]] });
 
-    const { result } = renderHook(() => useEquipment(undefined, undefined, "Viscaria"), { wrapper });
+    const { result } = renderHook(
+      () => useEquipment(undefined, undefined, "Viscaria"),
+      { wrapper },
+    );
 
     await waitFor(() => expect(result.current.isLoading).toBe(false));
 

@@ -2,7 +2,10 @@ import { describe, test, expect, vi, beforeEach } from "vitest";
 import { renderHook, waitFor } from "@testing-library/react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { PropsWithChildren } from "react";
-import { useEquipmentRecommend, RecommendRequest } from "./useEquipmentRecommend";
+import {
+  useEquipmentRecommend,
+  RecommendRequest,
+} from "./useEquipmentRecommend";
 
 const mockRecommendation = {
   blade: {
@@ -77,7 +80,10 @@ describe("useEquipmentRecommend", () => {
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
 
-    expect(mockPost).toHaveBeenCalledWith("/equipment/recommend-setup", request);
+    expect(mockPost).toHaveBeenCalledWith(
+      "/equipment/recommend-setup",
+      request,
+    );
     expect(result.current.data).toEqual(mockRecommendation);
   });
 
@@ -110,6 +116,9 @@ describe("useEquipmentRecommend", () => {
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
 
-    expect(mockPost).toHaveBeenCalledWith("/equipment/recommend-setup", request);
+    expect(mockPost).toHaveBeenCalledWith(
+      "/equipment/recommend-setup",
+      request,
+    );
   });
 });

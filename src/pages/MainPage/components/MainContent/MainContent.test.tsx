@@ -39,4 +39,4 @@ describe("MainContent Component", () => {
     renderWithProviders(<MainContent>{customContent}</MainContent>);
     expect(screen.getByTestId("custom-content")).toBeInTheDocument();
   });
-}); 
+});

@@ -1,7 +1,7 @@
-import ForumDetailsSection from './ForumDetailsSection';
+import ForumDetailsSection from "./ForumDetailsSection";
 
-describe('ForumDetailsSection.cy.tsx', () => {
-  it('renders', () => {
+describe("ForumDetailsSection.cy.tsx", () => {
+  it("renders", () => {
     cy.mount(<ForumDetailsSection />);
   });
-}); 
+});

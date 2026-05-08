@@ -1,12 +1,12 @@
 import { useState, useRef, useCallback } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
-import { useDeleteComment } from '@/hooks/comments/useDeleteComment';
-import { usePostComment } from '@/hooks/comments/usePostComments';
-import { useMainComments } from '@/hooks/comments/useMainComments';
-import type { Comment } from '@/types/Comment';
+import { useDeleteComment } from "@/hooks/comments/useDeleteComment";
+import { usePostComment } from "@/hooks/comments/usePostComments";
+import { useMainComments } from "@/hooks/comments/useMainComments";
+import type { Comment } from "@/types/Comment";
 import { CommentItem } from "../CommentItem/CommentItem";
-import { ErrorCode, ErrorMessages } from '@/enums/ErrorCode';
+import { ErrorCode, ErrorMessages } from "@/enums/ErrorCode";
 
 export default function Comments({ postId }: { postId: string }) {
   const queryClient = useQueryClient();
@@ -17,58 +17,80 @@ export default function Comments({ postId }: { postId: string }) {
   const [replyText, setReplyText] = useState<Record<string, string>>({});
   const replyInputRefs = useRef<Record<string, HTMLTextAreaElement | null>>({});
 
-  const handleDeleteComment = useCallback(async (commentId: string) => {
-    queryClient.setQueryData(['mainComments', postId], (old: Comment[] | undefined) =>
-      old ? old.filter(comment => comment.id !== commentId) : []
-    );
-    try {
-      await deleteCommentMutation(commentId);
-      toast.success("Comment deleted successfully");
-      queryClient.invalidateQueries({ queryKey: ["mainComments", postId] });
-    } catch (error) {
-      toast.error(ErrorMessages[ErrorCode.SERVER]);
-      queryClient.invalidateQueries({ queryKey: ["mainComments", postId] });
-    }
-  }, [deleteCommentMutation, postId, queryClient]);
+  const handleDeleteComment = useCallback(
+    async (commentId: string) => {
+      queryClient.setQueryData(
+        ["mainComments", postId],
+        (old: Comment[] | undefined) =>
+          old ? old.filter((comment) => comment.id !== commentId) : [],
+      );
+      try {
+        await deleteCommentMutation(commentId);
+        toast.success("Comment deleted successfully");
+        queryClient.invalidateQueries({ queryKey: ["mainComments", postId] });
+      } catch (error) {
+        toast.error(ErrorMessages[ErrorCode.SERVER]);
+        queryClient.invalidateQueries({ queryKey: ["mainComments", postId] });
+      }
+    },
+    [deleteCommentMutation, postId, queryClient],
+  );
 
-  const handleDeleteReply = useCallback(async (replyId: string, parentId: string) => {
-    queryClient.setQueryData(['repliedComments', postId, parentId], (old: Comment[] | undefined) =>
-      old ? old.filter(reply => reply.id !== replyId) : []
-    );
-    try {
-      await deleteCommentMutation(replyId);
-      toast.success("Reply deleted successfully");
-      queryClient.invalidateQueries({ queryKey: ["repliedComments", postId, parentId] });
-    } catch (error) {
-      toast.error(ErrorMessages[ErrorCode.SERVER]);
-      queryClient.invalidateQueries({ queryKey: ["repliedComments", postId, parentId] });
-    }
-  }, [deleteCommentMutation, postId, queryClient]);
+  const handleDeleteReply = useCallback(
+    async (replyId: string, parentId: string) => {
+      queryClient.setQueryData(
+        ["repliedComments", postId, parentId],
+        (old: Comment[] | undefined) =>
+          old ? old.filter((reply) => reply.id !== replyId) : [],
+      );
+      try {
+        await deleteCommentMutation(replyId);
+        toast.success("Reply deleted successfully");
+        queryClient.invalidateQueries({
+          queryKey: ["repliedComments", postId, parentId],
+        });
+      } catch (error) {
+        toast.error(ErrorMessages[ErrorCode.SERVER]);
+        queryClient.invalidateQueries({
+          queryKey: ["repliedComments", postId, parentId],
+        });
+      }
+    },
+    [deleteCommentMutation, postId, queryClient],
+  );
 
-  const handleReply = useCallback(async (parentId: string) => {
-    const text = replyText[parentId]?.trim() || "";
-    if (!text) {
-      toast.error(ErrorMessages[ErrorCode.REPLY_REQUIRED]);
-      return;
-    }
-    try {
-      await postComment({
-        comment: text,
-        parentId,
-      });
+  const handleReply = useCallback(
+    async (parentId: string) => {
+      const text = replyText[parentId]?.trim() || "";
+      if (!text) {
+        toast.error(ErrorMessages[ErrorCode.REPLY_REQUIRED]);
+        return;
+      }
+      try {
+        await postComment({
+          comment: text,
+          parentId,
+        });
 
-      queryClient.invalidateQueries({ queryKey: ["mainComments", postId] });
-      toast.success("Reply added successfully");
-      setReplyText((prev) => ({ ...prev, [parentId]: "" }));
-      setReplyingTo(null);
-      queryClient.invalidateQueries({ queryKey: ["repliedComments", postId, parentId] });
-    } catch (error) {
-      toast.error(ErrorMessages[ErrorCode.SERVER]);
-    }
-  }, [postComment, postId, replyText, queryClient]);
+        queryClient.invalidateQueries({ queryKey: ["mainComments", postId] });
+        toast.success("Reply added successfully");
+        setReplyText((prev) => ({ ...prev, [parentId]: "" }));
+        setReplyingTo(null);
+        queryClient.invalidateQueries({
+          queryKey: ["repliedComments", postId, parentId],
+        });
+      } catch (error) {
+        toast.error(ErrorMessages[ErrorCode.SERVER]);
+      }
+    },
+    [postComment, postId, replyText, queryClient],
+  );
 
   if (isLoading) return <div>Loading comments...</div>;
-  if (error) return <div className="text-red-400">{ErrorMessages[ErrorCode.SERVER]}</div>;
+  if (error)
+    return (
+      <div className="text-red-400">{ErrorMessages[ErrorCode.SERVER]}</div>
+    );
 
   return (
     <div className="space-y-4" data-testid="comments-list">
@@ -78,7 +100,9 @@ export default function Comments({ postId }: { postId: string }) {
           comment={mainComment}
           replyingTo={replyingTo}
           replyText={replyText[mainComment.id] || ""}
-          setReplyText={(text) => setReplyText((prev) => ({ ...prev, [mainComment.id]: text }))}
+          setReplyText={(text) =>
+            setReplyText((prev) => ({ ...prev, [mainComment.id]: text }))
+          }
           setReplyingTo={setReplyingTo}
           setReplyInputRef={(el) => {
             replyInputRefs.current[mainComment.id] = el;

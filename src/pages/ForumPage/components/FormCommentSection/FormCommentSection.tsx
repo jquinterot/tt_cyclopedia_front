@@ -1,9 +1,9 @@
-import { useLanguage } from '@/contexts/LanguageContext.utils';
-import { useAuth } from '@/contexts/AuthContext';
-import GenericFormCommentSection from '@/components/shared/GenericFormCommentSection/GenericFormCommentSection';
-import { useForumComments } from '@/hooks/forums/useForumComments';
-import { usePostForumComment } from '@/hooks/forums/usePostForumComment';
-import CommentsSection from '../CommentsSection/CommentsSection';
+import { useLanguage } from "@/contexts/LanguageContext.utils";
+import { useAuth } from "@/contexts/AuthContext";
+import GenericFormCommentSection from "@/components/shared/GenericFormCommentSection/GenericFormCommentSection";
+import { useForumComments } from "@/hooks/forums/useForumComments";
+import { usePostForumComment } from "@/hooks/forums/usePostForumComment";
+import CommentsSection from "../CommentsSection/CommentsSection";
 
 export default function FormForumComment({ forumId }: { forumId: string }) {
   const { isAuthenticated } = useAuth();
@@ -19,4 +19,4 @@ export default function FormForumComment({ forumId }: { forumId: string }) {
       CommentsSectionComponent={({ id }) => <CommentsSection forumId={id} />}
     />
   );
-} 
+}

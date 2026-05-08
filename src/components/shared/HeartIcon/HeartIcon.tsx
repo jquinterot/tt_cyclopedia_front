@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 
 interface HeartIconProps extends React.SVGProps<SVGSVGElement> {}
 
@@ -20,4 +20,4 @@ const HeartIcon = (props: HeartIconProps) => (
   </svg>
 );
 
-export default HeartIcon; 
+export default HeartIcon;

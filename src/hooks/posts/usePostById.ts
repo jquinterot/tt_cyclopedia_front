@@ -10,7 +10,7 @@ export const usePostById = (postId: string) => {
     const response = await apiClient.get<Post>(`/posts/${postId}`);
     return {
       ...response.data,
-      likedByCurrentUser: Boolean(response.data.likedByCurrentUser)
+      likedByCurrentUser: Boolean(response.data.likedByCurrentUser),
     };
   };
 

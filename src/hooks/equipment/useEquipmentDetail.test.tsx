@@ -48,7 +48,9 @@ describe("useEquipmentDetail", () => {
   test("fetches equipment detail by id", async () => {
     mockGet.mockResolvedValueOnce({ data: mockEquipmentDetail });
 
-    const { result } = renderHook(() => useEquipmentDetail("eq-1"), { wrapper });
+    const { result } = renderHook(() => useEquipmentDetail("eq-1"), {
+      wrapper,
+    });
 
     await waitFor(() => expect(result.current.isLoading).toBe(false));
 
@@ -66,7 +68,9 @@ describe("useEquipmentDetail", () => {
   test("handles error state", async () => {
     mockGet.mockRejectedValueOnce(new Error("Network error"));
 
-    const { result } = renderHook(() => useEquipmentDetail("eq-1"), { wrapper });
+    const { result } = renderHook(() => useEquipmentDetail("eq-1"), {
+      wrapper,
+    });
 
     await waitFor(() => expect(result.current.isLoading).toBe(false));
 
@@ -77,7 +81,9 @@ describe("useEquipmentDetail", () => {
   test("returns undefined when equipment not found", async () => {
     mockGet.mockResolvedValueOnce({ data: null });
 
-    const { result } = renderHook(() => useEquipmentDetail("eq-999"), { wrapper });
+    const { result } = renderHook(() => useEquipmentDetail("eq-999"), {
+      wrapper,
+    });
 
     await waitFor(() => expect(result.current.isLoading).toBe(false));
 

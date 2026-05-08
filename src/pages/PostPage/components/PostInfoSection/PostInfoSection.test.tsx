@@ -12,7 +12,7 @@ vi.mock("@/config/apiClient", () => ({
     post: vi.fn(),
     delete: vi.fn(),
   },
-  SESSION_EXPIRED_EVENT: 'session-expired',
+  SESSION_EXPIRED_EVENT: "session-expired",
 }));
 
 // Mock sonner
@@ -38,12 +38,10 @@ const renderWithProviders = (component: React.ReactElement) => {
     <QueryClientProvider client={queryClient}>
       <BrowserRouter>
         <LanguageProvider>
-          <AuthProvider>
-            {component}
-          </AuthProvider>
+          <AuthProvider>{component}</AuthProvider>
         </LanguageProvider>
       </BrowserRouter>
-    </QueryClientProvider>
+    </QueryClientProvider>,
   );
 };
 
@@ -60,23 +58,27 @@ describe("PostInfoSection", () => {
   test("renders outline heart icon when not liked", () => {
     renderWithProviders(<PostInfoSection post={mockPostData} />);
     expect(screen.getByTestId("post-like-icon-outline")).toBeInTheDocument();
-    expect(screen.queryByTestId("post-like-icon-filled")).not.toBeInTheDocument();
+    expect(
+      screen.queryByTestId("post-like-icon-filled"),
+    ).not.toBeInTheDocument();
   });
 
   test("renders filled heart icon when liked", () => {
     const likedPost = { ...mockPostData, likedByCurrentUser: true };
     renderWithProviders(<PostInfoSection post={likedPost} />);
     expect(screen.getByTestId("post-like-icon-filled")).toBeInTheDocument();
-    expect(screen.queryByTestId("post-like-icon-outline")).not.toBeInTheDocument();
+    expect(
+      screen.queryByTestId("post-like-icon-outline"),
+    ).not.toBeInTheDocument();
   });
 
   test("shows login toast when unauthenticated user tries to like", async () => {
     const { toast } = vi.mocked(await import("sonner"));
     renderWithProviders(<PostInfoSection post={mockPostData} />);
-    
+
     const likeButton = screen.getByRole("button");
     fireEvent.click(likeButton);
-    
+
     expect(toast).toHaveBeenCalledWith("Please login to like!", {
       icon: "⚠️",
       id: "login-to-like",
@@ -111,8 +113,13 @@ describe("PostInfoSection", () => {
   test("button has correct styling and attributes", () => {
     renderWithProviders(<PostInfoSection post={mockPostData} />);
     const likeButton = screen.getByRole("button");
-    
-    expect(likeButton).toHaveClass("flex", "items-center", "gap-2", "focus:outline-none");
+
+    expect(likeButton).toHaveClass(
+      "flex",
+      "items-center",
+      "gap-2",
+      "focus:outline-none",
+    );
     expect(likeButton).toHaveStyle("cursor: pointer");
     expect(likeButton).toHaveStyle("background: none");
     expect(likeButton).toHaveStyle("padding: 0");
@@ -127,7 +134,12 @@ describe("PostInfoSection", () => {
             className="relative flex items-center gap-2 focus:outline-none group"
             disabled={true}
             aria-pressed={post.likedByCurrentUser}
-            style={{ cursor: 'not-allowed', background: 'none', border: 'none', padding: 0 }}
+            style={{
+              cursor: "not-allowed",
+              background: "none",
+              border: "none",
+              padding: 0,
+            }}
           >
             {post.likedByCurrentUser ? (
               <div data-testid="like-icon-filled">❤️</div>
@@ -149,18 +161,18 @@ describe("PostInfoSection", () => {
   test("prevents default behavior when unauthenticated user clicks", async () => {
     const { toast } = vi.mocked(await import("sonner"));
     renderWithProviders(<PostInfoSection post={mockPostData} />);
-    
+
     const likeButton = screen.getByRole("button");
     const mockPreventDefault = vi.fn();
     const mockBlur = vi.fn();
-    
-    Object.defineProperty(likeButton, 'blur', {
+
+    Object.defineProperty(likeButton, "blur", {
       value: mockBlur,
-      writable: true
+      writable: true,
     });
-    
+
     fireEvent.click(likeButton, { preventDefault: mockPreventDefault });
-    
+
     expect(toast).toHaveBeenCalled();
     expect(mockBlur).toHaveBeenCalled();
   });
@@ -174,15 +186,25 @@ describe("PostInfoSection", () => {
   test("renders heart icons with correct styling", () => {
     renderWithProviders(<PostInfoSection post={mockPostData} />);
     const outlineIcon = screen.getByTestId("post-like-icon-outline");
-    
-    expect(outlineIcon).toHaveClass("w-7", "h-7", "text-blue-400", "transition-colors");
+
+    expect(outlineIcon).toHaveClass(
+      "w-7",
+      "h-7",
+      "text-blue-400",
+      "transition-colors",
+    );
   });
 
   test("renders filled heart icon with correct styling when liked", () => {
     const likedPost = { ...mockPostData, likedByCurrentUser: true };
     renderWithProviders(<PostInfoSection post={likedPost} />);
     const filledIcon = screen.getByTestId("post-like-icon-filled");
-    
-    expect(filledIcon).toHaveClass("w-7", "h-7", "text-blue-600", "transition-colors");
+
+    expect(filledIcon).toHaveClass(
+      "w-7",
+      "h-7",
+      "text-blue-600",
+      "transition-colors",
+    );
   });
 });

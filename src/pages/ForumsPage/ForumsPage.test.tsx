@@ -43,17 +43,15 @@ const queryClient = new QueryClient({
 });
 const renderForumsPage = () => {
   return render(
-
-      <QueryClientProvider client={queryClient}>
-        <BrowserRouter>
-          <LanguageProvider>
-            <AuthProvider>
-              <ForumsPage />
-            </AuthProvider>
-          </LanguageProvider>
-        </BrowserRouter>
-      </QueryClientProvider>
-
+    <QueryClientProvider client={queryClient}>
+      <BrowserRouter>
+        <LanguageProvider>
+          <AuthProvider>
+            <ForumsPage />
+          </AuthProvider>
+        </LanguageProvider>
+      </BrowserRouter>
+    </QueryClientProvider>,
   );
 };
 
@@ -81,7 +79,9 @@ describe("ForumsPage", () => {
 
   test("shows forum title in card", () => {
     renderForumsPage();
-    expect(screen.getByTestId("forum-card-title-1")).toHaveTextContent("Test Forum");
+    expect(screen.getByTestId("forum-card-title-1")).toHaveTextContent(
+      "Test Forum",
+    );
   });
 
   test("shows forum content preview in card", () => {
@@ -97,11 +97,15 @@ describe("ForumsPage", () => {
 
   test("shows filled heart for liked forum", () => {
     renderForumsPage();
-    expect(screen.getByTestId("forum-card-like-icon-filled-2")).toBeInTheDocument();
+    expect(
+      screen.getByTestId("forum-card-like-icon-filled-2"),
+    ).toBeInTheDocument();
   });
 
   test("shows outline heart for unliked forum", () => {
     renderForumsPage();
-    expect(screen.getByTestId("forum-card-like-icon-outline-1")).toBeInTheDocument();
+    expect(
+      screen.getByTestId("forum-card-like-icon-outline-1"),
+    ).toBeInTheDocument();
   });
 });

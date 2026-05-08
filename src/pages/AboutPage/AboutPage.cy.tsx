@@ -5,4 +5,4 @@ describe("<AboutPage />", () => {
     cy.mount(<AboutPage />);
     cy.get("[data-testid='about-page']").should("exist");
   });
-}); 
+});

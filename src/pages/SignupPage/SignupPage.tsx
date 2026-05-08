@@ -2,22 +2,22 @@ import { useState, useEffect, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useCreateUser } from "@/hooks/users";
 import { CreateUser } from "@/types/User";
-import SEOHead from '@/components/SEO/SEOHead';
-import { 
-  validatePassword, 
-  validateUsername, 
-  validatePasswordMatch, 
+import SEOHead from "@/components/SEO/SEOHead";
+import {
+  validatePassword,
+  validateUsername,
+  validatePasswordMatch,
   validateEmail,
   sanitizeInput,
   RateLimiter,
   generateCSRFToken,
   validateCSRFToken,
   PasswordValidationResult,
-  InputValidationResult
+  InputValidationResult,
 } from "@/utils/security";
 import PasswordStrength from "@/components/PasswordStrength/PasswordStrength";
 import { toast } from "sonner";
-import { ErrorCode, ErrorMessages } from '@/enums/ErrorCode';
+import { ErrorCode, ErrorMessages } from "@/enums/ErrorCode";
 
 // Initialize rate limiter
 const rateLimiter = new RateLimiter(5, 15 * 60 * 1000); // 5 attempts per 15 minutes
@@ -42,7 +42,7 @@ export default function SignupPage() {
   const [validation, setValidation] = useState<ValidationState>({
     username: { isValid: true, errors: [] },
     email: { isValid: true, errors: [] },
-    password: { isValid: true, errors: [], strength: 'weak' },
+    password: { isValid: true, errors: [], strength: "weak" },
     confirmPassword: { isValid: true, errors: [] },
   });
   const [showPasswordDetails, setShowPasswordDetails] = useState(false);
@@ -54,14 +54,17 @@ export default function SignupPage() {
     const token = generateCSRFToken();
     setCsrfToken(token);
     // Store token in sessionStorage for validation
-    sessionStorage.setItem('csrfToken', token);
+    sessionStorage.setItem("csrfToken", token);
   }, []);
 
   const validateForm = () => {
     const usernameValidation = validateUsername(formData.username);
     const emailValidation = validateEmail(formData.email);
     const passwordValidation = validatePassword(formData.password);
-    const confirmPasswordValidation = validatePasswordMatch(formData.password, formData.confirmPassword);
+    const confirmPasswordValidation = validatePasswordMatch(
+      formData.password,
+      formData.confirmPassword,
+    );
 
     setValidation({
       username: usernameValidation,
@@ -70,49 +73,66 @@ export default function SignupPage() {
       confirmPassword: confirmPasswordValidation,
     });
 
-    return usernameValidation.isValid && emailValidation.isValid && passwordValidation.isValid && confirmPasswordValidation.isValid;
+    return (
+      usernameValidation.isValid &&
+      emailValidation.isValid &&
+      passwordValidation.isValid &&
+      confirmPasswordValidation.isValid
+    );
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     const sanitizedValue = sanitizeInput(value);
-    
+
     setFormData((prev) => ({ ...prev, [name]: sanitizedValue }));
 
     // Real-time validation
-    if (name === 'username') {
+    if (name === "username") {
       const usernameValidation = validateUsername(sanitizedValue);
-      setValidation(prev => ({ ...prev, username: usernameValidation }));
-    } else if (name === 'email') {
+      setValidation((prev) => ({ ...prev, username: usernameValidation }));
+    } else if (name === "email") {
       const emailValidation = validateEmail(sanitizedValue);
-      setValidation(prev => ({ ...prev, email: emailValidation }));
-    } else if (name === 'password') {
+      setValidation((prev) => ({ ...prev, email: emailValidation }));
+    } else if (name === "password") {
       const passwordValidation = validatePassword(sanitizedValue);
-      setValidation(prev => ({ ...prev, password: passwordValidation }));
-      
+      setValidation((prev) => ({ ...prev, password: passwordValidation }));
+
       // Validate confirm password if it exists
       if (formData.confirmPassword) {
-        const confirmPasswordValidation = validatePasswordMatch(sanitizedValue, formData.confirmPassword);
-        setValidation(prev => ({ ...prev, confirmPassword: confirmPasswordValidation }));
+        const confirmPasswordValidation = validatePasswordMatch(
+          sanitizedValue,
+          formData.confirmPassword,
+        );
+        setValidation((prev) => ({
+          ...prev,
+          confirmPassword: confirmPasswordValidation,
+        }));
       }
-    } else if (name === 'confirmPassword') {
-      const confirmPasswordValidation = validatePasswordMatch(formData.password, sanitizedValue);
-      setValidation(prev => ({ ...prev, confirmPassword: confirmPasswordValidation }));
+    } else if (name === "confirmPassword") {
+      const confirmPasswordValidation = validatePasswordMatch(
+        formData.password,
+        sanitizedValue,
+      );
+      setValidation((prev) => ({
+        ...prev,
+        confirmPassword: confirmPasswordValidation,
+      }));
     }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     // Validate CSRF token
-    const storedToken = sessionStorage.getItem('csrfToken');
-    if (!validateCSRFToken(csrfToken, storedToken || '')) {
+    const storedToken = sessionStorage.getItem("csrfToken");
+    if (!validateCSRFToken(csrfToken, storedToken || "")) {
       toast.error(ErrorMessages[ErrorCode.CSRF]);
       return;
     }
 
     // Check rate limiting
-    const clientId = 'signup-form';
+    const clientId = "signup-form";
     if (!rateLimiter.isAllowed(clientId)) {
       toast.error(ErrorMessages[ErrorCode.RATE_LIMIT]);
       return;
@@ -135,86 +155,102 @@ export default function SignupPage() {
       await createUserMutation.mutateAsync(userData);
       // Reset rate limiter on successful signup
       rateLimiter.reset(clientId);
-      toast.success('Account created successfully! Welcome to TT Cyclopedia!');
+      toast.success("Account created successfully! Welcome to TT Cyclopedia!");
       // Redirect to login page
       setTimeout(() => {
-        navigate('/login');
+        navigate("/login");
       }, 1500);
     } catch (error: unknown) {
       // Enhanced error handling for user already exists
-      if (error && typeof error === 'object' && 'response' in error) {
-        const errorResponse = error as { 
-          response?: { 
-            status?: number; 
-            data?: { 
-              detail?: string; 
+      if (error && typeof error === "object" && "response" in error) {
+        const errorResponse = error as {
+          response?: {
+            status?: number;
+            data?: {
+              detail?: string;
               message?: string;
               errors?: Record<string, string[]>;
               username?: string[];
               email?: string[];
-            } 
-          } 
+            };
+          };
         };
-        
+
         const status = errorResponse.response?.status;
         const errorData = errorResponse.response?.data;
-        
+
         if (status === 400 || status === 409) {
           // Handle user already exists errors
           let hasFieldErrors = false;
-          
+
           // Check for field-specific errors from backend
-          if (errorData?.errors?.username && errorData.errors.username.length > 0) {
-            setValidation(prev => ({
+          if (
+            errorData?.errors?.username &&
+            errorData.errors.username.length > 0
+          ) {
+            setValidation((prev) => ({
               ...prev,
               username: {
                 isValid: false,
-                errors: errorData.errors!.username!.filter((err): err is string => typeof err === 'string')
-              }
+                errors: errorData.errors!.username!.filter(
+                  (err): err is string => typeof err === "string",
+                ),
+              },
             }));
             hasFieldErrors = true;
           }
-          
+
           if (errorData?.errors?.email && errorData.errors.email.length > 0) {
-            setValidation(prev => ({
+            setValidation((prev) => ({
               ...prev,
               email: {
                 isValid: false,
-                errors: errorData.errors!.email!.filter((err): err is string => typeof err === 'string')
-              }
+                errors: errorData.errors!.email!.filter(
+                  (err): err is string => typeof err === "string",
+                ),
+              },
             }));
             hasFieldErrors = true;
           }
-          
+
           // Check for direct field arrays (common backend pattern)
           if (errorData?.username && errorData.username.length > 0) {
-            setValidation(prev => ({
+            setValidation((prev) => ({
               ...prev,
               username: {
                 isValid: false,
-                errors: errorData.username!.filter((err): err is string => typeof err === 'string')
-              }
+                errors: errorData.username!.filter(
+                  (err): err is string => typeof err === "string",
+                ),
+              },
             }));
             hasFieldErrors = true;
           }
-          
+
           if (errorData?.email && errorData.email.length > 0) {
-            setValidation(prev => ({
+            setValidation((prev) => ({
               ...prev,
               email: {
                 isValid: false,
-                errors: errorData.email!.filter((err): err is string => typeof err === 'string')
-              }
+                errors: errorData.email!.filter(
+                  (err): err is string => typeof err === "string",
+                ),
+              },
             }));
             hasFieldErrors = true;
           }
-          
+
           // Show appropriate error message
           if (hasFieldErrors) {
             // More specific notification based on which fields have errors
-            const usernameError = (errorData?.errors?.username && errorData.errors.username.length > 0) || (errorData?.username && errorData.username.length > 0);
-            const emailError = (errorData?.errors?.email && errorData.errors.email.length > 0) || (errorData?.email && errorData.email.length > 0);
-            
+            const usernameError =
+              (errorData?.errors?.username &&
+                errorData.errors.username.length > 0) ||
+              (errorData?.username && errorData.username.length > 0);
+            const emailError =
+              (errorData?.errors?.email && errorData.errors.email.length > 0) ||
+              (errorData?.email && errorData.email.length > 0);
+
             if (usernameError && emailError) {
               toast.error(ErrorMessages[ErrorCode.DUPLICATE_BOTH]);
             } else if (usernameError) {
@@ -249,15 +285,16 @@ export default function SignupPage() {
   };
 
   const getInputErrorClass = (fieldName: keyof ValidationState) => {
-    return validation[fieldName].errors.length > 0 
-      ? 'border-red-500 focus:ring-red-500' 
-      : 'border-white/10 focus:ring-blue-500';
+    return validation[fieldName].errors.length > 0
+      ? "border-red-500 focus:ring-red-500"
+      : "border-white/10 focus:ring-blue-500";
   };
 
   const getInputSuccessClass = (fieldName: keyof ValidationState) => {
-    return validation[fieldName].isValid && formData[fieldName as keyof typeof formData] 
-      ? 'border-green-500 focus:ring-green-500' 
-      : '';
+    return validation[fieldName].isValid &&
+      formData[fieldName as keyof typeof formData]
+      ? "border-green-500 focus:ring-green-500"
+      : "";
   };
 
   return (
@@ -267,172 +304,207 @@ export default function SignupPage() {
         description="Join the TT Cyclopedia community. Create your account to share table tennis equipment reviews, posts, and participate in forum discussions."
         noindex
       />
-      <div className="min-h-screen flex flex-col items-center justify-center font-sans text-white py-12 px-4" data-testid="signup-page">
-      <div className="w-full max-w-[480px]">
-        <div className="text-center mb-8" data-testid="signup-header">
-          <h1 className="text-3xl font-bold">Create Account</h1>
-          <p className="mt-3 text-sm text-gray-300">
-            Join TT Cyclopedia community
-          </p>
-        </div>
+      <div
+        className="min-h-screen flex flex-col items-center justify-center font-sans text-white py-12 px-4"
+        data-testid="signup-page"
+      >
+        <div className="w-full max-w-[480px]">
+          <div className="text-center mb-8" data-testid="signup-header">
+            <h1 className="text-3xl font-bold">Create Account</h1>
+            <p className="mt-3 text-sm text-gray-300">
+              Join TT Cyclopedia community
+            </p>
+          </div>
 
-        <div className="bg-white/10 backdrop-blur-sm rounded-xl p-8 border border-white/10 flex flex-col w-full">
-          <form ref={formRef} onSubmit={handleSubmit} className="flex-1 flex flex-col w-full" data-testid="signup-form">
-            {/* Hidden CSRF token */}
-            <input type="hidden" name="csrfToken" value={csrfToken} />
-            
-            {/* Fixed form fields - no dynamic height changes */}
-            <div className="flex-1 space-y-6 w-full">
-              <div className="w-full">
-                <label className="block text-sm font-medium text-gray-300 mb-1" htmlFor="username">
-                  Username
-                </label>
-                <div className="mt-1 w-full">
-                  <input
-                    id="username"
-                    name="username"
-                    value={formData.username}
-                    onChange={handleChange}
-                    data-testid="signup-username-input"
-                    className={`w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:border-transparent transition-colors ${getInputErrorClass('username')} ${getInputSuccessClass('username')}`}
-                    type="text"
-                    placeholder="Enter username"
-                    required
-                    minLength={3}
-                    maxLength={30}
-                  />
-                </div>
-                {validation.username.errors.length > 0 && (
-                  <div className="mt-1">
-                    {validation.username.errors.map((error, index) => (
-                      <p key={`username-error-${index}`} className="text-sm text-red-400">
-                        {error}
-                      </p>
-                    ))}
-                  </div>
-                )}
-              </div>
-              <div className="w-full">
-                <label className="block text-sm font-medium text-gray-300 mb-1" htmlFor="email">
-                  Email
-                </label>
-                <div className="mt-1 w-full">
-                  <input
-                    id="email"
-                    name="email"
-                    value={formData.email}
-                    onChange={handleChange}
-                    data-testid="signup-email-input"
-                    className={`w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:border-transparent transition-colors ${getInputErrorClass('email')} ${getInputSuccessClass('email')}`}
-                    type="email"
-                    placeholder="Enter email"
-                    required
-                    maxLength={255}
-                  />
-                </div>
-                {validation.email.errors.length > 0 && (
-                  <div className="mt-1">
-                    {validation.email.errors.map((error, index) => (
-                      <p key={`email-error-${index}`} className="text-sm text-red-400">
-                        {error}
-                      </p>
-                    ))}
-                  </div>
-                )}
-              </div>
-              <div className="w-full">
-                <label className="block text-sm font-medium text-gray-300 mb-1" htmlFor="password">
-                  Password
-                </label>
-                <div className="mt-1 w-full">
-                  <input
-                    id="password"
-                    name="password"
-                    value={formData.password}
-                    onChange={handleChange}
-                    onFocus={() => setShowPasswordDetails(true)}
-                    onBlur={() => setShowPasswordDetails(false)}
-                    data-testid="signup-password-input"
-                    className={`w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:border-transparent transition-colors ${getInputErrorClass('password')} ${getInputSuccessClass('password')}`}
-                    type="password"
-                    placeholder="Enter password"
-                    required
-                    minLength={8}
-                    maxLength={128}
-                  />
-                </div>
-                {validation.password.errors.length > 0 && (
-                  <div className="mt-1">
-                    {validation.password.errors.map((error, index) => (
-                      <p key={`password-error-${index}`} className="text-sm text-red-400">
-                        {error}
-                      </p>
-                    ))}
-                  </div>
-                )}
-                <div className="mt-2 w-full">
-                  <PasswordStrength 
-                    validation={validation.password} 
-                    showDetails={showPasswordDetails || validation.password.errors.length > 0}
-                  />
-                </div>
-              </div>
-              <div className="w-full">
-                <label className="block text-sm font-medium text-gray-300 mb-1" htmlFor="confirmPassword">
-                  Confirm Password
-                </label>
-                <div className="mt-1 w-full">
-                  <input
-                    id="confirmPassword"
-                    name="confirmPassword"
-                    value={formData.confirmPassword}
-                    onChange={handleChange}
-                    data-testid="signup-confirm-password-input"
-                    className={`w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:border-transparent transition-colors ${getInputErrorClass('confirmPassword')} ${getInputSuccessClass('confirmPassword')}`}
-                    type="password"
-                    placeholder="Confirm password"
-                    required
-                  />
-                </div>
-                {validation.confirmPassword.errors.length > 0 && (
-                  <div className="mt-1">
-                    {validation.confirmPassword.errors.map((error, index) => (
-                      <p key={`confirmPassword-error-${index}`} className="text-sm text-red-400">
-                        {error}
-                      </p>
-                    ))}
-                  </div>
-                )}
-              </div>
-            </div>
+          <div className="bg-white/10 backdrop-blur-sm rounded-xl p-8 border border-white/10 flex flex-col w-full">
+            <form
+              ref={formRef}
+              onSubmit={handleSubmit}
+              className="flex-1 flex flex-col w-full"
+              data-testid="signup-form"
+            >
+              {/* Hidden CSRF token */}
+              <input type="hidden" name="csrfToken" value={csrfToken} />
 
+              {/* Fixed form fields - no dynamic height changes */}
+              <div className="flex-1 space-y-6 w-full">
+                <div className="w-full">
+                  <label
+                    className="block text-sm font-medium text-gray-300 mb-1"
+                    htmlFor="username"
+                  >
+                    Username
+                  </label>
+                  <div className="mt-1 w-full">
+                    <input
+                      id="username"
+                      name="username"
+                      value={formData.username}
+                      onChange={handleChange}
+                      data-testid="signup-username-input"
+                      className={`w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:border-transparent transition-colors ${getInputErrorClass("username")} ${getInputSuccessClass("username")}`}
+                      type="text"
+                      placeholder="Enter username"
+                      required
+                      minLength={3}
+                      maxLength={30}
+                    />
+                  </div>
+                  {validation.username.errors.length > 0 && (
+                    <div className="mt-1">
+                      {validation.username.errors.map((error, index) => (
+                        <p
+                          key={`username-error-${index}`}
+                          className="text-sm text-red-400"
+                        >
+                          {error}
+                        </p>
+                      ))}
+                    </div>
+                  )}
+                </div>
+                <div className="w-full">
+                  <label
+                    className="block text-sm font-medium text-gray-300 mb-1"
+                    htmlFor="email"
+                  >
+                    Email
+                  </label>
+                  <div className="mt-1 w-full">
+                    <input
+                      id="email"
+                      name="email"
+                      value={formData.email}
+                      onChange={handleChange}
+                      data-testid="signup-email-input"
+                      className={`w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:border-transparent transition-colors ${getInputErrorClass("email")} ${getInputSuccessClass("email")}`}
+                      type="email"
+                      placeholder="Enter email"
+                      required
+                      maxLength={255}
+                    />
+                  </div>
+                  {validation.email.errors.length > 0 && (
+                    <div className="mt-1">
+                      {validation.email.errors.map((error, index) => (
+                        <p
+                          key={`email-error-${index}`}
+                          className="text-sm text-red-400"
+                        >
+                          {error}
+                        </p>
+                      ))}
+                    </div>
+                  )}
+                </div>
+                <div className="w-full">
+                  <label
+                    className="block text-sm font-medium text-gray-300 mb-1"
+                    htmlFor="password"
+                  >
+                    Password
+                  </label>
+                  <div className="mt-1 w-full">
+                    <input
+                      id="password"
+                      name="password"
+                      value={formData.password}
+                      onChange={handleChange}
+                      onFocus={() => setShowPasswordDetails(true)}
+                      onBlur={() => setShowPasswordDetails(false)}
+                      data-testid="signup-password-input"
+                      className={`w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:border-transparent transition-colors ${getInputErrorClass("password")} ${getInputSuccessClass("password")}`}
+                      type="password"
+                      placeholder="Enter password"
+                      required
+                      minLength={8}
+                      maxLength={128}
+                    />
+                  </div>
+                  {validation.password.errors.length > 0 && (
+                    <div className="mt-1">
+                      {validation.password.errors.map((error, index) => (
+                        <p
+                          key={`password-error-${index}`}
+                          className="text-sm text-red-400"
+                        >
+                          {error}
+                        </p>
+                      ))}
+                    </div>
+                  )}
+                  <div className="mt-2 w-full">
+                    <PasswordStrength
+                      validation={validation.password}
+                      showDetails={
+                        showPasswordDetails ||
+                        validation.password.errors.length > 0
+                      }
+                    />
+                  </div>
+                </div>
+                <div className="w-full">
+                  <label
+                    className="block text-sm font-medium text-gray-300 mb-1"
+                    htmlFor="confirmPassword"
+                  >
+                    Confirm Password
+                  </label>
+                  <div className="mt-1 w-full">
+                    <input
+                      id="confirmPassword"
+                      name="confirmPassword"
+                      value={formData.confirmPassword}
+                      onChange={handleChange}
+                      data-testid="signup-confirm-password-input"
+                      className={`w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:border-transparent transition-colors ${getInputErrorClass("confirmPassword")} ${getInputSuccessClass("confirmPassword")}`}
+                      type="password"
+                      placeholder="Confirm password"
+                      required
+                    />
+                  </div>
+                  {validation.confirmPassword.errors.length > 0 && (
+                    <div className="mt-1">
+                      {validation.confirmPassword.errors.map((error, index) => (
+                        <p
+                          key={`confirmPassword-error-${index}`}
+                          className="text-sm text-red-400"
+                        >
+                          {error}
+                        </p>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              </div>
 
-
-            {/* Fixed bottom section */}
-            <div className="flex-shrink-0 mt-4 w-full">
-              <button
-                type="submit"
-                disabled={isSubmitting || createUserMutation.isPending}
-                data-testid="signup-submit"
-                className="w-full px-4 py-2 bg-blue-600 border border-transparent rounded-md text-sm font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-              >
-                {isSubmitting || createUserMutation.isPending ? 'Creating Account...' : 'Create Account'}
-              </button>
-              
-              <div className="text-center mt-4 w-full">
-                <Link
-                  to="/login"
-                  data-testid="login-link"
-                  className="text-sm text-blue-400 hover:text-blue-300 transition-colors"
+              {/* Fixed bottom section */}
+              <div className="flex-shrink-0 mt-4 w-full">
+                <button
+                  type="submit"
+                  disabled={isSubmitting || createUserMutation.isPending}
+                  data-testid="signup-submit"
+                  className="w-full px-4 py-2 bg-blue-600 border border-transparent rounded-md text-sm font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                 >
-                  Already have an account? Sign in
-                </Link>
+                  {isSubmitting || createUserMutation.isPending
+                    ? "Creating Account..."
+                    : "Create Account"}
+                </button>
+
+                <div className="text-center mt-4 w-full">
+                  <Link
+                    to="/login"
+                    data-testid="login-link"
+                    className="text-sm text-blue-400 hover:text-blue-300 transition-colors"
+                  >
+                    Already have an account? Sign in
+                  </Link>
+                </div>
               </div>
-            </div>
-          </form>
+            </form>
+          </div>
         </div>
       </div>
-    </div>
     </>
   );
-} 
+}

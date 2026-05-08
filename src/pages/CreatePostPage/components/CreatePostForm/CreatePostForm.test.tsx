@@ -21,7 +21,12 @@ vi.mock("@/hooks/equipment", () => ({
   useEquipment: () => ({
     equipment: [
       { id: "eq-1", name: "Viscaria", brand: "Butterfly", category: "blade" },
-      { id: "eq-2", name: "Tenergy 05", brand: "Butterfly", category: "rubber" },
+      {
+        id: "eq-2",
+        name: "Tenergy 05",
+        brand: "Butterfly",
+        category: "rubber",
+      },
     ],
     isLoading: false,
     error: null,
@@ -67,11 +72,11 @@ describe("CreatePostForm Equipment Selector", () => {
     render(<CreatePostForm />, { wrapper });
 
     const checkbox = screen.getByLabelText(/Link to equipment/i);
-    expect(screen.queryByRole('combobox')).not.toBeInTheDocument();
+    expect(screen.queryByRole("combobox")).not.toBeInTheDocument();
 
     fireEvent.click(checkbox);
 
-    expect(screen.getByRole('combobox')).toBeInTheDocument();
+    expect(screen.getByRole("combobox")).toBeInTheDocument();
     expect(screen.getByText(/Butterfly Viscaria/i)).toBeInTheDocument();
     expect(screen.getByText(/Butterfly Tenergy 05/i)).toBeInTheDocument();
   });
@@ -81,10 +86,10 @@ describe("CreatePostForm Equipment Selector", () => {
 
     const checkbox = screen.getByLabelText(/Link to equipment/i);
     fireEvent.click(checkbox);
-    expect(screen.getByRole('combobox')).toBeInTheDocument();
+    expect(screen.getByRole("combobox")).toBeInTheDocument();
 
     fireEvent.click(checkbox);
-    expect(screen.queryByRole('combobox')).not.toBeInTheDocument();
+    expect(screen.queryByRole("combobox")).not.toBeInTheDocument();
   });
 
   test("includes equipment_id in form data when equipment is selected", async () => {
@@ -100,7 +105,7 @@ describe("CreatePostForm Equipment Selector", () => {
     const checkbox = screen.getByLabelText(/Link to equipment/i);
     fireEvent.click(checkbox);
 
-    const select = screen.getByRole('combobox');
+    const select = screen.getByRole("combobox");
     fireEvent.change(select, { target: { value: "eq-1" } });
 
     // Submit form

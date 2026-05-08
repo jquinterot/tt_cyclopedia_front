@@ -214,7 +214,9 @@ describe("EquipmentDetailPage", () => {
     render(<EquipmentDetailPage />, { wrapper });
 
     expect(screen.getByText("Community Reviews")).toBeInTheDocument();
-    const spinner = screen.getByText((_, el) => el?.classList.contains("animate-spin") ?? false);
+    const spinner = screen.getByText(
+      (_, el) => el?.classList.contains("animate-spin") ?? false,
+    );
     expect(spinner).toBeInTheDocument();
   });
 

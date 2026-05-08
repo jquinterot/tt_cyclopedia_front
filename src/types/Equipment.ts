@@ -33,7 +33,7 @@ export type Equipment = {
   id: string;
   name: string;
   brand: string;
-  category: 'blade' | 'rubber' | 'ball' | 'table' | 'net' | 'shoes' | 'other';
+  category: "blade" | "rubber" | "ball" | "table" | "net" | "shoes" | "other";
   subcategory?: string;
   description?: string;
   image_url?: string;

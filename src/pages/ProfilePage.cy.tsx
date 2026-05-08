@@ -1,20 +1,26 @@
 /// <reference types="cypress" />
-import ProfilePage from './ProfilePage';
-import { AuthContext } from '../contexts/AuthContext';
-import type { User } from '../types/User';
-import type { ReactNode } from 'react';
+import ProfilePage from "./ProfilePage";
+import { AuthContext } from "../contexts/AuthContext";
+import type { User } from "../types/User";
+import type { ReactNode } from "react";
 
 const mockUser: User = {
-  id: 'user-1',
-  username: 'testuser',
-  email: 'test@example.com',
+  id: "user-1",
+  username: "testuser",
+  email: "test@example.com",
 };
 
-function MockAuthProvider({ user, children }: { user: User | null, children: ReactNode }) {
+function MockAuthProvider({
+  user,
+  children,
+}: {
+  user: User | null;
+  children: ReactNode;
+}) {
   // Minimal mock for useAuth
   const value = {
     user,
-    token: 'mock-token',
+    token: "mock-token",
     isAuthenticated: !!user,
     login: () => {},
     logout: () => {},
@@ -25,25 +31,28 @@ function MockAuthProvider({ user, children }: { user: User | null, children: Rea
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
 
-describe('<ProfilePage />', () => {
-  it('shows login required if not authenticated', () => {
+describe("<ProfilePage />", () => {
+  it("shows login required if not authenticated", () => {
     cy.mount(
       <MockAuthProvider user={null}>
         <ProfilePage />
-      </MockAuthProvider>
+      </MockAuthProvider>,
     );
-    cy.get('[data-testid="profile-login-required"]').should('be.visible');
+    cy.get('[data-testid="profile-login-required"]').should("be.visible");
   });
 
-  it('shows profile info if authenticated', () => {
+  it("shows profile info if authenticated", () => {
     cy.mount(
       <MockAuthProvider user={mockUser}>
         <ProfilePage />
-      </MockAuthProvider>
+      </MockAuthProvider>,
     );
-    cy.get('[data-testid="profile-page"]').should('be.visible');
-    cy.get('[data-testid="profile-title"]').should('contain', 'My Profile');
-    cy.get('[data-testid="profile-username"]').should('contain', mockUser.username);
-    cy.get('[data-testid="profile-details"]').should('contain', mockUser.email);
+    cy.get('[data-testid="profile-page"]').should("be.visible");
+    cy.get('[data-testid="profile-title"]').should("contain", "My Profile");
+    cy.get('[data-testid="profile-username"]').should(
+      "contain",
+      mockUser.username,
+    );
+    cy.get('[data-testid="profile-details"]').should("contain", mockUser.email);
   });
-}); 
+});

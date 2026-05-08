@@ -1,5 +1,5 @@
-import StatBar from '../StatBar/StatBar';
-import { STAT_CONFIG } from '@/config/statConfig';
+import StatBar from "../StatBar/StatBar";
+import { STAT_CONFIG } from "@/config/statConfig";
 
 function getDefaultStats(): Record<string, number> {
   const defaultStats: Record<string, number> = {};
@@ -9,12 +9,20 @@ function getDefaultStats(): Record<string, number> {
   return defaultStats;
 }
 
-export default function PostStats({ stats }: { stats?: Record<string, number> }) {
-  const displayStats = stats && Object.keys(stats).length > 0 ? stats : getDefaultStats();
-  
+export default function PostStats({
+  stats,
+}: {
+  stats?: Record<string, number>;
+}) {
+  const displayStats =
+    stats && Object.keys(stats).length > 0 ? stats : getDefaultStats();
+
   return (
     <div className="rounded-lg p-4 space-y-4">
-      <h3 className="text-base font-semibold text-white text-center" data-testid="stats-heading">
+      <h3
+        className="text-base font-semibold text-white text-center"
+        data-testid="stats-heading"
+      >
         Stats
       </h3>
       {STAT_CONFIG.map((config) => (
@@ -27,4 +35,4 @@ export default function PostStats({ stats }: { stats?: Record<string, number> })
       ))}
     </div>
   );
-} 
+}

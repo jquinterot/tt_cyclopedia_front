@@ -28,4 +28,4 @@ describe("PostList Component", () => {
     renderWithProviders(<PostList />);
     expect(screen.getByTestId("post-list-container")).toBeInTheDocument();
   });
-}); 
+});

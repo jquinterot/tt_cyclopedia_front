@@ -1,5 +1,5 @@
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { apiClient } from '@/config/apiClient';
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { apiClient } from "@/config/apiClient";
 
 export function useDeleteForum() {
   const queryClient = useQueryClient();
@@ -9,8 +9,8 @@ export function useDeleteForum() {
       return forumId;
     },
     onSuccess: (forumId) => {
-      queryClient.invalidateQueries({ queryKey: ['forums'] });
-      queryClient.removeQueries({ queryKey: ['forums', forumId] });
+      queryClient.invalidateQueries({ queryKey: ["forums"] });
+      queryClient.removeQueries({ queryKey: ["forums", forumId] });
     },
   });
-} 
+}

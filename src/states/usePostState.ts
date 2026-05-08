@@ -1,12 +1,12 @@
-import { create } from 'zustand';
-import { Post } from '@/types/Post';
-import { PostState } from '@/types/PostState';
-import axios from 'axios';
+import { create } from "zustand";
+import { Post } from "@/types/Post";
+import { PostState } from "@/types/PostState";
+import axios from "axios";
 import { apiClient } from "@/config/apiClient";
 
 export const usePostState = create<PostState>((set) => ({
   post: null,
-  error: null, 
+  error: null,
   getPostById: async (postId: string) => {
     try {
       const response = await apiClient.get<Post>(`/posts/${postId}`);
@@ -16,15 +16,18 @@ export const usePostState = create<PostState>((set) => ({
       });
     } catch (error) {
       if (axios.isAxiosError(error)) {
-        console.error('Error fetching post:', error.response?.data || error.message);
+        console.error(
+          "Error fetching post:",
+          error.response?.data || error.message,
+        );
         set({
           error: error.response?.data?.message || error.message,
           post: null,
         });
       } else {
-        console.error('Unknown error:', error);
+        console.error("Unknown error:", error);
         set({
-          error: 'Unknown error fetching post',
+          error: "Unknown error fetching post",
           post: null,
         });
       }

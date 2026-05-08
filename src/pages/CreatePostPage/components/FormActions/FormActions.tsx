@@ -1,4 +1,3 @@
-
 type FormActionsProps = {
   onCancel: () => void;
   isPending: boolean;
@@ -21,8 +20,8 @@ export default function FormActions({ onCancel, isPending }: FormActionsProps) {
         data-testid="submit-button"
         disabled={isPending}
       >
-        {isPending ? 'Creating...' : 'Create Post'}
+        {isPending ? "Creating..." : "Create Post"}
       </button>
     </div>
   );
-} 
+}

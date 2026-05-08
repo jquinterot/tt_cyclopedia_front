@@ -6,10 +6,10 @@ describe("<MissionSection />", () => {
     cy.mount(
       <LanguageProvider>
         <MissionSection />
-      </LanguageProvider>
+      </LanguageProvider>,
     );
 
     cy.get('[data-testid="mission-title"]').should("exist");
     cy.get('[data-testid="mission-list"]').should("exist");
   });
-}); 
+});

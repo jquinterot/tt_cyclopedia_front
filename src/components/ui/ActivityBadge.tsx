@@ -1,11 +1,11 @@
-import { ACTIVITY_TYPE_CONFIG } from '@/config/constants';
+import { ACTIVITY_TYPE_CONFIG } from "@/config/constants";
 
 interface ActivityBadgeProps {
   type: string;
   className?: string;
 }
 
-export function ActivityBadge({ type, className = '' }: ActivityBadgeProps) {
+export function ActivityBadge({ type, className = "" }: ActivityBadgeProps) {
   const config = ACTIVITY_TYPE_CONFIG[type];
 
   if (!config) return null;

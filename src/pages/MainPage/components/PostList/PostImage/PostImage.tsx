@@ -5,15 +5,20 @@ interface PostImageProps {
   defaultImageUrl: string;
 }
 
-const API_BASE = import.meta.env.VITE_API_BASE_URL || '';
+const API_BASE = import.meta.env.VITE_API_BASE_URL || "";
 
 function getFullImageUrl(src: string, fallback: string): string {
   if (!src) return fallback;
-  if (src.startsWith('http')) return src;
+  if (src.startsWith("http")) return src;
   return `${API_BASE}${src}`;
 }
 
-export default function PostImage({ src, alt, postId, defaultImageUrl }: PostImageProps) {
+export default function PostImage({
+  src,
+  alt,
+  postId,
+  defaultImageUrl,
+}: PostImageProps) {
   const handleError = (e: React.SyntheticEvent<HTMLImageElement, Event>) => {
     e.currentTarget.onerror = null; // Prevent infinite loop
     e.currentTarget.src = defaultImageUrl;
@@ -22,7 +27,10 @@ export default function PostImage({ src, alt, postId, defaultImageUrl }: PostIma
   const imageUrl = getFullImageUrl(src, defaultImageUrl);
 
   return (
-    <div className="w-full relative rounded-lg overflow-hidden" data-testid={`post-image-container-${postId}`}>
+    <div
+      className="w-full relative rounded-lg overflow-hidden"
+      data-testid={`post-image-container-${postId}`}
+    >
       <div className="aspect-square w-full group relative overflow-hidden rounded-lg">
         <img
           data-testid={`post-image-${postId}`}
@@ -36,4 +44,4 @@ export default function PostImage({ src, alt, postId, defaultImageUrl }: PostIma
       </div>
     </div>
   );
-} 
+}

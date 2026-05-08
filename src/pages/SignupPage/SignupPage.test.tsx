@@ -6,22 +6,20 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 const queryClient = new QueryClient({
   defaultOptions: {
-    queries: { retry: false }
-  }
+    queries: { retry: false },
+  },
 });
 
 describe("SignupPage", () => {
   it("renders the Signup page", () => {
     render(
-  
-        <QueryClientProvider client={queryClient}>
-          <BrowserRouter>
-            <LanguageProvider>
-              <SignupPage />
-            </LanguageProvider>
-          </BrowserRouter>
-        </QueryClientProvider>
-  
+      <QueryClientProvider client={queryClient}>
+        <BrowserRouter>
+          <LanguageProvider>
+            <SignupPage />
+          </LanguageProvider>
+        </BrowserRouter>
+      </QueryClientProvider>,
     );
   });
-}); 
+});

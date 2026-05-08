@@ -9,7 +9,7 @@ describe("<TextAreaField />", () => {
         id="test-id"
         inputRef={textareaRef}
         placeholder="Test placeholder"
-      />
+      />,
     );
 
     cy.get("label").should("contain", "Test Label");
@@ -17,4 +17,4 @@ describe("<TextAreaField />", () => {
     cy.get("textarea").should("have.attr", "placeholder", "Test placeholder");
     cy.get("textarea").should("have.attr", "data-testid", "post-test-id-input");
   });
-}); 
+});

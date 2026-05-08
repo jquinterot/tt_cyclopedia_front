@@ -1,13 +1,13 @@
 import PostList from "./PostList";
 
 beforeEach(() => {
-  cy.intercept('GET', '/posts', {
+  cy.intercept("GET", "/posts", {
     statusCode: 200,
     body: [
-      { id: '1', title: 'Test Post', content: 'Test content' },
+      { id: "1", title: "Test Post", content: "Test content" },
       // Add more mock posts if needed
     ],
-  }).as('getPosts');
+  }).as("getPosts");
 });
 
 describe("<PostList />", () => {
@@ -15,4 +15,4 @@ describe("<PostList />", () => {
     cy.mount(<PostList />);
     cy.get("[data-testid='post-list-container']").should("exist");
   });
-}); 
+});

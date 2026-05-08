@@ -1,10 +1,10 @@
-import { usePosts } from '@/hooks/posts/usePosts';
+import { usePosts } from "@/hooks/posts/usePosts";
 import { useNavigate } from "react-router-dom";
 import { useState, useMemo } from "react";
 import PostCard from "./PostCard/PostCard";
 import SearchBar from "@/components/shared/SearchBar/SearchBar";
-import LoadingSpinner from '@/components/shared/LoadingSpinner/LoadingSpinner';
-import { useAuth } from '@/contexts/AuthContext';
+import { SkeletonList } from "@/components/ui";
+import { useAuth } from "@/contexts/AuthContext";
 
 // --- Main PostList Component ---
 export default function PostList() {
@@ -16,23 +16,18 @@ export default function PostList() {
   const filteredPosts = useMemo(() => {
     if (!posts) return [];
     const sortedPosts = [...posts].sort((a, b) =>
-      a.title.toLowerCase().localeCompare(b.title.toLowerCase())
+      a.title.toLowerCase().localeCompare(b.title.toLowerCase()),
     );
     if (!searchQuery.trim()) return sortedPosts;
     const query = searchQuery.toLowerCase().trim();
     return sortedPosts.filter(
       (post) =>
         post.title.toLowerCase().includes(query) ||
-        post.content.toLowerCase().includes(query)
+        post.content.toLowerCase().includes(query),
     );
   }, [posts, searchQuery]);
 
-  if (isLoading)
-    return (
-      <div className="flex justify-center items-center h-64" data-testid="post-list-loading">
-        <LoadingSpinner />
-      </div>
-    );
+  if (isLoading) return <SkeletonList />;
 
   if (error)
     return (
@@ -48,7 +43,7 @@ export default function PostList() {
         <h1 className="text-3xl font-bold text-white">Posts</h1>
         {user && (
           <button
-            onClick={() => navigate('/createPost')}
+            onClick={() => navigate("/createPost")}
             className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
             data-testid="create-post-button"
           >
@@ -58,27 +53,54 @@ export default function PostList() {
       </div>
 
       {/* Search Filter */}
-      <SearchBar 
-        onSearch={setSearchQuery}
-        placeholder="Search posts..."
-      />
+      <SearchBar onSearch={setSearchQuery} placeholder="Search posts..." />
 
       {/* No Results Message */}
       {filteredPosts.length === 0 && searchQuery && (
-        <div className="text-center text-gray-400 mb-8" data-testid="no-results-message">
-          <svg className="mx-auto h-12 w-12 text-gray-500 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+        <div
+          className="text-center text-gray-400 mb-8"
+          data-testid="no-results-message"
+        >
+          <svg
+            className="mx-auto h-12 w-12 text-gray-500 mb-4"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+            />
           </svg>
-          <h3 className="text-lg font-medium text-white mb-1">No posts found</h3>
-          <p className="text-gray-400">No posts match "{searchQuery}". Try a different search term.</p>
+          <h3 className="text-lg font-medium text-white mb-1">
+            No posts found
+          </h3>
+          <p className="text-gray-400">
+            No posts match "{searchQuery}". Try a different search term.
+          </p>
         </div>
       )}
 
       {/* No Posts Available Message */}
       {filteredPosts.length === 0 && !searchQuery && (
-        <div className="text-center text-gray-400 mb-8" data-testid="no-posts-message">
-          <svg className="mx-auto h-12 w-12 text-gray-500 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+        <div
+          className="text-center text-gray-400 mb-8"
+          data-testid="no-posts-message"
+        >
+          <svg
+            className="mx-auto h-12 w-12 text-gray-500 mb-4"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"
+            />
           </svg>
           <h3 className="text-lg font-medium text-white mb-1">No posts yet</h3>
           <p className="text-gray-400">Be the first to share something!</p>
@@ -86,9 +108,16 @@ export default function PostList() {
       )}
 
       {/* Posts List */}
-      <div className="grid gap-4 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3" data-testid="posts-grid">
+      <div
+        className="grid gap-4 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3"
+        data-testid="posts-grid"
+      >
         {filteredPosts.map((post) => (
-          <PostCard key={post.id} post={post} onClick={() => navigate(`/posts/${post.id}`)} />
+          <PostCard
+            key={post.id}
+            post={post}
+            onClick={() => navigate(`/posts/${post.id}`)}
+          />
         ))}
       </div>
     </div>

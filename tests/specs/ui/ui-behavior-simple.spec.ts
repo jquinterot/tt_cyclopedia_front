@@ -1,5 +1,5 @@
-import { test } from '@playwright/test';
+import { test } from "@playwright/test";
 
-test.describe('Simple UI Behavior Tests', () => {
+test.describe("Simple UI Behavior Tests", () => {
   // ... rest of the file remains unchanged ...
-}); 
+});

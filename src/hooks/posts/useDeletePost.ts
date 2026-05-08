@@ -1,6 +1,6 @@
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { apiClient } from '@/config/apiClient';
-import { toast } from 'sonner';
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { apiClient } from "@/config/apiClient";
+import { toast } from "sonner";
 
 export function useDeletePost() {
   const queryClient = useQueryClient();
@@ -11,12 +11,12 @@ export function useDeletePost() {
       return postId;
     },
     onSuccess: (postId) => {
-      queryClient.removeQueries({ queryKey: ['post', postId] });
-      queryClient.invalidateQueries({ queryKey: ['posts'] });
-      toast.success('Post deleted');
+      queryClient.removeQueries({ queryKey: ["post", postId] });
+      queryClient.invalidateQueries({ queryKey: ["posts"] });
+      toast.success("Post deleted");
     },
     onError: () => {
-      toast.error('Failed to delete post');
+      toast.error("Failed to delete post");
     },
   });
 }

@@ -1,8 +1,8 @@
-import { ReactNode } from 'react';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { BrowserRouter } from 'react-router-dom';
-import { LanguageProvider } from '@/contexts/LanguageContext';
-import { AuthProvider } from '@/contexts/AuthContext';
+import { ReactNode } from "react";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { BrowserRouter } from "react-router-dom";
+import { LanguageProvider } from "@/contexts/LanguageContext";
+import { AuthProvider } from "@/contexts/AuthContext";
 
 const testQueryClient = new QueryClient({
   defaultOptions: {
@@ -15,11 +15,9 @@ export function TestProviders({ children }: { children: ReactNode }) {
     <BrowserRouter>
       <QueryClientProvider client={testQueryClient}>
         <LanguageProvider>
-          <AuthProvider>
-            {children}
-          </AuthProvider>
+          <AuthProvider>{children}</AuthProvider>
         </LanguageProvider>
       </QueryClientProvider>
     </BrowserRouter>
   );
-} 
+}

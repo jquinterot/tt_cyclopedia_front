@@ -1,11 +1,11 @@
-import { memo, useState, useRef, useEffect } from 'react';
-import { useAuth } from '@/contexts/AuthContext';
-import { useEditComment } from '@/hooks/comments/useEditComment';
-import { useLikeCommentModern } from '@/hooks/comments/useLikeCommentModern';
-import { toast } from 'sonner';
-import type { Comment } from '@/types/Comment';
-import HeartIcon from '@/components/shared/HeartIcon/HeartIcon';
-import HeartIconFilled from '@/components/shared/HeartIconFilled/HeartIconFilled';
+import { memo, useState, useRef, useEffect } from "react";
+import { useAuth } from "@/contexts/AuthContext";
+import { useEditComment } from "@/hooks/comments/useEditComment";
+import { useLikeCommentModern } from "@/hooks/comments/useLikeCommentModern";
+import { toast } from "sonner";
+import type { Comment } from "@/types/Comment";
+import HeartIcon from "@/components/shared/HeartIcon/HeartIcon";
+import HeartIconFilled from "@/components/shared/HeartIconFilled/HeartIconFilled";
 
 interface CommentItemProps {
   comment: Comment;
@@ -32,7 +32,6 @@ export const CommentItem = memo(function CommentItem({
   postId,
   handleDeleteReply,
 }: CommentItemProps) {
-
   const { user } = useAuth();
   const canEdit = user && comment.user_id === user.id;
   const canDelete = canEdit;
@@ -46,7 +45,7 @@ export const CommentItem = memo(function CommentItem({
     commentId: comment.id,
     postId,
     initialLikes: comment.likes || 0,
-    initialLiked: comment.liked_by_current_user || false
+    initialLiked: comment.liked_by_current_user || false,
   });
 
   useEffect(() => {
@@ -59,17 +58,20 @@ export const CommentItem = memo(function CommentItem({
 
   const handleLikeToggle = () => {
     if (!user) {
-      toast('Please login to like!', { icon: '⚠️', id: 'login-to-like' });
+      toast("Please login to like!", { icon: "⚠️", id: "login-to-like" });
       return;
     }
-    
+
     handleLike();
   };
 
   const handleEdit = async () => {
     setEditLoading(true);
     try {
-      await editCommentMutation({ commentId: comment.id, commentText: editValue });
+      await editCommentMutation({
+        commentId: comment.id,
+        commentText: editValue,
+      });
       setIsEditing(false);
     } finally {
       setEditLoading(false);
@@ -110,7 +112,9 @@ export const CommentItem = memo(function CommentItem({
         <div className="flex-1 min-w-0">
           <div className="flex items-center justify-between mb-2">
             <div className="flex items-center space-x-2">
-              <span className="font-semibold text-white">{comment.username}</span>
+              <span className="font-semibold text-white">
+                {comment.username}
+              </span>
               <span className="text-sm text-gray-400">
                 {new Date(comment.timestamp).toLocaleDateString()}
               </span>
@@ -130,7 +134,7 @@ export const CommentItem = memo(function CommentItem({
                   className="text-sm text-green-400 hover:text-green-300 transition-colors"
                   disabled={isProcessing}
                 >
-                  {isEditing ? 'Cancel' : 'Edit'}
+                  {isEditing ? "Cancel" : "Edit"}
                 </button>
               )}
               {canDelete && (
@@ -160,7 +164,7 @@ export const CommentItem = memo(function CommentItem({
                   disabled={editLoading}
                   className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 transition-colors"
                 >
-                  {editLoading ? 'Saving...' : 'Save'}
+                  {editLoading ? "Saving..." : "Save"}
                 </button>
                 <button
                   onClick={handleEditButton}
@@ -183,9 +187,15 @@ export const CommentItem = memo(function CommentItem({
               data-testid={`like-button-${comment.id}`}
             >
               {liked ? (
-                <HeartIconFilled className="h-5 w-5 text-blue-600 transition-colors" data-testid={`like-icon-filled-${comment.id}`}/>
+                <HeartIconFilled
+                  className="h-5 w-5 text-blue-600 transition-colors"
+                  data-testid={`like-icon-filled-${comment.id}`}
+                />
               ) : (
-                <HeartIcon className="h-5 w-5 text-blue-400 transition-colors" data-testid={`like-icon-outline-${comment.id}`}/>
+                <HeartIcon
+                  className="h-5 w-5 text-blue-400 transition-colors"
+                  data-testid={`like-icon-outline-${comment.id}`}
+                />
               )}
               <span className="text-sm text-gray-300">{likes}</span>
             </button>
@@ -221,4 +231,4 @@ export const CommentItem = memo(function CommentItem({
       )}
     </div>
   );
-}); 
+});

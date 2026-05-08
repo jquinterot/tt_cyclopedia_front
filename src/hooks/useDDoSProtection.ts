@@ -1,5 +1,11 @@
-import { useCallback } from 'react';
-import { debounce, throttle, RequestThrottler, APICallLimiter, BehaviorDetector } from '@/utils/security';
+import { useCallback } from "react";
+import {
+  debounce,
+  throttle,
+  RequestThrottler,
+  APICallLimiter,
+  BehaviorDetector,
+} from "@/utils/security";
 
 // Global instances for consistent protection across the app
 const requestThrottler = new RequestThrottler(1000); // 1 second between calls
@@ -13,29 +19,38 @@ export const useDDoSProtection = () => {
   /**
    * Creates a debounced version of a function
    */
-  const createDebouncedFunction = useCallback(<T extends (...args: unknown[]) => unknown>(
-    func: T,
-    delay: number = 300
-  ) => {
-    return debounce(func, delay);
-  }, []);
+  const createDebouncedFunction = useCallback(
+    <T extends (...args: unknown[]) => unknown>(
+      func: T,
+      delay: number = 300,
+    ) => {
+      return debounce(func, delay);
+    },
+    [],
+  );
 
   /**
    * Creates a throttled version of a function
    */
-  const createThrottledFunction = useCallback(<T extends (...args: unknown[]) => unknown>(
-    func: T,
-    limit: number = 1000
-  ) => {
-    return throttle(func, limit);
-  }, []);
+  const createThrottledFunction = useCallback(
+    <T extends (...args: unknown[]) => unknown>(
+      func: T,
+      limit: number = 1000,
+    ) => {
+      return throttle(func, limit);
+    },
+    [],
+  );
 
   /**
    * Checks if an action is allowed based on rate limiting
    */
-  const isActionAllowed = useCallback((action: string, userId?: string): boolean => {
-    return behaviorDetector.recordAction(action, userId);
-  }, []);
+  const isActionAllowed = useCallback(
+    (action: string, userId?: string): boolean => {
+      return behaviorDetector.recordAction(action, userId);
+    },
+    [],
+  );
 
   /**
    * Checks if an API call is allowed
@@ -68,9 +83,12 @@ export const useDDoSProtection = () => {
   /**
    * Records a user action for behavior analysis
    */
-  const recordUserAction = useCallback((action: string, userId?: string): boolean => {
-    return behaviorDetector.recordAction(action, userId);
-  }, []);
+  const recordUserAction = useCallback(
+    (action: string, userId?: string): boolean => {
+      return behaviorDetector.recordAction(action, userId);
+    },
+    [],
+  );
 
   /**
    * Checks if user behavior is suspicious
@@ -92,6 +110,6 @@ export const useDDoSProtection = () => {
     // Export the protection instances for direct access
     requestThrottler,
     apiCallLimiter,
-    behaviorDetector
+    behaviorDetector,
   };
-}; 
+};

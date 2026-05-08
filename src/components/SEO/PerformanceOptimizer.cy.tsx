@@ -1,8 +1,8 @@
 /// <reference types="cypress" />
-import PerformanceOptimizer from './PerformanceOptimizer';
+import PerformanceOptimizer from "./PerformanceOptimizer";
 
-describe('<PerformanceOptimizer />', () => {
-  it('renders', () => {
+describe("<PerformanceOptimizer />", () => {
+  it("renders", () => {
     cy.mount(<PerformanceOptimizer />);
   });
-}); 
+});

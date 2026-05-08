@@ -6,9 +6,9 @@ describe("<AboutDescription />", () => {
     cy.mount(
       <LanguageProvider>
         <AboutDescription />
-      </LanguageProvider>
+      </LanguageProvider>,
     );
 
     cy.get('[data-testid="about-description"]').should("exist");
   });
-}); 
+});

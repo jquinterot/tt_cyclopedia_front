@@ -1,49 +1,52 @@
-import { PasswordValidationResult } from '@/utils/security';
+import { PasswordValidationResult } from "@/utils/security";
 
 interface PasswordStrengthProps {
   validation: PasswordValidationResult;
   showDetails?: boolean;
 }
 
-export default function PasswordStrength({ validation, showDetails = false }: PasswordStrengthProps) {
+export default function PasswordStrength({
+  validation,
+  showDetails = false,
+}: PasswordStrengthProps) {
   const { strength, errors } = validation;
 
   const getStrengthColor = () => {
     switch (strength) {
-      case 'strong':
-        return 'bg-green-500';
-      case 'medium':
-        return 'bg-yellow-500';
-      case 'weak':
-        return 'bg-red-500';
+      case "strong":
+        return "bg-green-500";
+      case "medium":
+        return "bg-yellow-500";
+      case "weak":
+        return "bg-red-500";
       default:
-        return 'bg-gray-500';
+        return "bg-gray-500";
     }
   };
 
   const getStrengthText = () => {
     switch (strength) {
-      case 'strong':
-        return 'Strong';
-      case 'medium':
-        return 'Medium';
-      case 'weak':
-        return 'Weak';
+      case "strong":
+        return "Strong";
+      case "medium":
+        return "Medium";
+      case "weak":
+        return "Weak";
       default:
-        return 'Very Weak';
+        return "Very Weak";
     }
   };
 
   const getStrengthWidth = () => {
     switch (strength) {
-      case 'strong':
-        return 'w-full';
-      case 'medium':
-        return 'w-2/3';
-      case 'weak':
-        return 'w-1/3';
+      case "strong":
+        return "w-full";
+      case "medium":
+        return "w-2/3";
+      case "weak":
+        return "w-1/3";
       default:
-        return 'w-0';
+        return "w-0";
     }
   };
 
@@ -57,7 +60,9 @@ export default function PasswordStrength({ validation, showDetails = false }: Pa
             data-testid="password-strength-bar"
           />
         </div>
-        <span className={`text-sm font-medium ${strength === 'strong' ? 'text-green-400' : strength === 'medium' ? 'text-yellow-400' : 'text-red-400'}`}>
+        <span
+          className={`text-sm font-medium ${strength === "strong" ? "text-green-400" : strength === "medium" ? "text-yellow-400" : "text-red-400"}`}
+        >
           {getStrengthText()}
         </span>
       </div>
@@ -79,23 +84,33 @@ export default function PasswordStrength({ validation, showDetails = false }: Pa
         <div className="mt-3 space-y-1">
           <p className="text-sm text-gray-400 mb-2">Password Requirements:</p>
           <div className="grid grid-cols-1 gap-1 text-sm">
-            <div className={`flex items-center ${validation.isValid ? 'text-green-400' : 'text-gray-400'}`}>
+            <div
+              className={`flex items-center ${validation.isValid ? "text-green-400" : "text-gray-400"}`}
+            >
               <span className="mr-1">✓</span>
               At least 8 characters
             </div>
-            <div className={`flex items-center ${/[A-Z]/.test(validation.errors.length > 0 ? '' : 'A') ? 'text-green-400' : 'text-gray-400'}`}>
+            <div
+              className={`flex items-center ${/[A-Z]/.test(validation.errors.length > 0 ? "" : "A") ? "text-green-400" : "text-gray-400"}`}
+            >
               <span className="mr-1">✓</span>
               One uppercase letter
             </div>
-            <div className={`flex items-center ${/[a-z]/.test(validation.errors.length > 0 ? '' : 'a') ? 'text-green-400' : 'text-gray-400'}`}>
+            <div
+              className={`flex items-center ${/[a-z]/.test(validation.errors.length > 0 ? "" : "a") ? "text-green-400" : "text-gray-400"}`}
+            >
               <span className="mr-1">✓</span>
               One lowercase letter
             </div>
-            <div className={`flex items-center ${/\d/.test(validation.errors.length > 0 ? '' : '1') ? 'text-green-400' : 'text-gray-400'}`}>
+            <div
+              className={`flex items-center ${/\d/.test(validation.errors.length > 0 ? "" : "1") ? "text-green-400" : "text-gray-400"}`}
+            >
               <span className="mr-1">✓</span>
               One number
             </div>
-            <div className={`flex items-center ${/[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]/.test(validation.errors.length > 0 ? '' : '!') ? 'text-green-400' : 'text-gray-400'}`}>
+            <div
+              className={`flex items-center ${/[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]/.test(validation.errors.length > 0 ? "" : "!") ? "text-green-400" : "text-gray-400"}`}
+            >
               <span className="mr-1">✓</span>
               One special character
             </div>
@@ -104,4 +119,4 @@ export default function PasswordStrength({ validation, showDetails = false }: Pa
       )}
     </div>
   );
-} 
+}

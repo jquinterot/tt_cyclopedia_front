@@ -6,8 +6,11 @@ interface MainPageLayoutProps {
 
 export default function MainPageLayout({ children }: MainPageLayoutProps) {
   return (
-    <div className="min-h-screen flex flex-col font-sans text-white" data-testid="main-page">
+    <div
+      className="min-h-screen flex flex-col font-sans text-white"
+      data-testid="main-page"
+    >
       {children}
     </div>
   );
-} 
+}

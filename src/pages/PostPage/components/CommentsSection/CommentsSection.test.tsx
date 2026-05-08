@@ -4,10 +4,10 @@ import userEvent from "@testing-library/user-event";
 import Comments from "./CommentsSection";
 import "@testing-library/jest-dom/vitest";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { AuthProvider } from '@/contexts/AuthContext';
-import { BrowserRouter } from 'react-router-dom';
+import { AuthProvider } from "@/contexts/AuthContext";
+import { BrowserRouter } from "react-router-dom";
 
-vi.mock('@/hooks/comments/useMainComments', () => ({
+vi.mock("@/hooks/comments/useMainComments", () => ({
   useMainComments: (postId: string) => ({
     mainComments: [
       {
@@ -25,25 +25,25 @@ vi.mock('@/hooks/comments/useMainComments', () => ({
   }),
 }));
 
-vi.mock('@/hooks/comments/useDeleteComment', () => ({
+vi.mock("@/hooks/comments/useDeleteComment", () => ({
   useDeleteComment: () => ({
     mutateAsync: vi.fn(),
   }),
 }));
 
-vi.mock('@/hooks/comments/usePostComments', () => ({
+vi.mock("@/hooks/comments/usePostComments", () => ({
   usePostComment: () => ({
     mutateAsync: vi.fn(),
   }),
 }));
 
-vi.mock('@/hooks/comments/useEditComment', () => ({
+vi.mock("@/hooks/comments/useEditComment", () => ({
   useEditComment: () => ({
     mutateAsync: vi.fn(),
   }),
 }));
 
-vi.mock('@/hooks/comments/useLikeCommentModern', () => ({
+vi.mock("@/hooks/comments/useLikeCommentModern", () => ({
   useLikeCommentModern: vi.fn(() => ({
     likes: 5,
     liked: false,
@@ -52,7 +52,7 @@ vi.mock('@/hooks/comments/useLikeCommentModern', () => ({
   })),
 }));
 
-vi.mock('@/hooks/comments/useRepliedComments', () => ({
+vi.mock("@/hooks/comments/useRepliedComments", () => ({
   useReplyComments: () => ({
     comments: [],
     isLoading: false,
@@ -77,11 +77,9 @@ const renderWithProviders = (ui: React.ReactElement) => {
   return render(
     <QueryClientProvider client={queryClient}>
       <BrowserRouter>
-        <AuthProvider>
-          {ui}
-        </AuthProvider>
+        <AuthProvider>{ui}</AuthProvider>
       </BrowserRouter>
-    </QueryClientProvider>
+    </QueryClientProvider>,
   );
 };
 
@@ -91,7 +89,9 @@ describe("Comments Component", () => {
   });
 
   test("renders comments list", async () => {
-    const { getByText, getByTestId } = renderWithProviders(<Comments postId="post1" />);
+    const { getByText, getByTestId } = renderWithProviders(
+      <Comments postId="post1" />,
+    );
     await waitFor(() => {
       expect(getByTestId("comments-list")).toBeInTheDocument();
       expect(getByText("Test comment 1")).toBeInTheDocument();
@@ -106,7 +106,9 @@ describe("Comments Component", () => {
   });
 
   test("shows reply form when reply button is clicked", async () => {
-    const { getByText, getByPlaceholderText } = renderWithProviders(<Comments postId="post1" />);
+    const { getByText, getByPlaceholderText } = renderWithProviders(
+      <Comments postId="post1" />,
+    );
     const user = userEvent.setup();
 
     await waitFor(() => {

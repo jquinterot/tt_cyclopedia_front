@@ -36,4 +36,4 @@ describe("Avatar Component", () => {
     render(<Avatar fallbackIcon={customIcon} />);
     expect(screen.getByTestId("custom-icon")).toBeInTheDocument();
   });
-}); 
+});

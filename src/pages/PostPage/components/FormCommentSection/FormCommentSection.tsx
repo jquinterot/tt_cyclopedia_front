@@ -1,9 +1,9 @@
-import { useLanguage } from '@/contexts/LanguageContext.utils';
-import { useAuth } from '@/contexts/AuthContext';
-import GenericFormCommentSection from '@/components/shared/GenericFormCommentSection/GenericFormCommentSection';
-import { useMainComments } from '@/hooks/comments/useMainComments';
-import { usePostComment } from '@/hooks/comments/usePostComments';
-import Comments from '../CommentsSection/CommentsSection';
+import { useLanguage } from "@/contexts/LanguageContext.utils";
+import { useAuth } from "@/contexts/AuthContext";
+import GenericFormCommentSection from "@/components/shared/GenericFormCommentSection/GenericFormCommentSection";
+import { useMainComments } from "@/hooks/comments/useMainComments";
+import { usePostComment } from "@/hooks/comments/usePostComments";
+import Comments from "../CommentsSection/CommentsSection";
 
 export default function FormComment({ postId }: { postId: string }) {
   const { isAuthenticated } = useAuth();

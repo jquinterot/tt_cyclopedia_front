@@ -1,5 +1,5 @@
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { apiClient } from '@/config/apiClient';
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { apiClient } from "@/config/apiClient";
 
 export function useDeleteForumComment(forumId: string) {
   const queryClient = useQueryClient();
@@ -9,8 +9,10 @@ export function useDeleteForumComment(forumId: string) {
       await apiClient.delete(`/comments/${commentId}`);
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['forumComments', forumId] });
-      queryClient.invalidateQueries({ queryKey: ['forumCommentReplies', forumId] });
+      queryClient.invalidateQueries({ queryKey: ["forumComments", forumId] });
+      queryClient.invalidateQueries({
+        queryKey: ["forumCommentReplies", forumId],
+      });
     },
   });
 }

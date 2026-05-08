@@ -16,17 +16,15 @@ const queryClient = new QueryClient({
 
 const renderLoginPage = () => {
   return render(
-
-      <QueryClientProvider client={queryClient}>
-        <BrowserRouter>
-          <LanguageProvider>
-            <AuthProvider>
-              <LoginPage />
-            </AuthProvider>
-          </LanguageProvider>
-        </BrowserRouter>
-      </QueryClientProvider>
-
+    <QueryClientProvider client={queryClient}>
+      <BrowserRouter>
+        <LanguageProvider>
+          <AuthProvider>
+            <LoginPage />
+          </AuthProvider>
+        </LanguageProvider>
+      </BrowserRouter>
+    </QueryClientProvider>,
   );
 };
 
@@ -53,7 +51,7 @@ describe("LoginPage", () => {
 
     expect(screen.getByText("Welcome Back")).toBeInTheDocument();
     expect(
-      screen.getByText("Sign in to TT Cyclopedia to continue your journey")
+      screen.getByText("Sign in to TT Cyclopedia to continue your journey"),
     ).toBeInTheDocument();
   });
 
@@ -99,13 +97,19 @@ describe("LoginPage", () => {
   test("inputs have proper placeholders", () => {
     renderLoginPage();
 
-    expect(screen.getByPlaceholderText("Enter your username")).toBeInTheDocument();
-    expect(screen.getByPlaceholderText("Enter your password")).toBeInTheDocument();
+    expect(
+      screen.getByPlaceholderText("Enter your username"),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByPlaceholderText("Enter your password"),
+    ).toBeInTheDocument();
   });
 
   test("render includes Toaster for notifications", () => {
     const { container } = renderLoginPage();
 
-    expect(container.querySelector('[data-testid="login-page"]')).toBeInTheDocument();
+    expect(
+      container.querySelector('[data-testid="login-page"]'),
+    ).toBeInTheDocument();
   });
 });

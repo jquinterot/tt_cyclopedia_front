@@ -20,27 +20,23 @@ import MainPage from "./MainPage";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter } from "react-router-dom";
 import { LanguageProvider } from "@/contexts/LanguageContext";
-import { AuthProvider } from '@/contexts/AuthContext';
+import { AuthProvider } from "@/contexts/AuthContext";
 
 const queryClient = new QueryClient({
   defaultOptions: {
-    queries: { retry: false }
-  }
+    queries: { retry: false },
+  },
 });
 
 const renderWithProviders = (ui: React.ReactElement) => {
   return render(
-
-      <QueryClientProvider client={queryClient}>
-        <BrowserRouter>
-          <LanguageProvider>
-            <AuthProvider>
-              {ui}
-            </AuthProvider>
-          </LanguageProvider>
-        </BrowserRouter>
-      </QueryClientProvider>
-
+    <QueryClientProvider client={queryClient}>
+      <BrowserRouter>
+        <LanguageProvider>
+          <AuthProvider>{ui}</AuthProvider>
+        </LanguageProvider>
+      </BrowserRouter>
+    </QueryClientProvider>,
   );
 };
 
@@ -52,6 +48,6 @@ describe("MainPage Component", () => {
 
   test("renders PostList loading state", () => {
     renderWithProviders(<MainPage />);
-    expect(screen.getByTestId("post-list-loading")).toBeInTheDocument();
+    expect(screen.getByTestId("skeleton-list")).toBeInTheDocument();
   });
-}); 
+});

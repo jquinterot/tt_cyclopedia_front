@@ -23,4 +23,4 @@ export interface ForumUpdate {
 }
 
 // Forum response (matches Forum, but can be extended if needed)
-export type ForumResponse = Forum; 
+export type ForumResponse = Forum;

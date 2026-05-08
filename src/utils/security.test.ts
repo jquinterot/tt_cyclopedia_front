@@ -1,8 +1,8 @@
 import { describe, it, expect } from "vitest";
-import { 
-  validatePassword, 
-  validateUsername, 
-  validateEmail, 
+import {
+  validatePassword,
+  validateUsername,
+  validateEmail,
   validatePasswordMatch,
   sanitizeInput,
   RateLimiter,
@@ -12,7 +12,7 @@ import {
   generateCSRFToken,
   validateCSRFToken,
   debounce,
-  throttle
+  throttle,
 } from "@/utils/security";
 
 describe("validatePassword", () => {
@@ -115,7 +115,9 @@ describe("validatePasswordMatch", () => {
 
 describe("sanitizeInput", () => {
   it("removes HTML tags", () => {
-    expect(sanitizeInput("<script>alert('xss')</script>")).toBe("scriptalert('xss')/script");
+    expect(sanitizeInput("<script>alert('xss')</script>")).toBe(
+      "scriptalert('xss')/script",
+    );
   });
 
   it("removes javascript protocol", () => {
@@ -262,9 +264,11 @@ describe("validateCSRFToken", () => {
 
 describe("debounce", () => {
   it("delays function execution", async () => {
-    await new Promise<void>(resolve => {
+    await new Promise<void>((resolve) => {
       let called = false;
-      const fn = debounce(() => { called = true; }, 50);
+      const fn = debounce(() => {
+        called = true;
+      }, 50);
       fn();
       expect(called).toBe(false);
       setTimeout(() => {
@@ -278,14 +282,18 @@ describe("debounce", () => {
 describe("throttle", () => {
   it("executes first call immediately", () => {
     let called = false;
-    const fn = throttle(() => { called = true; }, 100);
+    const fn = throttle(() => {
+      called = true;
+    }, 100);
     fn();
     expect(called).toBe(true);
   });
 
   it("blocks calls within throttle limit", () => {
     let count = 0;
-    const fn = throttle(() => { count++; }, 100);
+    const fn = throttle(() => {
+      count++;
+    }, 100);
     fn();
     fn();
     expect(count).toBe(1);

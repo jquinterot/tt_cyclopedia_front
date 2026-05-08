@@ -2,7 +2,7 @@ import { describe, test, expect, vi } from "vitest";
 import { render, screen, fireEvent } from "@testing-library/react";
 import "@testing-library/jest-dom/vitest";
 import PostCard from "./PostCard";
-import { TestProviders } from '@/test-utils/TestProviders';
+import { TestProviders } from "@/test-utils/TestProviders";
 
 const mockPost = {
   id: "1",
@@ -19,12 +19,14 @@ describe("PostCard Component", () => {
     render(
       <TestProviders>
         <PostCard post={mockPost} onClick={mockOnClick} />
-      </TestProviders>
+      </TestProviders>,
     );
-    
+
     expect(screen.getByTestId("post-card-1"));
     expect(screen.getByTestId("post-title-1")).toHaveTextContent("Test Post");
-    expect(screen.getByTestId("post-excerpt-1")).toHaveTextContent("Test content");
+    expect(screen.getByTestId("post-excerpt-1")).toHaveTextContent(
+      "Test content",
+    );
   });
 
   test("calls onClick when card is clicked", () => {
@@ -32,12 +34,12 @@ describe("PostCard Component", () => {
     render(
       <TestProviders>
         <PostCard post={mockPost} onClick={mockOnClick} />
-      </TestProviders>
+      </TestProviders>,
     );
-    
+
     const card = screen.getByTestId("post-card-1");
     fireEvent.click(card);
-    
+
     expect(mockOnClick).toHaveBeenCalled();
   });
 
@@ -46,9 +48,9 @@ describe("PostCard Component", () => {
     render(
       <TestProviders>
         <PostCard post={mockPost} onClick={mockOnClick} />
-      </TestProviders>
+      </TestProviders>,
     );
-    
+
     expect(screen.getByText("5"));
   });
-}); 
+});
