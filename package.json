@@ -12,7 +12,10 @@
     "preview": "vite preview",
     "unit:test": "vitest",
     "component:test": "npx cypress run --component",
-    "prepush": "npm run format:check && npm run lint && npm run unit:test -- --run && npm run build"
+    "e2e:test": "cd e2e && npx playwright test",
+    "e2e:test:install": "cd e2e && npm install && npx playwright install chromium",
+    "test:all": "npm run unit:test -- --run && npm run component:test && npm run e2e:test",
+    "prepush": "npm run format:check && npm run lint && npm run unit:test -- --run && npm run component:test && npm run build"
   },
   "dependencies": {
     "@tanstack/react-query": "^5.100.5",
