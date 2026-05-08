@@ -7,7 +7,7 @@ on:
     branches: [main]
 
 jobs:
-  lint-and-test:
+  unit:
     name: Lint, Format & Unit Tests
     runs-on: ubuntu-latest
     steps:
@@ -15,7 +15,7 @@ jobs:
 
       - uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: '22'
           cache: 'npm'
 
       - name: Install dependencies
@@ -25,7 +25,27 @@ jobs:
         run: npm run lint
 
       - name: Run Prettier format check
-        run: npm run format -- --check
+        run: npx prettier --check "src/**/*.{ts,tsx,css,json}"
 
       - name: Run unit tests
         run: npm run unit:test -- --run
+
+  component:
+    name: Component Tests
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Cypress run
+        uses: cypress-io/github-action@v6
+        with:
+          component: true
+          browser: chrome
