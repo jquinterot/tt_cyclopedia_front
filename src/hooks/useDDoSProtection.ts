@@ -13,8 +13,8 @@ export const useDDoSProtection = () => {
   /**
    * Creates a debounced version of a function
    */
-  const createDebouncedFunction = useCallback((
-    func: (...args: unknown[]) => unknown,
+  const createDebouncedFunction = useCallback(<T extends (...args: unknown[]) => unknown>(
+    func: T,
     delay: number = 300
   ) => {
     return debounce(func, delay);
@@ -23,8 +23,8 @@ export const useDDoSProtection = () => {
   /**
    * Creates a throttled version of a function
    */
-  const createThrottledFunction = useCallback((
-    func: (...args: unknown[]) => unknown,
+  const createThrottledFunction = useCallback(<T extends (...args: unknown[]) => unknown>(
+    func: T,
     limit: number = 1000
   ) => {
     return throttle(func, limit);

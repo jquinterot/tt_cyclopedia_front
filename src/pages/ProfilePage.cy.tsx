@@ -1,9 +1,8 @@
 /// <reference types="cypress" />
-/// <reference types="cypress/react18" />
-import React from 'react';
 import ProfilePage from './ProfilePage';
 import { AuthContext } from '../contexts/AuthContext';
 import type { User } from '../types/User';
+import type { ReactNode } from 'react';
 
 const mockUser: User = {
   id: 'user-1',
@@ -11,7 +10,7 @@ const mockUser: User = {
   email: 'test@example.com',
 };
 
-function MockAuthProvider({ user, children }: { user: User | null, children: React.ReactNode }) {
+function MockAuthProvider({ user, children }: { user: User | null, children: ReactNode }) {
   // Minimal mock for useAuth
   const value = {
     user,
@@ -20,6 +19,8 @@ function MockAuthProvider({ user, children }: { user: User | null, children: Rea
     login: () => {},
     logout: () => {},
     updateToken: () => {},
+    handleSessionExpiration: () => {},
+    reloadPage: () => {},
   };
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }

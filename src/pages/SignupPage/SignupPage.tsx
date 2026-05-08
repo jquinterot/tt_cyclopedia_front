@@ -268,7 +268,7 @@ export default function SignupPage() {
         noindex
       />
       <div className="min-h-screen flex flex-col items-center justify-center font-sans text-white py-12 px-4" data-testid="signup-page">
-      <div className="w-[480px]">
+      <div className="w-full max-w-[480px]">
         <div className="text-center mb-8" data-testid="signup-header">
           <h1 className="text-3xl font-bold">Create Account</h1>
           <p className="mt-3 text-sm text-gray-300">

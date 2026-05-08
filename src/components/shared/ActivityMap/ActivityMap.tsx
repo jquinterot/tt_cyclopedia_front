@@ -1,12 +1,4 @@
-interface Location {
-  address: string;
-  city: string;
-  country: string;
-  coordinates?: {
-    lat: number;
-    lng: number;
-  };
-}
+import type { Location } from '@/types/Post';
 
 interface ActivityMapProps {
   location: Location;

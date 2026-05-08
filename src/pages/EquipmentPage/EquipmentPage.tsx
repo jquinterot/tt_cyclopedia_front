@@ -1,8 +1,9 @@
 import { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useEquipment } from '@/hooks/equipment';
-import type { Equipment } from '@/types/Equipment';
 import SEOHead from '@/components/SEO/SEOHead';
+import { EquipmentCard } from '@/components/shared/EquipmentCard/EquipmentCard';
+import { LoadingSkeleton } from '@/components/shared/LoadingSkeleton/LoadingSkeleton';
 
 const BRANDS = ['All', 'Butterfly', 'Donic', 'DHS', 'Nittaku', 'Xiom', 'Tibhar', 'Andro', 'Stiga'];
 const CATEGORIES = [
@@ -10,62 +11,6 @@ const CATEGORIES = [
   { value: 'blade', label: 'Blades' },
   { value: 'rubber', label: 'Rubbers' },
 ];
-
-function EquipmentCard({ item }: { item: Equipment }) {
-  const navigate = useNavigate();
-  const isBlade = item.category === 'blade';
-  const isRubber = item.category === 'rubber';
-
-  const getSpecsPreview = () => {
-    if (isBlade) return item.subcategory?.replace('_', ' ') || 'Blade';
-    if (isRubber) return item.subcategory?.replace('_', ' ') || 'Rubber';
-    return item.category;
-  };
-
-  const API_BASE = import.meta.env.VITE_API_BASE_URL || '';
-  const imageUrl = item.image_url ? `${API_BASE}${item.image_url}` : `${API_BASE}/static/default/default.jpeg`;
-
-  return (
-    <div
-      onClick={() => navigate(`/equipment/${item.id}`)}
-      className="bg-white/5 border border-white/10 rounded-lg overflow-hidden hover:bg-white/10 transition-colors cursor-pointer"
-    >
-      <div className="aspect-square bg-gray-800/50 flex items-center justify-center overflow-hidden">
-        <img
-          src={imageUrl}
-          alt={item.name}
-          className="w-full h-full object-cover"
-          onError={(e) => {
-            (e.target as HTMLImageElement).src = '/static/default/default.jpeg';
-          }}
-        />
-      </div>
-      <div className="p-4">
-        <div className="flex items-center gap-2 mb-1">
-          <span className="text-xs font-medium text-blue-400 uppercase tracking-wider">
-            {item.brand}
-          </span>
-          <span className="text-xs text-gray-500">|</span>
-          <span className="text-xs text-gray-400 capitalize">{getSpecsPreview()}</span>
-        </div>
-        <h3 className="text-lg font-semibold text-white mb-1">{item.name}</h3>
-        {item.description && (
-          <p className="text-sm text-gray-400 line-clamp-2 mb-2">{item.description}</p>
-        )}
-        <div className="flex items-center justify-between">
-          <span className="text-sm font-medium text-green-400">
-            {item.price_usd ? `$${item.price_usd.toFixed(2)}` : 'Price N/A'}
-          </span>
-          {item.avg_rating && (
-            <span className="text-sm text-yellow-400">
-              {item.avg_rating.toFixed(1)} ({item.review_count} reviews)
-            </span>
-          )}
-        </div>
-      </div>
-    </div>
-  );
-}
 
 export default function EquipmentPage() {
   const [selectedCategory, setSelectedCategory] = useState('');
@@ -86,17 +31,16 @@ export default function EquipmentPage() {
   }, [equipment]);
 
   if (isLoading) {
-    return (
-      <div className="flex justify-center items-center h-64">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
-      </div>
-    );
+    return <LoadingSkeleton />;
   }
 
   if (error) {
     return (
-      <div className="flex justify-center items-center h-64">
-        <div className="text-red-400">Error loading equipment catalog</div>
+      <div className="flex justify-center items-center h-64" data-testid="equipment-error">
+        <div className="text-center">
+          <h2 className="text-xl font-semibold text-red-400 mb-2">Unable to Load Equipment</h2>
+          <p className="text-gray-400">Something went wrong while loading the catalog. Please try again later.</p>
+        </div>
       </div>
     );
   }
@@ -168,8 +112,12 @@ export default function EquipmentPage() {
 
         {/* Results */}
         {filteredEquipment.length === 0 && (
-          <div className="text-center text-gray-400 py-16">
-            No equipment found matching your criteria
+          <div className="text-center text-gray-400 py-16" data-testid="equipment-empty-state">
+            <svg className="mx-auto h-12 w-12 text-gray-500 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4" />
+            </svg>
+            <h3 className="text-lg font-medium text-white mb-1">No equipment found</h3>
+            <p className="text-gray-400">Try adjusting your filters or search query.</p>
           </div>
         )}
 

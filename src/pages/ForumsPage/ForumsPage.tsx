@@ -1,84 +1,12 @@
 import { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useForums, useLikeForum } from '@/hooks/forums';
-import type { Forum } from '@/types/Forum';
-import { useAuth } from '@/contexts/AuthContext';
-import HeartIcon from '@/components/shared/HeartIcon/HeartIcon';
-import HeartIconFilled from '@/components/shared/HeartIconFilled/HeartIconFilled';
+import { useForums } from '@/hooks/forums';
+import { ForumCard } from '@/components/shared/ForumCard/ForumCard';
 import SearchBar from '@/components/shared/SearchBar/SearchBar';
 import SEOHead from '@/components/SEO/SEOHead';
-import { toast } from 'sonner';
+import { useAuth } from '@/contexts/AuthContext';
+import LoadingSpinner from '@/components/shared/LoadingSpinner/LoadingSpinner';
 
-// Forum Card Component
-function ForumCard({ forum, onClick }: { forum: Forum; onClick: () => void }) {
-  const { user } = useAuth();
-  const { likeMutation, unlikeMutation } = useLikeForum(forum.id);
-  
-  const contentPreview = forum.content.length > 150 
-    ? forum.content.substring(0, 150) + '...' 
-    : forum.content;
-
-  const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric'
-    });
-  };
-
-  const handleLikeToggle = (e: React.MouseEvent) => {
-    e.stopPropagation(); // Prevent parent handlers from firing
-    if (!user) {
-      toast('Please login to like!', { icon: '⚠️', id: 'login-to-like' });
-      return;
-    }
-    
-    // Prevent multiple simultaneous requests
-    if (likeMutation.isPending || unlikeMutation.isPending) {
-      return;
-    }
-    
-    if (forum.liked_by_current_user) {
-      unlikeMutation.mutate();
-    } else {
-      likeMutation.mutate();
-    }
-  };
-
-  return (
-    <div 
-      onClick={onClick}
-      className="bg-white/5 border border-white/10 rounded-lg p-6 hover:bg-white/10 transition-colors cursor-pointer"
-      data-testid={`forum-card-${forum.id}`}
-    >
-      <h3 className="text-xl font-semibold text-white mb-2" data-testid={`forum-card-title-${forum.id}`}>{forum.title}</h3>
-      <p className="text-gray-300 mb-4 line-clamp-3" data-testid={`forum-card-content-${forum.id}`}>{contentPreview}</p>
-      <div className="flex items-center justify-between text-sm text-gray-400">
-        <span>By {forum.author}</span>
-        <div className="flex items-center gap-4">
-          <button
-            className="flex items-center gap-1 focus:outline-none"
-            onClick={handleLikeToggle}
-            disabled={likeMutation.isPending || unlikeMutation.isPending}
-            aria-pressed={forum.liked_by_current_user}
-            style={{ cursor: (likeMutation.isPending || unlikeMutation.isPending) ? 'not-allowed' : 'pointer', background: 'none', border: 'none', padding: 0 }}
-            data-testid={`forum-card-like-button-${forum.id}`}
-          >
-            {forum.liked_by_current_user ? (
-              <HeartIconFilled className="h-5 w-5 text-blue-600 transition-colors" data-testid={`forum-card-like-icon-filled-${forum.id}`} />
-            ) : (
-              <HeartIcon className="h-5 w-5 text-blue-400 transition-colors" data-testid={`forum-card-like-icon-outline-${forum.id}`} />
-            )}
-            <span className="text-sm text-gray-300 select-none pointer-events-none">{forum.likes || 0}</span>
-          </button>
-          <span>{formatDate(forum.timestamp)}</span>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-// Main Forums Page Component
 export default function ForumsPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const { data: forums, isLoading, error } = useForums();
@@ -105,16 +33,19 @@ export default function ForumsPage() {
 
   if (isLoading) {
     return (
-      <div className="flex justify-center items-center h-64">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+      <div className="flex justify-center items-center h-64" data-testid="forums-loading">
+        <LoadingSpinner />
       </div>
     );
   }
 
   if (error) {
     return (
-      <div className="flex justify-center items-center h-64">
-        <div className="text-red-400">Error loading forums</div>
+      <div className="flex justify-center items-center h-64" data-testid="forums-error">
+        <div className="text-center">
+          <h2 className="text-xl font-semibold text-red-400 mb-2">Unable to Load Forums</h2>
+          <p className="text-gray-400">Something went wrong while loading the forums. Please try again later.</p>
+        </div>
       </div>
     );
   }
@@ -146,14 +77,22 @@ export default function ForumsPage() {
       />
 
       {filteredForums.length === 0 && searchQuery && (
-        <div className="text-center text-gray-400 mb-8">
-          No forums found matching "{searchQuery}"
+        <div className="text-center text-gray-400 mb-8" data-testid="forums-no-search-results">
+          <svg className="mx-auto h-12 w-12 text-gray-500 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+          </svg>
+          <h3 className="text-lg font-medium text-white mb-1">No forums found</h3>
+          <p className="text-gray-400">No forums match "{searchQuery}". Try a different search term.</p>
         </div>
       )}
 
       {filteredForums.length === 0 && !searchQuery && (
-        <div className="text-center text-gray-400 mb-8">
-          No forums available
+        <div className="text-center text-gray-400 mb-8" data-testid="forums-empty-state">
+          <svg className="mx-auto h-12 w-12 text-gray-500 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8h2a2 2 0 012 2v6a2 2 0 01-2 2h-2v4l-4-4H9a1.994 1.994 0 01-1.414-.586m0 0L11 14h4a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2v4l.586-.586z" />
+          </svg>
+          <h3 className="text-lg font-medium text-white mb-1">No forums yet</h3>
+          <p className="text-gray-400">Be the first to start a discussion!</p>
         </div>
       )}
 

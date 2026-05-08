@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useEquipmentRecommend, RecommendRequest } from '@/hooks/equipment';
 import SEOHead from '@/components/SEO/SEOHead';
+import { SpecBar } from '@/components/shared/SpecBar/SpecBar';
 
 const PLAYING_STYLES: { value: RecommendRequest['playing_style']; label: string }[] = [
   { value: 'beginner', label: 'Beginner' },
@@ -12,22 +13,6 @@ const PLAYING_STYLES: { value: RecommendRequest['playing_style']; label: string 
 ];
 
 const BRANDS = ['Butterfly', 'Donic', 'DHS', 'Nittaku', 'Xiom', 'Tibhar', 'Andro', 'Stiga'];
-
-function SpecBar({ label, value, max = 100 }: { label: string; value?: number; max?: number }) {
-  if (value === undefined || value === null) return null;
-  const percentage = (value / max) * 100;
-  return (
-    <div className="mb-2">
-      <div className="flex justify-between text-xs mb-1">
-        <span className="text-gray-400">{label}</span>
-        <span className="text-gray-300">{value}</span>
-      </div>
-      <div className="h-1.5 bg-white/10 rounded-full overflow-hidden">
-        <div className="h-full bg-blue-500 rounded-full" style={{ width: `${percentage}%` }} />
-      </div>
-    </div>
-  );
-}
 
 export default function SetupRecommenderPage() {
   const [style, setStyle] = useState<RecommendRequest['playing_style']>('beginner');

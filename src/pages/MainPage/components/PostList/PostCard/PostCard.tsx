@@ -127,6 +127,7 @@ export default function PostCard({ post, onClick }: PostCardProps) {
                 onClick={handleLikeToggle}
                 disabled={isProcessing}
                 aria-pressed={liked}
+                aria-label={liked ? 'Unlike post' : 'Like post'}
                 style={{ cursor: isProcessing ? 'not-allowed' : 'pointer', background: 'none', border: 'none', padding: 0 }}
                 data-testid={`post-card-like-button-${post.id}`}
               >
